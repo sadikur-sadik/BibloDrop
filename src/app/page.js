@@ -1,3 +1,4 @@
+import FeaturedBookCard from "@/components/FeaturedCard/FeaturedCard";
 import Footer from "@/components/Footer/Footer";
 import Navbar from "@/components/Navbar/Navbar";
 export default function Home() {
@@ -5,6 +6,7 @@ export default function Home() {
     <>
     <Navbar/>
     <Footer/>
+    {/* <FeaturedBookCard/> */}
     </>
   )
 }
