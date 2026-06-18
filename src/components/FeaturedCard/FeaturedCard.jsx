@@ -17,7 +17,7 @@ const FeaturedBookCard = ({ book }) => {
   } = book || {};
 
   return (
-    <Card className="relative overflow-hidden w-full max-w-sm sm:max-w-md aspect-3/4 min-h-120 rounded-[32px] border border-solid border-gray-300 dark:border-white/10 flex flex-col justify-end p-6 z-0 shadow-lg group transition-all duration-300 hover:border-gray-400 dark:hover:border-white/20">
+    <Card className="relative overflow-hidden w-full max-w-sm sm:max-w-md aspect-3/4 min-h-120 rounded-4xl border border-solid border-gray-300 dark:border-white/10 flex flex-col justify-end p-6 z-0 shadow-lg group transition-all duration-300 hover:border-gray-400 dark:hover:border-white/20">
       
       {/* Optimized Next.js Cover Image */}
       <Image
