@@ -2,3 +2,26 @@
 @import "@heroui/styles";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Embla Base Structure Rules */
+.embla {
+  overflow: hidden;
+  width: 100%;
+}
+
+.embla__viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.embla__container {
+  display: flex;
+  will-change: transform;
+}
+
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  /* Fixes visual flash rendering on iOS and MacOS browsers */
+  backface-visibility: hidden; 
+}

@@ -61,16 +61,6 @@ const SignUp = () => {
 
     setErrorMsg("");
     setIsSubmitting(true);
-    const payload = {
-      email: accountData.email,
-      password: accountData.password,
-      name: accountData.fullName,
-      image: accountData.photoUrl || undefined,
-      role: selectedRole,
-      status: selectedRole === 'librarian' ? 'pending' : null
-    };
-    console.log(payload);
-
     try {
       const { data, error } = await authClient.signUp.email({
         email: accountData.email,
@@ -78,7 +68,7 @@ const SignUp = () => {
         name: accountData.fullName,
         image: accountData.photoUrl || undefined,
         role: selectedRole,
-        status: selectedRole === 'librarian' ? 'pending' : null
+        status: selectedRole === 'librarian' ? 'pending' : "active"
       });
 
       if (error) {
