@@ -7,14 +7,19 @@ export const PostingBooks = async (data) => {
   return result;
 };
 
-export const togglePublish = async (id,state) =>{
-const result = await serverMutation (`books/${id}`,"PATCH",{status : state})
-return result
+export const togglePublish = async (id, state) => {
+  const result = await serverMutation(`books/${id}`, "PATCH", { status: state })
+  return result
 }
 
-export const deleteBookbyLibrarian = async(id)=>{
+export const deleteBookbyLibrarian = async (id) => {
 
-  const result = await serverMutation(`books/${id}`,"DELETE");
+  const result = await serverMutation(`books/${id}`, "DELETE");
 
+  return result
+}
+
+export const updateBookbyLibrarian = async (id, data) => {
+  const result = await serverMutation(`booksUpdate/${id}`, "PATCH",  data )
   return result
 }

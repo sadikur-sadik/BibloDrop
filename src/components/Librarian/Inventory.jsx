@@ -3,16 +3,19 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Table } from '@heroui/react';
+import DeleteBooks from './Delete';
+import EditBooks from './Edit';
 import { 
-  Pencil, 
-  TrashBin, 
   Eye, 
   EyeSlash, 
-  Check, 
   Lock,
   Xmark, 
 } from '@gravity-ui/icons';
-import { deleteBookbyLibrarian, togglePublish } from '@/lib/action/action';
+import { 
+  deleteBookbyLibrarian, 
+  togglePublish, 
+  updateBookbyLibrarian 
+} from '@/lib/action/action';
 
 const Inventory = ({ books = [] }) => {
   const [localBooks, setLocalBooks] = useState(books);
@@ -88,10 +91,45 @@ const Inventory = ({ books = [] }) => {
     }
   };
 
-  const handleEditBook = (book) => {
-    console.log("%c[ACTION REQUIRED] Edit Book Triggered", "color: #3d474e; font-weight: bold;");
-    console.log(`Target ID: ${book._id}`);
-    console.log("Current Data payload to populate state/inputs:", book);
+  const handleUpdateBook = async (bookId, updatedData) => {
+    const previousBooks = [...localBooks];
+
+    // Optimistic Update: Update list with edited fields instantly
+    setLocalBooks((prevBooks) =>
+      prevBooks.map((b) => (b._id === bookId ? { ...b, ...updatedData } : b))
+    );
+
+    try {
+      await updateBookbyLibrarian(bookId, updatedData);
+
+      setNotification({
+        type: 'success',
+        title: 'Book Updated',
+        message: `"${updatedData.title}" has been successfully updated.`,
+      });
+
+      // Automatically hide the message after 4 seconds
+      setTimeout(() => {
+        setNotification((prev) => {
+          if (prev && prev.message.includes(updatedData.title)) {
+            return null;
+          }
+          return prev;
+        });
+      }, 4000);
+
+    } catch (error) {
+      console.error("Failed to update book:", error);
+
+      // Revert state on failure
+      setLocalBooks(previousBooks);
+
+      setNotification({
+        type: 'error',
+        title: 'Update Failed',
+        message: `Could not update "${updatedData.title}". Please try again.`,
+      });
+    }
   };
 
   const handleDeleteBook = async (book) => {
@@ -387,25 +425,11 @@ const Inventory = ({ books = [] }) => {
                           )}
                         </motion.button>
 
-                        {/* Edit Action */}
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleEditBook(book)}
-                          className="p-2 rounded-xl bg-slate-200/60 hover:bg-slate-200 dark:bg-[#3d474e]/40 dark:hover:bg-[#3d474e]/60 text-slate-600 dark:text-slate-300 cursor-pointer"
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </motion.button>
+                        {/* Edit Action Component (Mobile) */}
+                        <EditBooks book={book} onEdit={handleUpdateBook} />
 
-                        {/* Delete Action */}
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleDeleteBook(book)}
-                          className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 cursor-pointer"
-                        >
-                          <TrashBin className="w-4 h-4" />
-                        </motion.button>
+                        {/* Delete Action Component (Mobile) */}
+                        <DeleteBooks book={book} onDelete={handleDeleteBook} />
                       </div>
                     </motion.div>
                   );
@@ -550,27 +574,11 @@ const Inventory = ({ books = [] }) => {
                                 )}
                               </div>
 
-                              {/* Edit Action Button */}
-                              <motion.button
-                                whileHover={{ scale: 1.08 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => handleEditBook(book)}
-                                className="p-2 rounded-xl bg-slate-200/60 hover:bg-slate-200 dark:bg-[#3d474e]/40 dark:hover:bg-[#3d474e]/60 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
-                                title="Edit Book"
-                              >
-                                <Pencil className="w-4 h-4" />
-                              </motion.button>
+                              {/* Edit Action Component (Table) */}
+                              <EditBooks book={book} onEdit={handleUpdateBook} />
 
-                              {/* Delete Action Button */}
-                              <motion.button
-                                whileHover={{ scale: 1.08 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => handleDeleteBook(book)}
-                                className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 transition-colors cursor-pointer"
-                                title="Delete Book"
-                              >
-                                <TrashBin className="w-4 h-4" />
-                              </motion.button>
+                              {/* Delete Action Component (Table) */}
+                              <DeleteBooks book={book} onDelete={handleDeleteBook} />
 
                             </div>
                           </Table.Cell>
