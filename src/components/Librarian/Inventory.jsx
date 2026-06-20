@@ -10,12 +10,11 @@ import {
   EyeSlash, 
   Check, 
   Lock,
-  Xmark, // Imported to close notifications
+  Xmark, 
 } from '@gravity-ui/icons';
 import { deleteBookbyLibrarian, togglePublish } from '@/lib/action/action';
 
 const Inventory = ({ books = [] }) => {
-  // Local state initialized with the books prop to enable dynamic updates without reload
   const [localBooks, setLocalBooks] = useState(books);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -41,7 +40,7 @@ const Inventory = ({ books = [] }) => {
     const nextPublishState = !book.isPublished;
     const publishStatus = nextPublishState ? "publish" : "unpublish";
 
-    // 1. Optimistic Update: Update state instantly before the network call resolves
+    // Optimistic Update: Update state instantly before the network call resolves
     setLocalBooks((prevBooks) =>
       prevBooks.map((b) =>
         b._id === book._id ? { ...b, isPublished: nextPublishState } : b
@@ -53,7 +52,6 @@ const Inventory = ({ books = [] }) => {
 
       await togglePublish(book._id, publishStatus);
 
-      // 2. Success Feedback
       setNotification({
         type: 'success',
         title: nextPublishState ? 'Book Published' : 'Book Unpublished',
@@ -73,14 +71,13 @@ const Inventory = ({ books = [] }) => {
     } catch (error) {
       console.error("Failed to toggle publish status:", error);
 
-      // 3. Revert state change if the network request fails
+      // Revert state change if the network request fails
       setLocalBooks((prevBooks) =>
         prevBooks.map((b) =>
           b._id === book._id ? { ...b, isPublished: !nextPublishState } : b
         )
       );
 
-      // Error Feedback
       setNotification({
         type: 'error',
         title: 'Action Failed',
@@ -97,12 +94,47 @@ const Inventory = ({ books = [] }) => {
     console.log("Current Data payload to populate state/inputs:", book);
   };
 
-  const handleDeleteBook = async(bookId) => {
-    await deleteBookbyLibrarian(bookId)
+  const handleDeleteBook = async (book) => {
+    // Preserve current state in case deletion fails on the server
+    const previousBooks = [...localBooks];
+
+    // Optimistic Update: Remove book instantly from UI
+    setLocalBooks((prevBooks) => prevBooks.filter((b) => b._id !== book._id));
+
+    try {
+      await deleteBookbyLibrarian(book._id);
+
+      setNotification({
+        type: 'success',
+        title: 'Book Deleted',
+        message: `"${book.title}" has been successfully removed from the inventory.`,
+      });
+
+      // Automatically hide the message after 4 seconds
+      setTimeout(() => {
+        setNotification((prev) => {
+          if (prev && prev.message.includes(book.title)) {
+            return null;
+          }
+          return prev;
+        });
+      }, 4000);
+
+    } catch (error) {
+      console.error("Failed to delete book:", error);
+
+      // Revert state to restore the book to UI
+      setLocalBooks(previousBooks);
+
+      setNotification({
+        type: 'error',
+        title: 'Deletion Failed',
+        message: `Could not delete "${book.title}". Please try again.`,
+      });
+    }
   };
 
   // --- Filters and Searches ---
-  // Now uses localBooks instead of the books prop
   const filteredBooks = useMemo(() => {
     return localBooks.filter((book) => {
       const matchesSearch = 
@@ -369,7 +401,7 @@ const Inventory = ({ books = [] }) => {
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          onClick={() => handleDeleteBook(book._id)}
+                          onClick={() => handleDeleteBook(book)}
                           className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 cursor-pointer"
                         >
                           <TrashBin className="w-4 h-4" />
@@ -533,7 +565,7 @@ const Inventory = ({ books = [] }) => {
                               <motion.button
                                 whileHover={{ scale: 1.08 }}
                                 whileTap={{ scale: 0.95 }}
-                                onClick={() => handleDeleteBook(book._id, book.title)}
+                                onClick={() => handleDeleteBook(book)}
                                 className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 transition-colors cursor-pointer"
                                 title="Delete Book"
                               >

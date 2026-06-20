@@ -14,7 +14,7 @@ return result
 
 export const deleteBookbyLibrarian = async(id)=>{
 
-  const result = await serverMutation(`books/${id}`,"DELETE","");
+  const result = await serverMutation(`books/${id}`,"DELETE");
 
   return result
 }
