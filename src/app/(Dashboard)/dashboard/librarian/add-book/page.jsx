@@ -36,13 +36,12 @@ const GENRES = [
 
 const AddBook = () => {
   const { data: session } = authClient.useSession();
-  // console.log(session?.user);
-
   // // ========================================================
   // // LIBRARIAN STATUS (Switch comments to test states)
   // // ========================================================
-  // const librarianStatus = session?.user?.status; 
-  // const librarianStatus = "pending";
+
+  const librarianStatus = session?.user?.role == "librarian" ? session?.user?.status : "";
+ 
 
   // State Management
   const [isUploading, setIsUploading] = useState(false);
@@ -131,8 +130,7 @@ const AddBook = () => {
       ...Object.fromEntries(new FormData(e.currentTarget)),
       coverImage: coverUrl,
       librarianEmail: session?.user?.email,
-      librarianId: session?.user?.id,
-      status: "pending"
+      librarianId: session?.user?.id
     };
 
     try {

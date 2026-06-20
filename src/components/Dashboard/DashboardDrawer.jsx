@@ -23,6 +23,7 @@ import {
   CardDiamond,
   LayoutSideContent
 } from "@gravity-ui/icons";
+import { authClient } from "@/lib/auth-client";
 
 const DEFAULT_AVATAR = "https://plus.unsplash.com/premium_photo-1732668021815-9129fdb798d1?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
@@ -60,7 +61,7 @@ const LIBRARIAN_NAV = [
     title: "Cataloging",
     links: [
       { href: "/dashboard/librarian/add-book", label: "Add Book", icon: Plus },
-      { href: "/dashboard/librarian/inventory", label: "Manage Inventory", icon: ListTimeline },
+      { href: "/dashboard/librarian/manage-inventory", label: "Manage Inventory", icon: ListTimeline },
     ],
   },
   {
@@ -104,22 +105,22 @@ const DashboardDrawer = () => {
   // ========================================================
   // SESSION DATA (Commented out for easy offline/local mock testing)
   // ========================================================
-  /*
+  
   const { data: session } = authClient.useSession();
   const user = session?.user;
   const userRole = user?.role || "reader";
-  */
+  
 
   // ========================================================
   // DUMMY STATIC DATA (Change "userRole" to test other profiles)
   // ========================================================
-  const user = {
-    name: "Alex Mercer",
-    image: null, // will automatically fallback to DEFAULT_AVATAR
-  };
-  const userRole = "librarian"; // Options: "reader" | "librarian" | "admin"
+  // const user = {
+  //   name: "Alex Mercer",
+  //   image: null, // will automatically fallback to DEFAULT_AVATAR
+  // };
+  // const userRole = "librarian"; // Options: "reader" | "librarian" | "admin"
 
-  // Generates unique styling for menu navigation links
+  // // Generates unique styling for menu navigation links
   const getLinkClass = (href) => {
     const isActive = pathname === href;
     return `flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all w-full border-l-4 ${
