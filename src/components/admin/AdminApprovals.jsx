@@ -4,142 +4,73 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import { Table } from '@heroui/react';
-import DeleteBooks from './Delete';
-import EditBooks from './Edit';
-import {
-  Eye,
-  EyeSlash,
-  Lock,
-  Xmark,
-} from '@gravity-ui/icons';
-import {
-  deleteBook,
-  togglePublish,
-  updateBookbyLibrarian
-} from '@/lib/action/action';
+import { Xmark } from '@gravity-ui/icons';
+import DeletePendingBook from './DeleteByAdmin';
+import ApproveBooks from './ApproveBooks';
+import PublishByAdmin from './PublishByAdmin';
+import { approveBookByAdmin, deleteBook, togglePublish } from '@/lib/action/action';
 
-const Inventory = ({ books = [] }) => {
+const AdminApprovals = ({ books = [] }) => {
   const [localBooks, setLocalBooks] = useState(books);
-
-  // Track active toggling operations to show loader feedback
-  const [togglingId, setTogglingId] = useState(null);
-
-  // State to manage success or error notifications
   const [notification, setNotification] = useState(null);
 
-  // Synchronize local state if the parent component updates the books prop
+  // Sync state if books prop updates from parent
   useEffect(() => {
     setLocalBooks(books);
   }, [books]);
 
-  // --- API CALL HANDLERS ---
-  const handleTogglePublish = async (book) => {
-    if (book.currentStatus === 'pending') {
-      console.warn("Unauthorized Action: Librarian cannot toggle publish status of a Pending book.");
-      return;
-    }
+  // --- API Handlers with Optimistic Updates ---
 
-    const nextPublishState = !book.isPublished;
-    const publishStatus = nextPublishState ? "publish" : "unpublish";
+  const handleToggleApproval = async (book) => {
+    const previousBooks = [...localBooks];
+    const isCurrentlyApproved = book.currentStatus === 'approved';
+    const nextStatus = isCurrentlyApproved ? 'pending' : 'approved';
 
-    // Optimistic Update: Update state instantly before the network call resolves
+    // Optimistic Update:
+    // Update currentStatus and force isPublished to false locally if reverting to pending
     setLocalBooks((prevBooks) =>
       prevBooks.map((b) =>
-        b._id === book._id ? { ...b, isPublished: nextPublishState } : b
+        b._id === book._id
+          ? { 
+              ...b, 
+              currentStatus: nextStatus, 
+              isPublished: nextStatus === 'pending' ? false : b.isPublished 
+            }
+          : b
       )
     );
 
     try {
-      setTogglingId(book._id);
-
-      await togglePublish(book._id, publishStatus);
-
+      // SINGLE API CALL: Handles both transition to 'approved' and back to 'pending'.
+      await approveBookByAdmin(book._id, nextStatus); 
+      
       setNotification({
         type: 'success',
-        title: nextPublishState ? 'Book Published' : 'Book Unpublished',
-        message: `"${book.title}" has been successfully ${nextPublishState ? 'published' : 'unpublished'}.`,
+        title: 'Status Updated',
+        message: `"${book.title}" has been successfully updated to ${nextStatus}.`,
         targetBook: book.title
       });
 
-      // Automatically hide the message after 4 seconds
       setTimeout(() => {
-        setNotification((prev) => {
-          if (prev && prev.targetBook === book.title) {
-            return null;
-          }
-          return prev;
-        });
+        setNotification((prev) => (prev && prev.targetBook === book.title ? null : prev));
       }, 4000);
-
     } catch (error) {
-      console.error("Failed to toggle publish status:", error);
-
-      // Revert state change if the network request fails
-      setLocalBooks((prevBooks) =>
-        prevBooks.map((b) =>
-          b._id === book._id ? { ...b, isPublished: !nextPublishState } : b
-        )
-      );
+      console.error("Failed to update status:", error);
+      setLocalBooks(previousBooks); // Revert on failure
 
       setNotification({
         type: 'error',
         title: 'Action Failed',
-        message: `Failed to update publication status for "${book.title}". Please try again.`,
+        message: `Could not update approval status for "${book.title}".`,
         targetBook: book.title
-      });
-    } finally {
-      setTogglingId(null);
-    }
-  };
-
-  const handleUpdateBook = async (bookId, updatedData) => {
-    const previousBooks = [...localBooks];
-
-    // Optimistic Update: Update list with edited fields instantly
-    setLocalBooks((prevBooks) =>
-      prevBooks.map((b) => (b._id === bookId ? { ...b, ...updatedData } : b))
-    );
-
-    try {
-      await updateBookbyLibrarian(bookId, updatedData);
-
-      setNotification({
-        type: 'success',
-        title: 'Book Updated',
-        message: `"${updatedData.title}" has been successfully updated.`,
-        targetBook: updatedData.title
-      });
-
-      // Automatically hide the message after 4 seconds
-      setTimeout(() => {
-        setNotification((prev) => {
-          if (prev && prev.targetBook === updatedData.title) {
-            return null;
-          }
-          return prev;
-        });
-      }, 4000);
-
-    } catch (error) {
-      console.error("Failed to update book:", error);
-
-      // Revert state on failure
-      setLocalBooks(previousBooks);
-
-      setNotification({
-        type: 'error',
-        title: 'Update Failed',
-        message: `Could not update "${updatedData.title}". Please try again.`,
-        targetBook: updatedData.title
       });
     }
   };
 
   const handleDeleteBook = async (book) => {
-    // Preserve current state in case deletion fails on the server
     const previousBooks = [...localBooks];
 
-    // Optimistic Update: Remove book instantly from UI
+    // Optimistically remove book from state
     setLocalBooks((prevBooks) => prevBooks.filter((b) => b._id !== book._id));
 
     try {
@@ -147,31 +78,62 @@ const Inventory = ({ books = [] }) => {
 
       setNotification({
         type: 'success',
-        title: 'Book Deleted',
-        message: `"${book.title}" has been successfully removed from the inventory.`,
+        title: 'Submission Rejected',
+        message: `"${book.title}" has been rejected and deleted from the queue.`,
         targetBook: book.title
       });
 
-      // Automatically hide the message after 4 seconds
       setTimeout(() => {
-        setNotification((prev) => {
-          if (prev && prev.targetBook === book.title) {
-            return null;
-          }
-          return prev;
-        });
+        setNotification((prev) => (prev && prev.targetBook === book.title ? null : prev));
       }, 4000);
 
     } catch (error) {
       console.error("Failed to delete book:", error);
+      setLocalBooks(previousBooks); // Revert on failure
 
-      // Revert state to restore the book to UI
+      setNotification({
+        type: 'error',
+        title: 'Action Failed',
+        message: `Could not delete pending request for "${book.title}".`,
+        targetBook: book.title
+      });
+    }
+  };
+
+  const handleTogglePublish = async (book) => {
+    const previousBooks = [...localBooks];
+    const nextPublishState = !book.isPublished;
+
+    // Optimistically toggle publication state
+    setLocalBooks((prevBooks) =>
+      prevBooks.map((b) =>
+        b._id === book._id ? { ...b, isPublished: nextPublishState } : b
+      )
+    );
+
+    try {
+      const publishState = nextPublishState === true ? "publish" : "unpublish";
+      await togglePublish(book._id, publishState);
+
+      setNotification({
+        type: 'success',
+        title: 'Book Status Changed',
+        message: `"${book.title}" has been successfully ${nextPublishState ? 'published' : 'unpublished'}.`,
+        targetBook: book.title
+      });
+
+      setTimeout(() => {
+        setNotification((prev) => (prev && prev.targetBook === book.title ? null : prev));
+      }, 4000);
+
+    } catch (error) {
+      console.error("Failed to toggle publish status:", error);
       setLocalBooks(previousBooks);
 
       setNotification({
         type: 'error',
-        title: 'Deletion Failed',
-        message: `Could not delete "${book.title}". Please try again.`,
+        title: 'Action Failed',
+        message: `Could not update publication status for "${book.title}".`,
         targetBook: book.title
       });
     }
@@ -209,27 +171,16 @@ const Inventory = ({ books = [] }) => {
     };
   };
 
-  // Animation configuration variants
+  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.05 }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 12 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: 'spring', stiffness: 100, damping: 15 }
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.95,
-      transition: { duration: 0.15 }
-    }
+    visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 15 } },
+    exit: { opacity: 0, scale: 0.95, transition: { duration: 0.15 } }
   };
 
   const isSuccess = notification?.type === 'success';
@@ -290,10 +241,10 @@ const Inventory = ({ books = [] }) => {
           ======================================================== */}
       <div className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8">
         <h1 className="text-2xl font-black tracking-tight text-slate-800 dark:text-white">
-          Librarian <span className="text-[#856a26] dark:text-[#ffcd00]">Control</span> Center
+          Library <span className="text-[#856a26] dark:text-[#ffcd00]">Governance</span> Approvals
         </h1>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-          Manage your collection with precision. Publish, unpublish, and curate digital inventory.
+          Maintain database integrity. Review submissions, configure visibility settings, and manage library catalog entries.
         </p>
       </div>
 
@@ -312,7 +263,7 @@ const Inventory = ({ books = [] }) => {
           </div>
         ) : (
           <>
-            {/* Mobile Layout: Responsive Metadata Grid Cards */}
+            {/* Mobile Layout: Cards */}
             <div className="block lg:hidden">
               <AnimatePresence mode="popLayout">
                 <motion.div
@@ -325,7 +276,6 @@ const Inventory = ({ books = [] }) => {
                   {localBooks.map((book) => {
                     const statusBadge = getStatusBadge(book);
                     const visBadge = getVisibilityBadge(book);
-                    const isToggling = togglingId === book._id;
 
                     return (
                       <motion.div
@@ -342,7 +292,7 @@ const Inventory = ({ books = [] }) => {
                               width={64}
                               height={80}
                               className="w-16 h-20 object-cover rounded-lg shadow-sm"
-                              unoptimized
+                              unoptimized // Helps when loading absolute external URLs without standard domain whitelists
                             />
                           )}
                           <div>
@@ -378,37 +328,10 @@ const Inventory = ({ books = [] }) => {
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between gap-3 pt-3 border-t border-slate-200/60 dark:border-gray-800/60">
-                          {/* Publish/Unpublish Action */}
-                          <motion.button
-                            whileTap={book.currentStatus !== 'pending' && !isToggling ? { scale: 0.95 } : {}}
-                            onClick={() => handleTogglePublish(book)}
-                            disabled={book.currentStatus === 'pending' || isToggling}
-                            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${book.currentStatus === 'pending'
-                                ? 'bg-slate-200/40 text-slate-400 dark:bg-[#3d474e]/20 dark:text-[#9ea7b3]/40 cursor-not-allowed opacity-50'
-                                : isToggling
-                                  ? 'bg-slate-300 text-slate-500 dark:bg-[#3d474e] dark:text-[#9ea7b3] animate-pulse cursor-wait'
-                                  : book.isPublished
-                                    ? 'bg-rose-500/10 text-rose-500 hover:bg-rose-500/20'
-                                    : 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20'
-                              }`}
-                          >
-                            {book.currentStatus === 'pending' ? (
-                              <><Lock className="w-3.5 h-3.5" /> Locked</>
-                            ) : isToggling ? (
-                              <>Updating...</>
-                            ) : book.isPublished ? (
-                              <><EyeSlash className="w-3.5 h-3.5" /> Unpublish</>
-                            ) : (
-                              <><Eye className="w-3.5 h-3.5" /> Publish</>
-                            )}
-                          </motion.button>
-
-                          {/* Edit Action Component (Mobile) */}
-                          <EditBooks book={book} onEdit={handleUpdateBook} />
-
-                          {/* Delete Action Component (Mobile) */}
-                          <DeleteBooks book={book} onDelete={handleDeleteBook} />
+                        <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200/60 dark:border-gray-800/60">
+                          <PublishByAdmin book={book} onTogglePublish={handleTogglePublish} />
+                          <ApproveBooks book={book} onToggleApproval={handleToggleApproval} />
+                          <DeletePendingBook book={book} onDelete={handleDeleteBook} />
                         </div>
                       </motion.div>
                     );
@@ -421,7 +344,7 @@ const Inventory = ({ books = [] }) => {
             <div className="hidden lg:block">
               <Table className="bg-transparent shadow-none">
                 <Table.ScrollContainer className="bg-transparent">
-                  <Table.Content aria-label="Inventory Table">
+                  <Table.Content aria-label="Approvals Queue Table">
                     <Table.Header>
                       <Table.Column isRowHeader className="bg-slate-100 dark:bg-[#2c2f38] text-slate-700 dark:text-slate-200 font-extrabold text-sm py-4 first:rounded-l-2xl last:rounded-r-2xl border-b border-slate-200 dark:border-gray-800">
                         Book Details
@@ -447,7 +370,6 @@ const Inventory = ({ books = [] }) => {
                       {localBooks.map((book, idx) => {
                         const statusBadge = getStatusBadge(book);
                         const visBadge = getVisibilityBadge(book);
-                        const isToggling = togglingId === book._id;
 
                         return (
                           <Table.Row
@@ -519,48 +441,9 @@ const Inventory = ({ books = [] }) => {
                             {/* Column 6: Actions */}
                             <Table.Cell className="py-4 text-right">
                               <div className="flex items-center justify-end gap-2.5">
-
-                                {/* Toggle Publish State: Disabled on pending & during active mutation */}
-                                <div className="relative group">
-                                  <motion.button
-                                    whileHover={book.currentStatus !== 'pending' && !isToggling ? { scale: 1.08 } : {}}
-                                    whileTap={book.currentStatus !== 'pending' && !isToggling ? { scale: 0.95 } : {}}
-                                    onClick={() => handleTogglePublish(book)}
-                                    disabled={book.currentStatus === 'pending' || isToggling}
-                                    className={`p-2 rounded-xl transition-colors cursor-pointer flex items-center justify-center ${book.currentStatus === 'pending'
-                                        ? 'bg-slate-200/30 text-slate-300 dark:bg-[#3d474e]/10 dark:text-slate-700 cursor-not-allowed'
-                                        : isToggling
-                                          ? 'bg-slate-200 text-slate-400 dark:bg-[#3d474e] dark:text-[#9ea7b3] animate-pulse cursor-wait'
-                                          : book.isPublished
-                                            ? 'bg-rose-500/10 text-rose-500 hover:bg-rose-500/20'
-                                            : 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20'
-                                      }`}
-                                    title={book.currentStatus === 'pending' ? 'Locked: Awaiting Admin Approval' : book.isPublished ? 'Unpublish Book' : 'Publish Book'}
-                                  >
-                                    {book.currentStatus === 'pending' ? (
-                                      <Lock className="w-4 h-4" />
-                                    ) : isToggling ? (
-                                      <div className="w-4 h-4 rounded-full border-2 border-slate-400 border-t-transparent animate-spin" />
-                                    ) : book.isPublished ? (
-                                      <EyeSlash className="w-4 h-4" />
-                                    ) : (
-                                      <Eye className="w-4 h-4" />
-                                    )}
-                                  </motion.button>
-
-                                  {book.currentStatus === 'pending' && (
-                                    <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block w-48 p-2 rounded-lg bg-[#192230] dark:bg-white text-white dark:text-[#192230] text-[10px] font-bold text-center shadow-lg pointer-events-none z-20">
-                                      Publishing power disabled while "Pending Approval"
-                                    </div>
-                                  )}
-                                </div>
-
-                                {/* Edit Action Component */}
-                                <EditBooks book={book} onEdit={handleUpdateBook} />
-
-                                {/* Delete Action Component */}
-                                <DeleteBooks book={book} onDelete={handleDeleteBook} />
-
+                                <PublishByAdmin book={book} onTogglePublish={handleTogglePublish} />
+                                <ApproveBooks book={book} onToggleApproval={handleToggleApproval} />
+                                <DeletePendingBook book={book} onDelete={handleDeleteBook} />
                               </div>
                             </Table.Cell>
                           </Table.Row>
@@ -579,4 +462,4 @@ const Inventory = ({ books = [] }) => {
   );
 };
 
-export default Inventory;
+export default AdminApprovals;
