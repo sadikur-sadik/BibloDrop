@@ -5,10 +5,9 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import { Table } from '@heroui/react';
 import { Xmark } from '@gravity-ui/icons';
-import DeletePendingBook from './DeleteByAdmin';
+import DeletePendingBook from '../DeleteByAdmin';
 import ApproveBooks from './ApproveBooks';
-import PublishByAdmin from './PublishByAdmin';
-import { approveBookByAdmin, deleteBook, togglePublish } from '@/lib/action/action';
+import { approveBookByAdmin, deleteBookByAdmin} from '@/lib/action/action';
 
 const AdminApprovals = ({ books = [] }) => {
   const [localBooks, setLocalBooks] = useState(books);
@@ -25,16 +24,16 @@ const AdminApprovals = ({ books = [] }) => {
     const previousBooks = [...localBooks];
     const isCurrentlyApproved = book.currentStatus === 'approved';
     const nextStatus = isCurrentlyApproved ? 'pending' : 'approved';
-
+    
     // Optimistic Update:
-    // Update currentStatus and force isPublished to false locally if reverting to pending
+    // Instantly reflect approved status and visibility updates locally
     setLocalBooks((prevBooks) =>
       prevBooks.map((b) =>
         b._id === book._id
           ? { 
               ...b, 
               currentStatus: nextStatus, 
-              isPublished: nextStatus === 'pending' ? false : b.isPublished 
+              isPublished: nextStatus === 'approved' 
             }
           : b
       )
@@ -74,7 +73,7 @@ const AdminApprovals = ({ books = [] }) => {
     setLocalBooks((prevBooks) => prevBooks.filter((b) => b._id !== book._id));
 
     try {
-      await deleteBook(book._id);
+      await deleteBookByAdmin(book._id);
 
       setNotification({
         type: 'success',
@@ -100,44 +99,6 @@ const AdminApprovals = ({ books = [] }) => {
     }
   };
 
-  const handleTogglePublish = async (book) => {
-    const previousBooks = [...localBooks];
-    const nextPublishState = !book.isPublished;
-
-    // Optimistically toggle publication state
-    setLocalBooks((prevBooks) =>
-      prevBooks.map((b) =>
-        b._id === book._id ? { ...b, isPublished: nextPublishState } : b
-      )
-    );
-
-    try {
-      const publishState = nextPublishState === true ? "publish" : "unpublish";
-      await togglePublish(book._id, publishState);
-
-      setNotification({
-        type: 'success',
-        title: 'Book Status Changed',
-        message: `"${book.title}" has been successfully ${nextPublishState ? 'published' : 'unpublished'}.`,
-        targetBook: book.title
-      });
-
-      setTimeout(() => {
-        setNotification((prev) => (prev && prev.targetBook === book.title ? null : prev));
-      }, 4000);
-
-    } catch (error) {
-      console.error("Failed to toggle publish status:", error);
-      setLocalBooks(previousBooks);
-
-      setNotification({
-        type: 'error',
-        title: 'Action Failed',
-        message: `Could not update publication status for "${book.title}".`,
-        targetBook: book.title
-      });
-    }
-  };
 
   // Approval Status Badge helper
   const getStatusBadge = (book) => {
@@ -188,9 +149,7 @@ const AdminApprovals = ({ books = [] }) => {
   return (
     <div className="relative w-full bg-transparent text-[#192230] dark:text-white transition-colors duration-300 space-y-6">
 
-      {/* ========================================================
-          FLOATING NOTIFICATION BANNER
-          ======================================================== */}
+      {/* FLOATING NOTIFICATION BANNER */}
       <div className="absolute top-4 left-4 right-4 z-50 pointer-events-none">
         <AnimatePresence>
           {notification && (
@@ -236,9 +195,7 @@ const AdminApprovals = ({ books = [] }) => {
         </AnimatePresence>
       </div>
 
-      {/* ========================================================
-          HEADER SECTION (Adapted to your component context)
-          ======================================================== */}
+      {/* HEADER SECTION */}
       <div className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8">
         <h1 className="text-2xl font-black tracking-tight text-slate-800 dark:text-white">
           Library <span className="text-[#856a26] dark:text-[#ffcd00]">Governance</span> Approvals
@@ -248,9 +205,7 @@ const AdminApprovals = ({ books = [] }) => {
         </p>
       </div>
 
-      {/* ========================================================
-          QUEUE CONTENT
-          ======================================================== */}
+      {/* QUEUE CONTENT */}
       <div className="relative w-full">
         {localBooks.length === 0 ? (
           <div className="text-center py-16 bg-slate-100/40 dark:bg-[#2c2f38]/10 border border-slate-200/80 dark:border-gray-800/60 rounded-3xl max-w-md mx-auto space-y-2">
@@ -292,7 +247,7 @@ const AdminApprovals = ({ books = [] }) => {
                               width={64}
                               height={80}
                               className="w-16 h-20 object-cover rounded-lg shadow-sm"
-                              unoptimized // Helps when loading absolute external URLs without standard domain whitelists
+                              unoptimized 
                             />
                           )}
                           <div>
@@ -329,7 +284,6 @@ const AdminApprovals = ({ books = [] }) => {
                         </div>
 
                         <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200/60 dark:border-gray-800/60">
-                          <PublishByAdmin book={book} onTogglePublish={handleTogglePublish} />
                           <ApproveBooks book={book} onToggleApproval={handleToggleApproval} />
                           <DeletePendingBook book={book} onDelete={handleDeleteBook} />
                         </div>
@@ -414,7 +368,6 @@ const AdminApprovals = ({ books = [] }) => {
                               {book.quantity || '0'}
                             </Table.Cell>
 
-                            {/* Column 4: Approval Status */}
                             <Table.Cell className="py-4">
                               <motion.span
                                 initial={{ opacity: 0, scale: 0.95 }}
@@ -426,7 +379,6 @@ const AdminApprovals = ({ books = [] }) => {
                               </motion.span>
                             </Table.Cell>
 
-                            {/* Column 5: Visibility */}
                             <Table.Cell className="py-4">
                               <motion.span
                                 initial={{ opacity: 0, scale: 0.95 }}
@@ -438,10 +390,8 @@ const AdminApprovals = ({ books = [] }) => {
                               </motion.span>
                             </Table.Cell>
 
-                            {/* Column 6: Actions */}
                             <Table.Cell className="py-4 text-right">
                               <div className="flex items-center justify-end gap-2.5">
-                                <PublishByAdmin book={book} onTogglePublish={handleTogglePublish} />
                                 <ApproveBooks book={book} onToggleApproval={handleToggleApproval} />
                                 <DeletePendingBook book={book} onDelete={handleDeleteBook} />
                               </div>

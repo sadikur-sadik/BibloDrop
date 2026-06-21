@@ -5,7 +5,7 @@ import { Modal, Button } from "@heroui/react";
 import { motion } from 'motion/react';
 import { TrashBin } from '@gravity-ui/icons';
 
-const DeleteBooks = ({ book, onDelete }) => {
+const DeleteUserByAdmin = ({ user, onDelete }) => {
   // Use controlled state to ensure compatibility with custom Framer Motion triggers
   const [isOpen, setIsOpen] = useState(false);
 
@@ -17,7 +17,7 @@ const DeleteBooks = ({ book, onDelete }) => {
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
         className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 transition-colors cursor-pointer flex items-center justify-center"
-        title="Delete Book"
+        title="Delete User"
       >
         <TrashBin className="w-4.5 h-4.5" />
       </motion.button>
@@ -38,12 +38,12 @@ const DeleteBooks = ({ book, onDelete }) => {
                     <TrashBin className="w-5 h-5" />
                   </Modal.Icon>
                   <Modal.Heading className="text-base font-black tracking-tight">
-                    Confirm Deletion
+                    Confirm Removal
                   </Modal.Heading>
                 </Modal.Header>
 
                 <Modal.Body className="py-5 text-sm text-slate-600 dark:text-[#9ea7b3] leading-relaxed">
-                  Are you absolutely sure you want to delete <strong className="text-slate-900 dark:text-white font-extrabold">"{book?.title}"</strong>? This will permanently remove the record from the library inventory database.
+                  Are you absolutely sure you want to permanently delete user <strong className="text-slate-900 dark:text-white font-extrabold">"{user?.name}"</strong>? This will remove their profile record and permissions from the database.
                 </Modal.Body>
 
                 <Modal.Footer className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-gray-800/60">
@@ -55,12 +55,12 @@ const DeleteBooks = ({ book, onDelete }) => {
                   </Button>
                   <Button
                     onPress={() => {
-                      onDelete(book);
+                      onDelete(user);
                       close();
                     }}
                     className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-500 hover:bg-rose-600 text-white transition-colors cursor-pointer"
                   >
-                    Delete Book
+                    Delete User
                   </Button>
                 </Modal.Footer>
               </>
@@ -72,4 +72,4 @@ const DeleteBooks = ({ book, onDelete }) => {
   );
 };
 
-export default DeleteBooks;
+export default DeleteUserByAdmin;

@@ -1,7 +1,7 @@
 "use server"
 
 export const serverMutation = async (key, operation, data) => {
-
+  
   const res = await fetch(`${process.env.BACKEND_URL}/${key}`, {
     method: operation,
     headers: {

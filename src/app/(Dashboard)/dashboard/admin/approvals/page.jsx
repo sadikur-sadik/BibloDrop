@@ -1,4 +1,5 @@
-import AdminApprovals from '@/components/admin/AdminApprovals';
+
+import AdminApprovals from '@/components/admin/AdminApprovals/AdminApprovals';
 import { getAllBooks } from '@/lib/fetch/all-books';
 import React from 'react';
 

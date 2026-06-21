@@ -91,8 +91,8 @@ const ADMIN_NAV = [
   {
     title: "System Management",
     links: [
-      { href: "/dashboard/admin/users", label: "Manage Users", icon: Persons },
-      { href: "/dashboard/admin/books", label: "Manage All Books", icon: Book },
+      { href: "/dashboard/admin/manage-users", label: "Manage Users", icon: Persons },
+      { href: "/dashboard/admin/manage-books", label: "Manage All Books", icon: Book },
       { href: "/dashboard/admin/transactions", label: "All Transactions", icon: CardDiamond },
     ],
   },
@@ -110,17 +110,6 @@ const DashboardDrawer = () => {
   const user = session?.user;
   const userRole = user?.role || "reader";
   
-
-  // ========================================================
-  // DUMMY STATIC DATA (Change "userRole" to test other profiles)
-  // ========================================================
-  // const user = {
-  //   name: "Alex Mercer",
-  //   image: null, // will automatically fallback to DEFAULT_AVATAR
-  // };
-  // const userRole = "librarian"; // Options: "reader" | "librarian" | "admin"
-
-  // // Generates unique styling for menu navigation links
   const getLinkClass = (href) => {
     const isActive = pathname === href;
     return `flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all w-full border-l-4 ${
