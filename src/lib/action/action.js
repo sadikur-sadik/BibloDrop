@@ -17,15 +17,11 @@ export const togglePublishByAdmin = async (id, state) => {
 }
 
 export const deleteBookByLibrarian = async (id) => {
-
   const result = await serverMutation(`bookslibrarian/${id}`, "DELETE");
-
   return result
 }
 export const deleteBookByAdmin = async (id) => {
-
   const result = await serverMutation(`booksadmin/${id}`, "DELETE");
-
   return result
 }
 
@@ -35,7 +31,6 @@ export const updateBookbyLibrarian = async (id, data) => {
 }
 
 export const approveBookByAdmin = async (id,status) => {
- 
   const result = await serverMutation(`adminbooks/${id}`, "PATCH", {status:status})
   return result
 } 
@@ -46,9 +41,7 @@ export const updateUserRole = async (id , role) => {
 }
 
 export const deleteUser = async (id) => {
-
   const result = await serverMutation(`users/${id}`, "DELETE");
-
   return result
 }
 

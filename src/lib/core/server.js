@@ -16,7 +16,6 @@ export const serverMutation = async (key, operation, data) => {
 };
 
 export const serverFetch = async (key,query="") => {
-
   const res = await fetch(`${process.env.BACKEND_URL}/${key}${query}`)
 
   if (!res.ok) {

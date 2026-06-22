@@ -2,7 +2,7 @@
 
 import { serverFetch } from "../core/server"
 
-export const getAllBooks = async () => {
-  const res = await serverFetch("books")
+export const getAllBooks = async (query) => {
+  const res = await serverFetch("books",query)
   return res
 }

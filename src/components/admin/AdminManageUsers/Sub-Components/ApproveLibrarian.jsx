@@ -48,7 +48,7 @@ const ApproveLibrarian = ({ user, onStatusChange }) => {
         <Dropdown.Trigger
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-gray-800 bg-white dark:bg-[#1e2330] hover:bg-slate-50 dark:hover:bg-[#2c3344] text-slate-700 dark:text-slate-200 text-xs font-bold transition-all shadow-sm cursor-pointer outline-none h-auto min-w-0"
         >
-          <span>Set Status</span>
+          <span>Status</span>
           <svg
             className="w-3.5 h-3.5 text-slate-500 transition-transform duration-200"
             fill="none"
