@@ -2,28 +2,33 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 
 // Import child components
 import LibrarianControls from './LibrarianControl/LibrarianControl';
 import DeliveryRequestButton from './DeliveryRequest/DeliveryRequest';
-import ReviewStats from './ReviewStats/ReviewStats';
 import PassingReview from './PassingReview/PassingReview';
 import AllReviews from './AllReviews/AllReviews';
 import NoReviews from './NoReviews/NoReviews';
 
+// Dynamically import ReviewStats to bypass server-side rendering issues with Recharts
+const ReviewStats = dynamic(() => import('./ReviewStats/ReviewStats'), { ssr: false });
+
 export default function BookDetails({ book, user, deliveryInfo, librarianInfo, reviews = [] }) {
   const [currentBook, setCurrentBook] = useState(book);
+  const [reviewsList, setReviewsList] = useState(reviews || []);
   const [deliveryStatus, setDeliveryStatus] = useState('Available');
 
-  // Extract first item from the arrays safely
   const librarian = librarianInfo && librarianInfo.length > 0 ? librarianInfo[0] : null;
 
-  // Sync state with incoming props when they change
   useEffect(() => {
     setCurrentBook(book);
   }, [book]);
 
-  // Synchronize dynamic status based on the first item in the deliveryInfo array
+  useEffect(() => {
+    setReviewsList(reviews || []);
+  }, [reviews]);
+
   useEffect(() => {
     const actualDelivery = deliveryInfo && deliveryInfo.length > 0 ? deliveryInfo[0] : null;
 
@@ -51,7 +56,6 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
 
   const isAuthenticated = !!user;
   
-  // Ensure the user's role is 'librarian' before evaluating ownership
   const isOwner = isAuthenticated && 
     user.role === 'librarian' && (
       user._id === currentBook.librarianId || 
@@ -66,6 +70,10 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
       return;
     }
     setDeliveryStatus('Pending Delivery');
+  };
+
+  const handleAddNewReview = (newReview) => {
+    setReviewsList([newReview, ...reviewsList]);
   };
 
   return (
@@ -185,6 +193,33 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
                 />
               )}
             </div>
+          </div>
+
+        </div>
+
+        {/* Reviews Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <div className="lg:col-span-4">
+            <ReviewStats reviews={reviewsList} />
+          </div>
+
+          <div className="lg:col-span-8 space-y-6">
+            
+            <PassingReview 
+              bookId={currentBook._id}
+              currentUser={user}
+              isAuthenticated={isAuthenticated}
+              deliveryInfo={deliveryInfo}
+              onAddReview={handleAddNewReview}
+            />
+
+            {reviewsList.length === 0 ? (
+              <NoReviews />
+            ) : (
+              <AllReviews reviews={reviewsList} />
+            )}
+
           </div>
 
         </div>

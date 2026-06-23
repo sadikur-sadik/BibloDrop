@@ -10,6 +10,10 @@ export const PostingDeliveryInfo = async (data) => {
   const result = await serverMutation("delivery", "POST", data);
   return result;
 };
+export const PostingReview = async (data) => {
+  const result = await serverMutation("review", "POST", data);
+  return result;
+}
 
 export const togglePublishByLibrarian = async (id, state) => {
   const result = await serverMutation(`bookslibrarian/${id}`, "PATCH", { status: state })

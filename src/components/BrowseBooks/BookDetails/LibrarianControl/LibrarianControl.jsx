@@ -1,109 +1,91 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  deleteBookByLibrarian,
+  togglePublishByLibrarian,
+  updateBookbyLibrarian
+} from '@/lib/action/action';
+import PublishToggle from './Publish';
+import EditBooks from './Edit';
+import DeleteBooks from './Delete';
 
 export default function LibrarianControls({ book, onUpdate }) {
   const [isUpdating, setIsUpdating] = useState(false);
+  const router = useRouter();
 
-  // 1. Publish/Unpublish toggle operation
+  // 1. Publish/Unpublish toggle operation (passed to PublishToggle)
   const handleTogglePublish = async () => {
-    setIsUpdating(true);
-    const updatedPublishState = !book.isPublished;
-    
-    // Prepare the payload for backend dispatch
-    const payload = {
-      isPublished: updatedPublishState
-    };
-    
-    console.log("Toggle Publish Payload ready:", payload);
+    if (book.currentStatus === 'pending') {
+      alert("Librarian cannot toggle publish status of a Pending book.");
+      return;
+    }
 
-    /*
+    setIsUpdating(true);
+    const nextPublishState = !book.isPublished;
+    const publishStatus = nextPublishState ? "publish" : "unpublish";
+
     try {
-      const response = await fetch(`/api/books/${book._id}/publish`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      const updatedBook = await response.json();
-      if (onUpdate) onUpdate(updatedBook);
+      // Execute actual server action
+      await togglePublishByLibrarian(book._id, publishStatus);
+      
+      // Notify parent component to update UI state
+      if (onUpdate) {
+        onUpdate({ ...book, isPublished: nextPublishState });
+      }
+
+      // If the action transitions the book to UNPUBLISHED, redirect
+      if (!nextPublishState) {
+        router.push('/dashboard/librarian/manage-inventory');
+      }
     } catch (error) {
       console.error("Failed to execute toggle publish on backend:", error);
+      alert("Failed to update publication status. Please try again.");
     } finally {
       setIsUpdating(false);
     }
-    */
-    
-    // Fallback UI State update
-    setTimeout(() => {
-      onUpdate({ ...book, isPublished: updatedPublishState });
-      setIsUpdating(false);
-    }, 400);
   };
 
-  // 2. Delete operation
-  const handleDeleteBook = async () => {
-    if (!window.confirm("Are you sure you want to delete this book?")) return;
+  // 2. Delete operation (passed to DeleteBooks)
+  const handleDeleteBook = async (deletedBook) => {
     setIsUpdating(true);
-    
-    console.log("Delete Request ready for book ID:", book._id);
 
-    /*
     try {
-      const response = await fetch(`/api/books/${book._id}`, {
-        method: 'DELETE',
-      });
-      const data = await response.json();
-      alert("Book deleted from database.");
+      // Execute actual server action
+      await deleteBookByLibrarian(deletedBook._id);
+      
+      alert("Book successfully deleted from database.");
+      
+      // Redirect to the add book dashboard following successful deletion
+      router.push('/dashboard/librarian/add-book'); 
     } catch (error) {
       console.error("Failed to execute delete on backend:", error);
+      alert("Failed to delete the book. Please try again.");
     } finally {
       setIsUpdating(false);
     }
-    */
-
-    setTimeout(() => {
-      alert("Mock Delete Successful.");
-      setIsUpdating(false);
-    }, 400);
   };
 
-  // 3. Edit operation
-  const handleEditBook = async () => {
+  // 3. Edit operation (passed to EditBooks)
+  const handleEditBook = async (bookId, updatedFields) => {
     setIsUpdating(true);
-    
-    // Sample placeholder payload structure representing dynamic edits
-    const payload = {
-      title: book.title,
-      author: book.author,
-      description: "Updated Book Description text content.",
-      genre: book.genre,
-      quantity: book.quantity,
-      deliveryFee: book.deliveryFee
-    };
 
-    console.log("Edit Payload ready:", payload);
-
-    /*
     try {
-      const response = await fetch(`/api/books/${book._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      const updatedBook = await response.json();
-      if (onUpdate) onUpdate(updatedBook);
+      // Execute actual server action with new form data
+      await updateBookbyLibrarian(bookId, updatedFields);
+
+      // Notify parent component to update UI state
+      if (onUpdate) {
+        onUpdate({ ...book, ...updatedFields });
+      }
+      alert("Book successfully updated.");
     } catch (error) {
       console.error("Failed to execute update on backend:", error);
+      alert("Failed to update the book. Please try again.");
     } finally {
       setIsUpdating(false);
     }
-    */
-
-    setTimeout(() => {
-      onUpdate({ ...book, description: payload.description });
-      setIsUpdating(false);
-      alert("Mock Edit Successful.");
-    }, 400);
   };
 
   return (
@@ -111,28 +93,30 @@ export default function LibrarianControls({ book, onUpdate }) {
       <p className="text-xs font-bold text-[#856a26] dark:text-[#ffcd00] mb-3 uppercase tracking-wider">
         Librarian Controls (Owner Access)
       </p>
-      <div className="grid grid-cols-3 gap-2">
-        <button 
-          onClick={handleEditBook}
-          disabled={isUpdating}
-          className="py-2 px-3 text-xs font-semibold rounded-lg bg-slate-200 dark:bg-gray-800 hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
-        >
-          Edit
-        </button>
-        <button 
-          onClick={handleTogglePublish}
-          disabled={isUpdating}
-          className="py-2 px-3 text-xs font-semibold rounded-lg bg-slate-200 dark:bg-gray-800 hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
-        >
-          {book.isPublished ? 'Unpublish' : 'Publish'}
-        </button>
-        <button 
-          onClick={handleDeleteBook}
-          disabled={isUpdating}
-          className="py-2 px-3 text-xs font-semibold rounded-lg bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
-        >
-          Delete
-        </button>
+      
+      {/* 3-column grid hosting the custom modular control components */}
+      <div className="grid grid-cols-3 gap-2 items-center">
+        
+        {/* 1. Modular Edit Book Form Modal */}
+        <EditBooks 
+          book={book} 
+          onEdit={handleEditBook} 
+        />
+
+        {/* 2. Modular Publish Toggle Button (uses text button style variant) */}
+        <PublishToggle 
+          book={book} 
+          isToggling={isUpdating} 
+          onToggle={handleTogglePublish} 
+          variant="button" 
+        />
+
+        {/* 3. Modular Delete Book Confirmation Modal */}
+        <DeleteBooks 
+          book={book} 
+          onDelete={handleDeleteBook} 
+        />
+
       </div>
     </div>
   );

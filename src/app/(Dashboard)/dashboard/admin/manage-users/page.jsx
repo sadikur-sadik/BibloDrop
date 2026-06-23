@@ -1,9 +1,9 @@
 import ManageUsersByAdmin from '@/components/admin/AdminManageUsers/ManageUsers';
-import { getUsersAPI } from '@/lib/fetch/users';
+import { getAllUsersForAdmin} from '@/lib/fetch/users';
 import React from 'react';
 
 const ManageUsers = async() => {
-  const users = await getUsersAPI()
+  const users = await getAllUsersForAdmin()
   
   return (
     <div>

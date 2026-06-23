@@ -1,79 +1,74 @@
 'use client';
 
+import { PostingReview } from '@/lib/action/action';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter
 
 export default function PassingReview({ 
   bookId, 
   currentUser, 
   isAuthenticated, 
-  hasOrderedBook, 
+  deliveryInfo, 
   onAddReview 
 }) {
+  const router = useRouter(); // Initialize router
   const [newComment, setNewComment] = useState('');
   const [newRating, setNewRating] = useState(5);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Prepare review submission for backend API integration
+  const hasPurchased = deliveryInfo && deliveryInfo.length > 0;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isAuthenticated || !hasOrderedBook) return;
+    if (!isAuthenticated || !hasPurchased) return;
     if (!newComment.trim()) return;
 
     setIsSubmitting(true);
 
-    // Formulate payload with strict data types
     const payload = {
       bookId: bookId,
       reviewerName: currentUser?.name || 'Anonymous Reader',
       reviewerEmail: currentUser?.email,
       reviewerImage: currentUser?.image || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=120&auto=format&fit=crop',
-      rating: Number(newRating), // Strict number parsing
+      rating: Number(newRating),
       comment: newComment,
-      date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-      verified: true // Strict boolean parsing
+      verified: true
     };
 
-    console.log("Ready to post review payload from PassingReview component:", payload);
-
-    /*
     try {
-      const response = await fetch(`/api/books/${bookId}/reviews`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json' 
-        },
-        body: JSON.stringify(payload)
-      });
-      const savedReview = await response.json();
+      const response = await PostingReview(payload);
       
-      // Update mother component state
-      if (onAddReview) onAddReview(savedReview);
-      
-      setNewComment('');
-      setNewRating(5);
+      if (response && (response.acknowledged || response.insertedId)) {
+        alert('Review submitted successfully!');
+        
+        // Construct complete review object with standard createdAt timestamp
+        const savedReview = {
+          _id: response.insertedId || Date.now().toString(),
+          ...payload,
+          createdAt: new Date().toISOString() 
+        };
+        
+        // 1. Instant 0ms local state update (overcomes any server caching delay)
+        if (onAddReview) {
+          onAddReview(savedReview); 
+        }
+        
+        // 2. Silent background sync with server to ensure next loads are completely fresh
+        router.refresh(); 
+        
+        setNewComment('');
+        setNewRating(5);
+      } else {
+        alert('Failed to post review. Please try again.');
+      }
     } catch (error) {
       console.error("Failed to execute review submission on backend:", error);
+      alert('An error occurred. Your review could not be posted.');
     } finally {
       setIsSubmitting(false);
     }
-    */
-
-    // Simulated local fallback for testing
-    setTimeout(() => {
-      const mockSavedReview = {
-        id: `rev-${Date.now()}`,
-        ...payload,
-        helpfulCount: 0
-      };
-      if (onAddReview) onAddReview(mockSavedReview);
-      
-      setNewComment('');
-      setNewRating(5);
-      setIsSubmitting(false);
-    }, 400);
   };
 
-  // State 1: User is not authenticated
   if (!isAuthenticated) {
     return (
       <div className="bg-slate-100/50 dark:bg-slate-800/40 border border-dashed border-slate-200 dark:border-gray-800 p-6 rounded-3xl text-center">
@@ -84,21 +79,16 @@ export default function PassingReview({
     );
   }
 
-  // State 2: User is logged in but hasn't ordered the book yet
-  if (!hasOrderedBook) {
+  if (!hasPurchased) {
     return (
       <div className="bg-slate-100/50 dark:bg-slate-800/40 border border-dashed border-slate-200 dark:border-gray-800 p-6 rounded-3xl text-center">
         <p className="text-xs text-amber-600 dark:text-amber-400 font-medium">
           Only readers who have ordered this book can leave a review.
         </p>
-        <p className="text-[11px] text-slate-400 mt-1">
-          (Test Tip: Switch identity to &quot;Reader&quot; above and click &quot;Request Delivery&quot; to unlock the form)
-        </p>
       </div>
     );
   }
 
-  // State 3: User is authenticated and has ordered the book
   return (
     <div className="bg-white dark:bg-[#2c2f38] p-6 rounded-3xl border border-slate-200/80 dark:border-gray-800 shadow-xs">
       <h4 className="font-bold text-xs mb-4">Write a Review</h4>
@@ -125,7 +115,7 @@ export default function PassingReview({
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Share your opinions on content quality and printing layout..."
-          className="w-full rounded-xl border border-slate-200 dark:border-gray-800 bg-slate-50 dark:bg-[#192230]/50 p-4 text-xs focus:outline-hidden"
+          className="w-full rounded-xl border border-slate-200 dark:border-gray-800 bg-slate-50 dark:bg-[#192230]/50 p-4 text-xs focus:outline-hidden text-slate-800 dark:text-white"
           disabled={isSubmitting}
         />
         <div className="flex justify-end">

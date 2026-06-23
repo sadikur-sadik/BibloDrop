@@ -11,7 +11,7 @@ import {
   Cell 
 } from 'recharts';
 
-export default function ReviewStats({ reviews }) {
+export default function ReviewStats({ reviews = [] }) {
   const [mounted, setMounted] = useState(false);
 
   // Safe SSR mount guard for Recharts
@@ -19,21 +19,23 @@ export default function ReviewStats({ reviews }) {
     setMounted(true);
   }, []);
 
-  // Directly calculate values on every render (no useMemo)
-  const total = reviews?.length || 0;
+  // Safely fallback to an empty array to prevent crashes if reviews is null
+  const reviewsArray = reviews || [];
+  const total = reviewsArray.length;
+  
   let average = '0.0';
   let distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
   let chartData = [];
 
   if (total > 0) {
-    const sum = reviews.reduce((acc, r) => acc + r.rating, 0);
+    // Safely cast string ratings to Numbers (e.g., "5" -> 5)
+    const sum = reviewsArray.reduce((acc, r) => acc + Number(r.rating || 0), 0);
     average = (sum / total).toFixed(1);
 
     [5, 4, 3, 2, 1].forEach((star) => {
-      distribution[star] = reviews.filter((r) => r.rating === star).length;
+      distribution[star] = reviewsArray.filter((r) => Number(r.rating) === star).length;
     });
 
-    // Formatted strictly for the vertical Recharts BarChart layout (5 Stars at the top)
     chartData = [
       { name: '5 ★', count: distribution[5] },
       { name: '4 ★', count: distribution[4] },
@@ -42,17 +44,18 @@ export default function ReviewStats({ reviews }) {
       { name: '1 ★', count: distribution[1] },
     ];
   } else {
+    // Default fallback dataset when there are 0 reviews
     chartData = [
-      { name: '5 ★', count: 5 },
-      { name: '4 ★', count: 4 },
-      { name: '3 ★', count: 1 },
-      { name: '2 ★', count: 3 },
+      { name: '5 ★', count: 0 },
+      { name: '4 ★', count: 0 },
+      { name: '3 ★', count: 0 },
+      { name: '2 ★', count: 0 },
       { name: '1 ★', count: 0 },
     ];
   }
 
   return (
-    <div className="bg-white dark:bg-[#2c2f38] p-6 rounded-3xl border border-slate-200/80 dark:border-gray-800 shadow-xs space-y-6">
+    <div className="bg-white dark:bg-[#2c2f38] p-6 rounded-3xl border border-slate-200/80 dark:border-gray-800 shadow-xs space-y-6 w-full">
       <h3 className="text-base font-bold border-b border-slate-100 dark:border-gray-800 pb-3">
         Reviews Summary
       </h3>
@@ -78,7 +81,7 @@ export default function ReviewStats({ reviews }) {
               <BarChart 
                 data={chartData} 
                 layout="vertical" 
-                margin={{ left: -20, right: 15, top: 0, bottom: 0 }}
+                margin={{ left: -25, right: 15, top: 0, bottom: 0 }}
               >
                 <XAxis type="number" hide />
                 <YAxis 
@@ -107,7 +110,7 @@ export default function ReviewStats({ reviews }) {
                   {chartData.map((entry, index) => (
                     <Cell 
                       key={`cell-${index}`} 
-                      fill="#ffcd00" // Cohesive amber/gold matching your dark-theme accents
+                      fill="#ffcd00" 
                     />
                   ))}
                 </Bar>
