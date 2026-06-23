@@ -54,7 +54,7 @@ const LIBRARIAN_NAV = [
   {
     title: "Overview",
     links: [
-      { href: "/dashboard/librarian", label: "Dashboard", icon: House },
+      { href: "/dashboard/librarian/overview", label: "Overview", icon: House },
     ],
   },
   {

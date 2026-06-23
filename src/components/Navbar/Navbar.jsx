@@ -41,8 +41,8 @@ const Navbar = () => {
 
   // Helper to map roles directly to their respective dashboards
   const getDashboardHref = (role) => {
-    if (role === 'admin') return '/dashboard/admin';
-    if (role === 'librarian') return '/dashboard/librarian';
+    if (role === 'admin') return '/dashboard/admin/overview';
+    if (role === 'librarian') return '/dashboard/librarian/overview';
     return '/dashboard/reader';
   };
 

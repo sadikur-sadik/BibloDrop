@@ -83,7 +83,7 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
         {/* Book Information Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white dark:bg-[#2c2f38] p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-gray-800 shadow-xs">
           
-          <div className="lg:col-span-4 flex items-center justify-center bg-slate-100/50 dark:bg-[#192230]/30 rounded-2xl p-6 min-h-[300px] sm:min-h-[400px]">
+          <div className="lg:col-span-4 flex items-center justify-center bg-slate-100/50 dark:bg-[#192230]/30 rounded-2xl p-6 min-h-75 sm:min-h-100">
             <div className="relative w-40 h-56 sm:w-48 sm:h-72">
               <Image 
                 src={currentBook.coverImage} 
