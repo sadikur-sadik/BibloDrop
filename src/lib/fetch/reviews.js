@@ -15,4 +15,8 @@ export const getAllReviews = async()=>{
   const res = await serverFetch("allreviews")
   return res
 }
+export const getreaderReview = async(id)=>{
+  const res = await serverFetch("readerallreview", `?reviewerId=${id}`)
+  return res
+}
 

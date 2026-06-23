@@ -1,9 +1,9 @@
 import ManageBooks from '@/components/admin/AdminManageBooks/ManageBooks';
-import { getAllBooks } from '@/lib/fetch/all-books';
+import { getAllBooksByAdmin } from '@/lib/fetch/all-books';
 import React from 'react';
 
 const ManageAllBooks = async() => {
-  const books = await getAllBooks()
+  const books = await getAllBooksByAdmin()
   return (
     <div>
       <ManageBooks books={books}/>

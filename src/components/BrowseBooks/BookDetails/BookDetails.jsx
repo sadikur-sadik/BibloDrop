@@ -212,6 +212,7 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
               isAuthenticated={isAuthenticated}
               deliveryInfo={deliveryInfo}
               onAddReview={handleAddNewReview}
+              librarianId={currentBook.librarianId} // Passed librarianId down here
             />
 
             {reviewsList.length === 0 ? (

@@ -17,6 +17,7 @@ export const getToken = async () => {
   })
 
   return res?.session?.token || null
+  
 }
 
 export const requiredRole = async (role) => {
@@ -29,5 +30,5 @@ export const requiredRole = async (role) => {
     redirect("/signin")
   }
 
-  return user
+  return user || null
 }

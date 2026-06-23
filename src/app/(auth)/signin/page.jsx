@@ -48,11 +48,11 @@ const SignIn = () => {
           const userRole = ctx.data?.user?.role || 'reader';
           
           if (userRole === 'librarian') {
-            router.push('/dashboard/librarian'); 
+            router.push('/dashboard/librarian/overview'); 
           } else if (userRole === 'admin') {
-            router.push('/dashboard/admin');
+            router.push('/dashboard/admin/overview');
           } else {
-            router.push('/dashboard/reader');
+            router.push('/dashboard/reader/overview');
           }
         },
         onError: (ctx) => {

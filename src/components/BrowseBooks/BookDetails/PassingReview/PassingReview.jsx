@@ -4,12 +4,15 @@ import { PostingReview } from '@/lib/action/action';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'; // Import useRouter
 
-export default function PassingReview({ 
-  bookId, 
-  currentUser, 
-  isAuthenticated, 
-  deliveryInfo, 
-  onAddReview 
+export default function PassingReview({
+  bookId,
+  bookImage: bookImage,
+  bookName: bookName,
+  currentUser,
+  isAuthenticated,
+  deliveryInfo,
+  onAddReview,
+  librarianId
 }) {
   const router = useRouter(); // Initialize router
   const [newComment, setNewComment] = useState('');
@@ -27,6 +30,10 @@ export default function PassingReview({
 
     const payload = {
       bookId: bookId,
+      bookImage: bookImage,
+      bookName: bookName,
+      reviewerId: currentUser?._id || currentUser?.id || null, // 2. Add the reviewer's ID
+      librarianId: librarianId || null,                         // 3. Add the librarian's ID
       reviewerName: currentUser?.name || 'Anonymous Reader',
       reviewerEmail: currentUser?.email,
       reviewerImage: currentUser?.image || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=120&auto=format&fit=crop',
@@ -37,25 +44,25 @@ export default function PassingReview({
 
     try {
       const response = await PostingReview(payload);
-      
+
       if (response && (response.acknowledged || response.insertedId)) {
         alert('Review submitted successfully!');
-        
+
         // Construct complete review object with standard createdAt timestamp
         const savedReview = {
           _id: response.insertedId || Date.now().toString(),
           ...payload,
-          createdAt: new Date().toISOString() 
+          createdAt: new Date().toISOString()
         };
-        
+
         // 1. Instant 0ms local state update (overcomes any server caching delay)
         if (onAddReview) {
-          onAddReview(savedReview); 
+          onAddReview(savedReview);
         }
-        
+
         // 2. Silent background sync with server to ensure next loads are completely fresh
-        router.refresh(); 
-        
+        router.refresh();
+
         setNewComment('');
         setNewRating(5);
       } else {
@@ -92,12 +99,12 @@ export default function PassingReview({
   return (
     <div className="bg-white dark:bg-[#2c2f38] p-6 rounded-3xl border border-slate-200/80 dark:border-gray-800 shadow-xs">
       <h4 className="font-bold text-xs mb-4">Write a Review</h4>
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-[10px] uppercase font-bold text-slate-400 mb-1">Your Rating</label>
-          <select 
-            value={newRating} 
+          <select
+            value={newRating}
             onChange={(e) => setNewRating(Number(e.target.value))}
             className="rounded-lg bg-slate-100 dark:bg-slate-800 border-none p-1.5 text-xs text-slate-800 dark:text-white focus:outline-hidden"
             disabled={isSubmitting}
@@ -110,8 +117,8 @@ export default function PassingReview({
           </select>
         </div>
 
-        <textarea 
-          rows="3" 
+        <textarea
+          rows="3"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Share your opinions on content quality and printing layout..."
@@ -119,7 +126,7 @@ export default function PassingReview({
           disabled={isSubmitting}
         />
         <div className="flex justify-end">
-          <button 
+          <button
             type="submit"
             disabled={isSubmitting}
             className="px-5 py-2 rounded-lg bg-[#192230] dark:bg-[#ffcd00] text-white dark:text-[#192230] text-xs font-bold cursor-pointer hover:opacity-90 transition-opacity disabled:opacity-50"

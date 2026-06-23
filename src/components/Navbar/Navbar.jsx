@@ -43,7 +43,7 @@ const Navbar = () => {
   const getDashboardHref = (role) => {
     if (role === 'admin') return '/dashboard/admin/overview';
     if (role === 'librarian') return '/dashboard/librarian/overview';
-    return '/dashboard/reader';
+    return '/dashboard/reader/overview';
   };
 
   const toggleTheme = () => {

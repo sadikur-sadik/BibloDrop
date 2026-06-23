@@ -34,13 +34,13 @@ const READER_NAV = [
   {
     title: "Overview",
     links: [
-      { href: "/dashboard/reader", label: "Dashboard", icon: House },
+      { href: "/dashboard/reader/overview", label: "Overview", icon: House },
     ],
   },
   {
     title: "My Activity",
     links: [
-      { href: "/dashboard/reader/deliveries", label: "Delivery History", icon: Clock },
+      { href: "/dashboard/reader/delivery-history", label: "Delivery History", icon: Clock },
       { href: "/dashboard/reader/reading-list", label: "My Reading List", icon: BookOpen },
       { href: "/dashboard/reader/reviews", label: "My Reviews", icon: Comment },
     ],

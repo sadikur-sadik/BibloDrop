@@ -32,9 +32,17 @@ export const deleteBookByAdmin = async (id) => {
   const result = await serverMutation(`booksadmin/${id}`, "DELETE");
   return result
 }
+export const deleteReviewByReader= async (id) => {
+  const result = await serverMutation(`reviewreader/${id}`, "DELETE");
+  return result
+}
 
 export const updateBookbyLibrarian = async (id, data) => {
-  const result = await serverMutation(`booksUpdate/${id}`, "PATCH",  data )
+  const result = await serverMutation(`booksupdate/${id}`, "PATCH",  data )
+  return result
+}
+export const updateReviewByReader  = async (id, data) => {
+  const result = await serverMutation(`reviewreader/${id}`, "PATCH",  data )
   return result
 }
 
@@ -44,7 +52,7 @@ export const approveBookByAdmin = async (id,status) => {
 } 
 
 export const updateUserRole = async (id , role) => {
-  const result = await serverMutation(`users/${id}`, "PATCH", {role:role})
+  const result = await serverMutation(`usersrole/${id}`, "PATCH", {role:role})
   return result
 }
 
@@ -54,7 +62,7 @@ export const deleteUser = async (id) => {
 }
 
 export const approveLibrarian = async (id,status) => {
-  const result = await serverMutation(`userslibrarian/${id}`, "PATCH",{status:status});
+  const result = await serverMutation(`approvelibrarian/${id}`, "PATCH",{status:status});
   return result
 }
 
