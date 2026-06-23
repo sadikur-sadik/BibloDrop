@@ -79,7 +79,7 @@ const ADMIN_NAV = [
   {
     title: "Overview",
     links: [
-      { href: "/dashboard/admin", label: "Dashboard", icon: House },
+      { href: "/dashboard/admin/overview", label: "Overview", icon: House },
     ],
   },
   {
@@ -93,7 +93,7 @@ const ADMIN_NAV = [
     links: [
       { href: "/dashboard/admin/manage-users", label: "Manage Users", icon: Persons },
       { href: "/dashboard/admin/manage-books", label: "Manage All Books", icon: Book },
-      { href: "/dashboard/admin/transactions", label: "All Transactions", icon: CardDiamond },
+      { href: "/dashboard/admin/manage-transactions", label: "All Transactions", icon: CardDiamond },
     ],
   },
 ];

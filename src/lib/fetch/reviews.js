@@ -7,7 +7,12 @@ export const getReviews = async (id) => {
   return res
 }
 export const getAllLibrarianReviews = async (id,userId) => {
-  const res = await serverFetch("reviews",`?librarianId=${id}&userId=${userId}`)
+  const res = await serverFetch("librarianallreview",`?librarianId=${id}&userId=${userId}`)
+  return res
+}
+
+export const getAllReviews = async()=>{
+  const res = await serverFetch("allreviews")
   return res
 }
 
