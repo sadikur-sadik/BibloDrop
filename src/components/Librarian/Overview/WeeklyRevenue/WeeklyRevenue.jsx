@@ -24,30 +24,43 @@ const useDarkMode = () => {
   return isDark;
 };
 
-const ReviewTrendLineChart = ({ reviews = [] }) => {
+// Helper to format values as clean currency, e.g. $5 or $5.99
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  }).format(value);
+};
+
+const RevenueTrendLineChart = ({ deliveries = [] }) => {
   const isDark = useDarkMode();
   
+  // 1. Generate past 7 days starting from today (June 23, 2026)
   const last7Days = Array.from({ length: 7 }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() - i);
     return {
       dateStr: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       dateKey: d.toISOString().split('T')[0],
-      count: 0,
+      revenue: 0,
     };
   }).reverse();
 
-  reviews.forEach(review => {
-    if (review.createdAt) {
-      const dateKey = new Date(review.createdAt).toISOString().split('T')[0];
+  // 2. Map and aggregate completed delivery revenue per day
+  deliveries.forEach(delivery => {
+    if (delivery.deliveryStatus === 'delivered' && delivery.createdAt) {
+      const dateKey = new Date(delivery.createdAt).toISOString().split('T')[0];
       const match = last7Days.find(day => day.dateKey === dateKey);
       if (match) {
-        match.count += 1;
+        // Safe conversion handling both numeric values (e.g., 5) and string decimals (e.g., "5.99")
+        match.revenue += parseFloat(delivery.paid || 0);
       }
     }
   });
 
-  const weeklyTotal = last7Days.reduce((acc, curr) => acc + curr.count, 0);
+  const weeklyTotal = last7Days.reduce((acc, curr) => acc + curr.revenue, 0);
 
   const themeAccent = isDark ? '#ffcd00' : '#856a26';
   const gridStroke = isDark ? '#2e3846' : '#f1f5f9';
@@ -57,11 +70,13 @@ const ReviewTrendLineChart = ({ reviews = [] }) => {
       
       <div className="flex justify-between items-start mb-6">
         <div className="space-y-1">
-          <h3 className="text-lg font-extrabold text-[#192230] dark:text-white">Weekly Review Volume</h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">Total reviews submitted over the last 7 days</p>
+          <h3 className="text-lg font-extrabold text-[#192230] dark:text-white">Weekly Revenue Trend</h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Total delivery earnings generated over the last 7 days (delivered)</p>
         </div>
         <div className="flex flex-col items-end">
-          <span className="text-2xl font-black text-[#856a26] dark:text-[#ffcd00]">{weeklyTotal}</span>
+          <span className="text-2xl font-black text-[#856a26] dark:text-[#ffcd00]">
+            {formatCurrency(weeklyTotal)}
+          </span>
           <span className="text-[10px] font-bold text-slate-400 uppercase">This Week</span>
         </div>
       </div>
@@ -73,7 +88,7 @@ const ReviewTrendLineChart = ({ reviews = [] }) => {
             margin={{ top: 20, right: 15, left: 15, bottom: 5 }}
           >
             <defs>
-              <linearGradient id="reviewGrad" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={themeAccent} stopOpacity={0.25} />
                 <stop offset="95%" stopColor={themeAccent} stopOpacity={0.0} />
               </linearGradient>
@@ -103,25 +118,25 @@ const ReviewTrendLineChart = ({ reviews = [] }) => {
                 fontSize: '12px',
                 color: isDark ? '#fff' : '#192230' 
               }}
-              itemStyle={{ color: themeAccent }}
+              formatter={(value) => [formatCurrency(value), "Revenue"]}
               labelStyle={{ color: isDark ? '#9ca3af' : '#64748b', fontWeight: 'bold' }}
             />
 
             <Area 
               type="monotone" 
-              dataKey="count" 
+              dataKey="revenue" 
               stroke={themeAccent} 
               strokeWidth={3}
               fillOpacity={1} 
-              fill="url(#reviewGrad)" 
+              fill="url(#revenueGrad)" 
               dot={{ r: 4, stroke: themeAccent, strokeWidth: 2, fill: isDark ? '#2c2f38' : '#ffffff' }}
               activeDot={{ r: 6, stroke: themeAccent, strokeWidth: 2, fill: themeAccent }}
             >
               <LabelList 
-                dataKey="count" 
+                dataKey="revenue" 
                 position="top" 
                 offset={10}
-                formatter={(val) => (val > 0 ? val : '')}
+                formatter={(val) => (val > 0 ? formatCurrency(val) : '')}
                 fill={isDark ? '#ffffff' : '#192230'}
                 className="text-xs font-black"
               />
@@ -133,4 +148,4 @@ const ReviewTrendLineChart = ({ reviews = [] }) => {
   );
 };
 
-export default ReviewTrendLineChart;
+export default RevenueTrendLineChart;

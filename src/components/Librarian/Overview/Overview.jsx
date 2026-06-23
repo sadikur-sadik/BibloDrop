@@ -4,8 +4,10 @@ import React from 'react';
 import LibrarianOverviewStats from './StatsCards/StatsCards';
 import BookPublishPieChart from './PublishStatsPieChart/Chart';
 import StarReviewDistributionChart from './ReviewChart/ReviewChart';
-import ReviewTrendLineChart from './WeeklyRevenue/WeeklyRevenue';
+
 import DeliveryStatusBarChart from './DeliveryStatus/DeliveryStatus';
+import RevenueTrendLineChart from './WeeklyRevenue/WeeklyRevenue';
+
 const LibrarianOverview = ({ books = [], deliveries = [], reviews = [] }) => {
   
   // Data calculations
@@ -67,9 +69,9 @@ const LibrarianOverview = ({ books = [], deliveries = [], reviews = [] }) => {
             <StarReviewDistributionChart reviews={reviews} />
           </div>
 
-          {/* Bottom Row Left: Live 7-Day Review volume Trend (6 cols) */}
+          {/* Bottom Row Left: Live 7-Day Revenue Trend (6 cols) */}
           <div className="lg:col-span-6">
-            <ReviewTrendLineChart reviews={reviews} />
+            <RevenueTrendLineChart deliveries={deliveries} /> {/* Passed deliveries here */}
           </div>
 
           {/* Bottom Row Right: Live Delivery Fulfillment Steps Bar Chart (6 cols) */}

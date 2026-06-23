@@ -21,19 +21,26 @@ export default async function Success({ searchParams }) {
   if (status === 'open') {
     return redirect('/')
   }
-
   // Execute database writes only on a confirmed complete checkout status
+  // ... existing code
   if (status === 'complete') {
     try {
-      await PostingDeliveryInfo(metadata)
+      // Create a copy of metadata and convert the 'paid' field
+      const processedMetadata = {
+        ...metadata,
+        // Use parseFloat to handle decimal values like "5.99"
+        paid: parseFloat(metadata.paid)
+      };
+
+      // Pass the processed object to your database action
+      await PostingDeliveryInfo(processedMetadata);
     } catch (error) {
-      // Better error logging context instead of a generic 403
-      console.error('Failed to register delivery info upon successful checkout:', error)
+      console.error('Failed to register delivery info upon successful checkout:', error);
     }
 
     return <SuccessPageClient customerEmail={customerEmail} />
   }
-
+  // ...
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#192230] flex items-center justify-center text-slate-400 text-sm">
       Processing validation...
