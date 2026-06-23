@@ -57,3 +57,8 @@ export const approveLibrarian = async (id,status) => {
   const result = await serverMutation(`userslibrarian/${id}`, "PATCH",{status:status});
   return result
 }
+
+export const updateDeliveryStatusByLibrarian = async(id,status)=>{
+  const result = await serverMutation(`deliverylevelup/${id}`, "PATCH",{status:status});
+  return result
+}

@@ -67,7 +67,7 @@ const LIBRARIAN_NAV = [
   {
     title: "Operations",
     links: [
-      { href: "/dashboard/librarian/deliveries", label: "Manage Deliveries", icon: Clock },
+      { href: "/dashboard/librarian/manage-deliveries", label: "Manage Deliveries", icon: Clock },
     ],
   },
 ];
