@@ -10,6 +10,7 @@ import { Eye, EyeSlash } from "@gravity-ui/icons";
 // Asset Import
 import SideImage from "@/asset/books_2.jpg";
 import { authClient } from '@/lib/auth-client';
+import { Bounce, toast } from 'react-toastify';
 
 const SignIn = () => {
   const router = useRouter();
@@ -43,6 +44,18 @@ const SignIn = () => {
         },
         onSuccess: (ctx) => {
           setIsSubmitting(false);
+
+          toast.success("Welcome back! Signed in successfully.", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
           
           // Role-based routing
           const userRole = ctx.data?.user?.role || 'reader';
@@ -57,12 +70,36 @@ const SignIn = () => {
         },
         onError: (ctx) => {
           setIsSubmitting(false);
-          setErrorMsg(ctx.error.message || "Invalid credentials. Please verify and try again.");
+          const msg = ctx.error.message || "Invalid credentials. Please verify and try again.";
+          setErrorMsg(msg);
+          toast.error(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
         }
       });
     } catch (err) {
       setIsSubmitting(false);
-      setErrorMsg("A server or network error occurred. Please try again.");
+      const errMsg = "A server or network error occurred. Please try again.";
+      setErrorMsg(errMsg);
+      toast.error(errMsg, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     }
   };
 
@@ -75,7 +112,19 @@ const SignIn = () => {
         callbackURL: "/", 
       });
     } catch (err) {
-      setErrorMsg("Failed to initiate Google authentication.");
+      const errMsg = "Failed to initiate Google authentication.";
+      setErrorMsg(errMsg);
+      toast.error(errMsg, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     }
   };
 

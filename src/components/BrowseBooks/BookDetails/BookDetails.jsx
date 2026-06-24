@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import { Bounce, toast } from 'react-toastify';
 
 // Import child components
 import LibrarianControls from './LibrarianControl/LibrarianControl';
@@ -10,11 +11,13 @@ import DeliveryRequestButton from './DeliveryRequest/DeliveryRequest';
 import PassingReview from './PassingReview/PassingReview';
 import AllReviews from './AllReviews/AllReviews';
 import NoReviews from './NoReviews/NoReviews';
+import { useRouter } from 'next/navigation';
 
 // Dynamically import ReviewStats to bypass server-side rendering issues with Recharts
 const ReviewStats = dynamic(() => import('./ReviewStats/ReviewStats'), { ssr: false });
 
 export default function BookDetails({ book, user, deliveryInfo, librarianInfo, reviews = [] }) {
+  const router = useRouter()
   const [currentBook, setCurrentBook] = useState(book);
   const [reviewsList, setReviewsList] = useState(reviews || []);
   const [deliveryStatus, setDeliveryStatus] = useState('Available');
@@ -66,7 +69,19 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
 
   const handleDeliveryAction = () => {
     if (!isAuthenticated) {
-      alert("Authentication Required! Please register or log in.");
+      toast.error("Authentication Required! Please register or log in.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+
+      router.push("/signin")
       return;
     }
     setDeliveryStatus('Pending Delivery');

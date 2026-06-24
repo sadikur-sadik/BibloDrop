@@ -8,10 +8,10 @@ import DeleteReview from './DeleteReview/DeleteReview';
 import EditReview from './EditReview/EditReview';
 import { Xmark, Star, StarFill } from '@gravity-ui/icons';
 import { deleteReviewByReader, updateReviewByReader } from '@/lib/action/action';
+import { Bounce, toast } from 'react-toastify';
 
 const ReviewList = ({ reviews = [] }) => {
   const [localReviews, setLocalReviews] = useState(reviews);
-  const [notification, setNotification] = useState(null);
 
   // Synchronize state if parent properties change
   useEffect(() => {
@@ -30,28 +30,48 @@ const ReviewList = ({ reviews = [] }) => {
 
     try {
       // Use the correctly imported API function
-      await updateReviewByReader(reviewId, updatedData);
+      const res = await updateReviewByReader(reviewId, updatedData);
 
-      setNotification({
-        type: 'success',
-        title: 'Review Updated',
-        message: 'The feedback comments and ratings have been successfully updated.',
-        targetId: reviewId
-      });
-
-      setTimeout(() => {
-        setNotification((prev) => (prev?.targetId === reviewId ? null : prev));
-      }, 4000);
+      if (res?.modifiedCount > 0) {
+        toast.success('Review updated successfully!', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      } else {
+        toast.info('No changes were made to the review.', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
 
     } catch (error) {
       console.error("Failed to update the review details:", error);
       setLocalReviews(previousReviews);
 
-      setNotification({
-        type: 'error',
-        title: 'Update Failed',
-        message: 'Could not complete your request to update feedback. Please try again.',
-        targetId: reviewId
+      toast.error('Could not complete your request to update feedback. Please try again.', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
       });
     }
   };
@@ -64,28 +84,49 @@ const ReviewList = ({ reviews = [] }) => {
 
     try {
       // Use the correctly imported API function, sending only the review ID
-      await deleteReviewByReader(review._id);
+      const res = await deleteReviewByReader(review._id);
 
-      setNotification({
-        type: 'success',
-        title: 'Review Deleted',
-        message: `Review written by "${review.reviewerName}" has been successfully removed.`,
-        targetId: review._id
-      });
-
-      setTimeout(() => {
-        setNotification((prev) => (prev?.targetId === review._id ? null : prev));
-      }, 4000);
+      if (res?.deletedCount > 0) {
+        toast.success(`Review written by "${review.reviewerName}" has been successfully removed.`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      } else {
+        toast.error(`Failed to delete review written by "${review.reviewerName}".`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+        setLocalReviews(previousReviews);
+      }
 
     } catch (error) {
       console.error("Failed to complete review deletion:", error);
       setLocalReviews(previousReviews);
 
-      setNotification({
-        type: 'error',
-        title: 'Deletion Failed',
-        message: `Unable to remove the review entry. Please try again.`,
-        targetId: review._id
+      toast.error(`Unable to remove the review entry. Please try again.`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
       });
     }
   };
@@ -143,56 +184,8 @@ const ReviewList = ({ reviews = [] }) => {
     }
   };
 
-  const isSuccess = notification?.type === 'success';
-
   return (
     <div className="relative w-full bg-transparent text-[#192230] dark:text-white transition-colors duration-300 space-y-6">
-
-      {/* FLOATING NOTIFICATION BANNER */}
-      <div className="absolute top-4 left-4 right-4 z-50 pointer-events-none">
-        <AnimatePresence>
-          {notification && (
-            <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className={`pointer-events-auto w-full p-4 rounded-2xl bg-white/95 dark:bg-[#192230]/95 backdrop-blur-md border shadow-xl flex items-start justify-between gap-3 ${
-                isSuccess
-                  ? 'border-emerald-500/25 dark:border-emerald-500/20 text-emerald-800 dark:text-emerald-300'
-                  : 'border-rose-500/25 dark:border-rose-500/20 text-rose-800 dark:text-rose-300'
-              }`}
-            >
-              <div className="flex items-start gap-3 min-w-0">
-                <div className={`flex items-center justify-center w-6 h-6 rounded-full shrink-0 text-sm font-bold ${
-                  isSuccess
-                    ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                    : 'bg-rose-500/20 text-rose-600 dark:text-rose-400'
-                }`}>
-                  {isSuccess ? '✓' : '!'}
-                </div>
-                <div className="min-w-0">
-                  <h4 className={`text-sm font-black tracking-tight ${
-                    isSuccess ? 'text-emerald-800 dark:text-emerald-400' : 'text-rose-800 dark:text-rose-400'
-                  }`}>
-                    {notification.title}
-                  </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-400/90 mt-0.5 leading-relaxed">
-                    {notification.message}
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setNotification(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 shrink-0 p-1 rounded-lg transition-colors cursor-pointer"
-              >
-                <Xmark width={16} height={16} />
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
 
       {/* HEADER SECTION */}
       <div className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8">

@@ -8,10 +8,10 @@ import DeleteUserByAdmin from './Sub-Components/Delete';
 import ChangeUserRole from './Sub-Components/ChangeRole';
 import ApproveLibrarian from './Sub-Components/ApproveLibrarian';
 import { approveLibrarian, deleteUser, updateUserRole } from '@/lib/action/action';
+import { Bounce, toast } from 'react-toastify';
 
 const ManageUsersByAdmin = ({ users = [] }) => {
   const [localUsers, setLocalUsers] = useState(users);
-  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     setLocalUsers(users);
@@ -32,28 +32,48 @@ const ManageUsersByAdmin = ({ users = [] }) => {
     );
 
     try {
-      await updateUserRole(user._id, nextRole);
+      const res = await updateUserRole(user._id, nextRole);
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      setNotification({
-        type: 'success',
-        title: 'Role Updated',
-        message: `Successfully changed the role of "${user.name}" to ${nextRole}.`,
-        targetUser: user._id
-      });
-
-      setTimeout(() => {
-        setNotification((prev) => (prev && prev.targetUser === user._id ? null : prev));
-      }, 4000);
+      if (res?.modifiedCount > 0) {
+        toast.success(`Successfully changed the role of "${user.name}" to ${nextRole}.`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      } else {
+        toast.info(`No changes were made to "${user.name}".`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
     } catch (error) {
       console.error("Failed to update user role:", error);
       setLocalUsers(previousUsers);
 
-      setNotification({
-        type: 'error',
-        title: 'Action Failed',
-        message: `Could not update role for "${user.name}".`,
-        targetUser: user._id
+      toast.error(`Could not update role for "${user.name}".`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
       });
     }
   };
@@ -67,40 +87,48 @@ const ManageUsersByAdmin = ({ users = [] }) => {
     );
 
     try {
-      // Prepared data payload ready for the backend
-      const payload = {
-        userId: user._id,
-        status: nextStatus
-      };
-      await approveLibrarian(user._id, nextStatus)
-
-      // =============================================================
-      // CALL YOUR BACKEND API ACTION HERE
-      // Example:
-      // await updatestatus(payload.userId, payload.status);
-      // =============================================================
-
+      const res = await approveLibrarian(user._id, nextStatus);
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      setNotification({
-        type: 'success',
-        title: 'Status Updated',
-        message: `Successfully set librarian status of "${user.name}" to ${nextStatus}.`,
-        targetUser: user._id
-      });
-
-      setTimeout(() => {
-        setNotification((prev) => (prev && prev.targetUser === user._id ? null : prev));
-      }, 4000);
+      if (res?.modifiedCount > 0) {
+        toast.success(`Successfully set librarian status of "${user.name}" to ${nextStatus}.`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      } else {
+        toast.info(`No changes were made to "${user.name}".`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
     } catch (error) {
       console.error("Failed to update librarian status:", error);
       setLocalUsers(previousUsers);
 
-      setNotification({
-        type: 'error',
-        title: 'Action Failed',
-        message: `Could not update librarian status for "${user.name}".`,
-        targetUser: user._id
+      toast.error(`Could not update librarian status for "${user.name}".`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
       });
     }
   };
@@ -111,28 +139,49 @@ const ManageUsersByAdmin = ({ users = [] }) => {
     setLocalUsers((prevUsers) => prevUsers.filter((u) => u._id !== user._id));
 
     try {
-      await deleteUser(user._id);
+      const res = await deleteUser(user._id);
       
-      setNotification({
-        type: 'success',
-        title: 'User Deleted',
-        message: `Successfully removed user "${user.name}" from the database.`,
-        targetUser: user._id
-      });
-
-      setTimeout(() => {
-        setNotification((prev) => (prev && prev.targetUser === user._id ? null : prev));
-      }, 4000);
+      if (res?.deletedCount > 0) {
+        toast.success(`Successfully removed user "${user.name}" from the database.`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      } else {
+        toast.error(`Failed to delete "${user.name}".`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+        setLocalUsers(previousUsers);
+      }
       
     } catch (error) {
       console.error("Failed to delete user:", error);
       setLocalUsers(previousUsers);
 
-      setNotification({
-        type: 'error',
-        title: 'Action Failed',
-        message: `Could not delete user "${user.name}".`,
-        targetUser: user._id
+      toast.error(`Could not delete user "${user.name}".`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
       });
     }
   };
@@ -170,59 +219,8 @@ const ManageUsersByAdmin = ({ users = [] }) => {
     visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 15 } }
   };
 
-  const isSuccess = notification?.type === 'success';
-
   return (
     <div className="relative w-full bg-transparent text-[#192230] dark:text-white transition-colors duration-300 space-y-6">
-      
-      {/* Floating Notification Toast */}
-      <div className="absolute top-4 left-4 right-4 z-50 pointer-events-none">
-        <AnimatePresence>
-          {notification && (
-            <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className={`pointer-events-auto w-full p-4 rounded-2xl bg-white/95 dark:bg-[#192230]/95 backdrop-blur-md border shadow-xl flex items-start justify-between gap-3 ${
-                isSuccess
-                  ? 'border-emerald-500/25 dark:border-emerald-500/20 text-emerald-800 dark:text-emerald-300'
-                  : 'border-rose-500/25 dark:border-rose-500/20 text-rose-800 dark:text-rose-300'
-              }`}
-            >
-              <div className="flex items-start gap-3 min-w-0">
-                <div className={`flex items-center justify-center w-6 h-6 rounded-full shrink-0 text-sm font-bold ${
-                  isSuccess
-                    ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                    : 'bg-rose-500/20 text-rose-600 dark:text-rose-400'
-                }`}>
-                  {isSuccess ? '✓' : '!'}
-                </div>
-                <div className="min-w-0">
-                  <h4 className={`text-sm font-black tracking-tight ${
-                    isSuccess ? 'text-emerald-800 dark:text-emerald-400' : 'text-rose-800 dark:text-rose-400'
-                  }`}>
-                    {notification.title}
-                  </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-400/90 mt-0.5 leading-relaxed">
-                    {notification.message}
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setNotification(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 shrink-0 p-1 rounded-lg transition-colors cursor-pointer"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
 
       {/* Header section */}
       <div className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8">

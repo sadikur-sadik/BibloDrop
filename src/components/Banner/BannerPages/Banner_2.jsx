@@ -56,7 +56,7 @@ const Banner_2 = () => {
 
         {/* Buttons Centered on Mobile */}
         <motion.div variants={itemVariants} className="flex flex-wrap justify-center md:justify-start gap-4 pt-2 w-full">
-           <Link href="/books">
+           <Link href="/books?page=1">
             <button className="bg-[#192230] text-white hover:bg-[#2c2f38] dark:bg-[#ffcd00] dark:text-[#192230] dark:hover:bg-[#ffe066] px-8 py-3.5 rounded-full font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-gray-200 dark:shadow-[#ffcd00]/20 text-sm cursor-pointer">
               Browse Books
             </button>

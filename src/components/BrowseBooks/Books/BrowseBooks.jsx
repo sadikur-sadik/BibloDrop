@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { motion } from 'motion/react'; // Imported for matched animations
+import { motion } from 'motion/react'; 
 import FilterBar from '../FilterBooks/FilterBooks';
 import SearchBar from '../SearchBooks/SearchBooks';
 import BooksCard from '../BooksCard/BooksCard';
@@ -12,7 +12,6 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
   const router = useRouter();
   const pathname = usePathname();
   
-  // 1. Initialize states directly from params (matching reference pattern)
   const [selectedCategory, setSelectedCategory] = useState(params?.category || 'All');
   const [deliveryFeeRange, setDeliveryFeeRange] = useState(params?.deliveryFee || 'All');
   const [availabilityStatus, setAvailabilityStatus] = useState(params?.availability || 'All');
@@ -22,12 +21,9 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
   const itemsPerPage = 12;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  // Local state for immediate, lag-free keystroke typing
   const [searchInput, setSearchInput] = useState(params?.search || '');
-  // Debounced search state used for routing
   const [debouncedSearch, setDebouncedSearch] = useState(searchInput);
 
-  // Staggered animation settings matched from the Contact page
   const containerVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
@@ -50,7 +46,6 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
     },
   };
 
-  // Fix duplicate key error by returning [1] if there's only 1 or 0 pages total
   const getPageNumbers = () => {
     if (totalPages <= 1) return [1];
 
@@ -74,7 +69,6 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
   const startItem = (page - 1) * itemsPerPage + 1;
   const endItem = Math.min(page * itemsPerPage, totalItems);
 
-  // Auto-correct page if it goes out of bounds (e.g., when browsing empty page or filters change)
   useEffect(() => {
     if (totalPages > 0 && page > totalPages) {
       setPage(totalPages);
@@ -83,16 +77,14 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
     }
   }, [totalPages, page]);
 
-  // 2. Debounce effect to delay router updates during active typing
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchInput);
-    }, 400); // 400ms delay
+    }, 400);
 
     return () => clearTimeout(handler);
   }, [searchInput]);
 
-  // 3. Sync local states with dynamic params changes (e.g., Back/Forward browser navigation)
   useEffect(() => {
     setSelectedCategory(params?.category || 'All');
     setDeliveryFeeRange(params?.deliveryFee || 'All');
@@ -101,26 +93,21 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
     setSearchInput(params?.search || '');
   }, [params]);
 
-  // 4. Update the URL via Next.js Router whenever debounced state or filters change
   useEffect(() => {
     const sp = new URLSearchParams();
 
     if (debouncedSearch) {
       sp.set('search', debouncedSearch);
     }
-
     if (selectedCategory !== 'All') {
       sp.set('category', selectedCategory);
     }
-
     if (deliveryFeeRange !== 'All') {
       sp.set('deliveryFee', deliveryFeeRange);
     }
-
     if (availabilityStatus !== 'All') {
       sp.set('availability', availabilityStatus);
     }
-
     if (sortBy !== 'default') {
       sp.set('sort', sortBy);
     }
@@ -131,7 +118,6 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
     const queryString = sp.toString();
     const path = queryString ? `${pathname}?${queryString}` : pathname;
 
-    // Guard clause to prevent redundant pushes to the same location
     if (typeof window !== 'undefined' && window.location.search !== `?${queryString}`) {
       router.push(path, { scroll: false });
     }
@@ -149,19 +135,17 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
   return (
     <div className="w-full min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-slate-50/50 dark:bg-[#2c2f38]/20 transition-colors duration-300 relative overflow-hidden">
       
-      {/* Background accents to match the Contact page design system */}
       <div className="absolute right-0 top-0 w-96 h-96 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute left-0 bottom-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
+      {/* Changed whileInView to animate for reliable mounting on mobile */}
       <motion.div
         initial="hidden"
-        whileInView="visible"
-        viewport={{ once: false, amount: 0.1 }}
+        animate="visible"
         variants={containerVariants}
         className="max-w-7xl mx-auto space-y-8 relative z-10"
       >
 
-        {/* Header Title Section */}
         <motion.div 
           variants={itemVariants}
           className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8"
@@ -174,7 +158,6 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
           </p>
         </motion.div>
 
-        {/* Searching & Filtering Controls Group */}
         <motion.div 
           variants={itemVariants}
           className="bg-white dark:bg-[#192230]/40 p-5 rounded-[2rem] border border-slate-200/60 dark:border-white/5 space-y-4 shadow-sm"
@@ -193,7 +176,6 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
           />
         </motion.div>
 
-        {/* Dynamic List Section - Receives backend filtered collection data */}
         {isLoading ? (
           <motion.div 
             variants={itemVariants}
@@ -234,7 +216,6 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
               </motion.div>
             )}
 
-            {/* Pagination is rendered outside of the books.length condition */}
             {(totalPages > 1 || page > 1) && (
               <motion.div variants={itemVariants}>
                 <Pagination className="w-full">

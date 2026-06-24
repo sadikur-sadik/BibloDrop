@@ -6,15 +6,13 @@ import { Table } from '@heroui/react';
 import { Xmark } from '@gravity-ui/icons';
 import LevelUp from './LevelUp/LevelUp';
 import { updateDeliveryStatusByLibrarian } from '@/lib/action/action';
+import { Bounce, toast } from 'react-toastify';
 
 const ManageDeliveries = ({ deliveries = [] }) => {
   const [localDeliveries, setLocalDeliveries] = useState(deliveries);
 
   // Tracks active status updates to show loading spin feedback for specific entries
   const [updatingId, setUpdatingId] = useState(null);
-
-  // Feedback notifications
-  const [notification, setNotification] = useState(null);
 
   // Sync state if initial props change
   useEffect(() => {
@@ -46,24 +44,33 @@ const ManageDeliveries = ({ deliveries = [] }) => {
       setUpdatingId(delivery._id);
 
       // Trigger server action call (pending, dispatched, or delivered)
-      await updateDeliveryStatusByLibrarian(delivery._id, nextStatus);
+      const res = await updateDeliveryStatusByLibrarian(delivery._id, nextStatus);
 
-      setNotification({
-        type: 'success',
-        title: 'Status Updated',
-        message: `"${delivery.bookTitle}" is now marked as ${nextStatus.toUpperCase()}.`,
-        targetId: delivery._id,
-      });
-
-      // Clear the notice after 4 seconds
-      setTimeout(() => {
-        setNotification((prev) => {
-          if (prev && prev.targetId === delivery._id) {
-            return null;
-          }
-          return prev;
+      if (res?.modifiedCount > 0) {
+        toast.success(`"${delivery.bookTitle}" is now marked as ${nextStatus.toUpperCase()}.`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
         });
-      }, 4000);
+      } else {
+        toast.info(`No changes were made to "${delivery.bookTitle}".`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
 
     } catch (error) {
       console.error("Failed to transition delivery status:", error);
@@ -71,11 +78,16 @@ const ManageDeliveries = ({ deliveries = [] }) => {
       // Revert state if the database write fails
       setLocalDeliveries(previousDeliveries);
 
-      setNotification({
-        type: 'error',
-        title: 'Action Failed',
-        message: `Failed to update status for "${delivery.bookTitle}". Please try again.`,
-        targetId: delivery._id,
+      toast.error(`Failed to update status for "${delivery.bookTitle}". Please try again.`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
       });
     } finally {
       setUpdatingId(null);
@@ -138,56 +150,8 @@ const ManageDeliveries = ({ deliveries = [] }) => {
     }
   };
 
-  const isSuccess = notification?.type === 'success';
-
   return (
     <div className="relative w-full bg-transparent text-[#192230] dark:text-white transition-colors duration-300 space-y-6">
-      
-      {/* FLOATING NOTIFICATION BANNER */}
-      <div className="absolute top-4 left-4 right-4 z-50 pointer-events-none">
-        <AnimatePresence>
-          {notification && (
-            <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className={`pointer-events-auto w-full p-4 rounded-2xl bg-white/95 dark:bg-[#192230]/95 backdrop-blur-md border shadow-xl flex items-start justify-between gap-3 ${
-                isSuccess
-                  ? 'border-emerald-500/25 dark:border-emerald-500/20 text-emerald-800 dark:text-emerald-300'
-                  : 'border-rose-500/25 dark:border-rose-500/20 text-rose-800 dark:text-rose-300'
-              }`}
-            >
-              <div className="flex items-start gap-3 min-w-0">
-                <div className={`flex items-center justify-center w-6 h-6 rounded-full shrink-0 text-sm font-bold ${
-                  isSuccess
-                    ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                    : 'bg-rose-500/20 text-rose-600 dark:text-rose-400'
-                }`}>
-                  {isSuccess ? '✓' : '!'}
-                </div>
-                <div className="min-w-0">
-                  <h4 className={`text-sm font-black tracking-tight ${
-                    isSuccess ? 'text-emerald-800 dark:text-emerald-400' : 'text-rose-800 dark:text-rose-400'
-                  }`}>
-                    {notification.title}
-                  </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-400/90 mt-0.5 leading-relaxed">
-                    {notification.message}
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setNotification(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 shrink-0 p-1 rounded-lg transition-colors cursor-pointer"
-              >
-                <Xmark width={16} height={16} />
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
 
       {/* HEADER SECTION */}
       <div className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8">

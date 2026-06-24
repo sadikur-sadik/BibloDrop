@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { 
-  Modal, 
-  Button, 
-  FieldError, 
-  Form, 
-  Input, 
-  Label, 
-  TextField, 
-  TextArea, 
-  Select, 
-  ListBox 
+import {
+  Modal,
+  Button,
+  FieldError,
+  Form,
+  Input,
+  Label,
+  TextField,
+  TextArea,
+  Select,
+  ListBox
 } from "@heroui/react";
 import { motion, AnimatePresence } from 'motion/react';
 import { Pencil, Check, TriangleExclamation, ArrowUp, Xmark } from '@gravity-ui/icons';
@@ -40,7 +40,7 @@ const EditBooks = ({ book, onEdit }) => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // Controlled Select value state
   const [genre, setGenre] = useState(book?.genre || "");
 
@@ -65,7 +65,7 @@ const EditBooks = ({ book, onEdit }) => {
 
     try {
       const apiKey = process.env.NEXT_PUBLIC_IMGBB_KEY;
-      
+
       if (!apiKey) {
         throw new Error(
           "ImgBB API Key is missing. Define NEXT_PUBLIC_IMGBB_KEY in your env file."
@@ -112,7 +112,7 @@ const EditBooks = ({ book, onEdit }) => {
     setIsSubmitting(true);
 
     const formDataObj = Object.fromEntries(new FormData(e.currentTarget));
-    
+
     // Assemble completed update data payload
     const updatedData = {
       ...formDataObj,
@@ -121,7 +121,7 @@ const EditBooks = ({ book, onEdit }) => {
     };
 
     try {
-      res = await onEdit(book._id, updatedData);
+      await onEdit(book._id, updatedData);
       setIsOpen(false);
     } catch (error) {
       console.error("Error occurred while updating form:", error);
@@ -149,11 +149,11 @@ const EditBooks = ({ book, onEdit }) => {
           <Modal.Dialog className="relative w-full max-w-2xl bg-white dark:bg-[#192230] text-[#192230] dark:text-white rounded-3xl border border-slate-200/80 dark:border-gray-800/80 shadow-2xl overflow-hidden p-6 md:p-8 outline-hidden transition-colors duration-300">
             {({ close }) => (
               <>
-                <Modal.CloseTrigger 
+                <Modal.CloseTrigger
                   onPress={close}
-                  className="absolute top-4 right-4 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#2c2f38] text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors cursor-pointer" 
+                  className="absolute top-4 right-4 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#2c2f38] text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors cursor-pointer"
                 />
-                
+
                 <Modal.Header className="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-gray-800/60">
                   <Modal.Icon className="text-[#856a26] dark:text-[#ffcd00]">
                     <Pencil className="w-5 h-5" />
@@ -183,10 +183,10 @@ const EditBooks = ({ book, onEdit }) => {
 
                     <div className="grid grid-cols-2 gap-4">
                       {/* Selected value linked dynamically through state */}
-                      <Select 
-                        isRequired 
-                        name="genre" 
-                        placeholder="Select a genre" 
+                      <Select
+                        isRequired
+                        name="genre"
+                        placeholder="Select a genre"
                         selectedKey={genre}
                         onSelectionChange={(key) => setGenre(key)}
                         className="flex flex-col gap-1"
@@ -199,9 +199,9 @@ const EditBooks = ({ book, onEdit }) => {
                         <Select.Popover className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#192230] rounded-xl shadow-xl mt-1 max-h-48 overflow-y-auto z-50">
                           <ListBox className="p-1.5 space-y-0.5">
                             {GENRES.map((g) => (
-                              <ListBox.Item 
-                                key={g.id} 
-                                id={g.id} 
+                              <ListBox.Item
+                                key={g.id}
+                                id={g.id}
                                 textValue={g.name}
                                 className="px-3 py-2 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer flex items-center justify-between data-selected:bg-amber-100 dark:data-selected:bg-amber-900/40"
                               >
@@ -334,7 +334,7 @@ const EditBooks = ({ book, onEdit }) => {
 
                     {/* Modal Footer Controls */}
                     <div className="flex gap-2.5 justify-end pt-4 border-t border-slate-100 dark:border-gray-800/60">
-                      <Button 
+                      <Button
                         onPress={close}
                         className="px-4 h-10 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200/80 dark:bg-[#2c2f38]/60 dark:hover:bg-[#2c2f38] text-slate-700 dark:text-[#9ea7b3] transition-colors cursor-pointer"
                       >

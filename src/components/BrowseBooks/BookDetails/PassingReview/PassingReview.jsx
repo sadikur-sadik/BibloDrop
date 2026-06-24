@@ -3,6 +3,7 @@
 import { PostingReview } from '@/lib/action/action';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'; // Import useRouter
+import { Bounce, toast } from 'react-toastify';
 
 export default function PassingReview({
   bookId,
@@ -46,7 +47,17 @@ export default function PassingReview({
       const response = await PostingReview(payload);
 
       if (response && (response.acknowledged || response.insertedId)) {
-        alert('Review submitted successfully!');
+        toast.success('Review submitted successfully!', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
 
         // Construct complete review object with standard createdAt timestamp
         const savedReview = {
@@ -66,11 +77,31 @@ export default function PassingReview({
         setNewComment('');
         setNewRating(5);
       } else {
-        alert('Failed to post review. Please try again.');
+        toast.error('Failed to post review. Please try again.', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
       }
     } catch (error) {
       console.error("Failed to execute review submission on backend:", error);
-      alert('An error occurred. Your review could not be posted.');
+      toast.error('An error occurred. Your review could not be posted.', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     } finally {
       setIsSubmitting(false);
     }

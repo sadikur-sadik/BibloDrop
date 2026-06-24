@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { authClient } from '@/lib/auth-client';
+import { Bounce, toast } from 'react-toastify';
 
 const EditProfileModal = ({ isOpen, onClose, user }) => {
   const [editName, setEditName] = useState('');
@@ -30,8 +31,31 @@ const EditProfileModal = ({ isOpen, onClose, user }) => {
         image: editImage,
       });
       setUpdateSuccess(true);
+      toast.success("Profile updated successfully!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     } catch (err) {
-      setUpdateError(err.message || 'Failed to update profile');
+      const errMsg = err.message || 'Failed to update profile';
+      setUpdateError(errMsg);
+      toast.error(errMsg, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     } finally {
       setIsUpdating(false);
     }

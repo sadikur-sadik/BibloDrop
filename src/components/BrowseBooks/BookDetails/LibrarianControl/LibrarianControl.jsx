@@ -10,6 +10,7 @@ import {
 import PublishToggle from './Publish';
 import EditBooks from './Edit';
 import DeleteBooks from './Delete';
+import { Bounce, toast } from 'react-toastify';
 
 export default function LibrarianControls({ book, onUpdate }) {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -18,7 +19,17 @@ export default function LibrarianControls({ book, onUpdate }) {
   // 1. Publish/Unpublish toggle operation (passed to PublishToggle)
   const handleTogglePublish = async () => {
     if (book.currentStatus === 'pending') {
-      alert("Librarian cannot toggle publish status of a Pending book.");
+      toast.error("Librarian cannot toggle publish status of a Pending book.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
       return;
     }
 
@@ -28,20 +39,55 @@ export default function LibrarianControls({ book, onUpdate }) {
 
     try {
       // Execute actual server action
-      await togglePublishByLibrarian(book._id, publishStatus);
+      const res = await togglePublishByLibrarian(book._id, publishStatus);
       
-      // Notify parent component to update UI state
-      if (onUpdate) {
-        onUpdate({ ...book, isPublished: nextPublishState });
-      }
+      if (res?.modifiedCount > 0) {
+        // Notify parent component to update UI state
+        if (onUpdate) {
+          onUpdate({ ...book, isPublished: nextPublishState });
+        }
+        toast.success(`Book successfully ${nextPublishState ? 'published' : 'unpublished'}.`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
 
-      // If the action transitions the book to UNPUBLISHED, redirect
-      if (!nextPublishState) {
-        router.push('/dashboard/librarian/manage-inventory');
+        // If the action transitions the book to UNPUBLISHED, redirect
+        if (!nextPublishState) {
+          router.push('/dashboard/librarian/manage-inventory');
+        }
+      } else {
+        toast.info("No changes were made.", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
       }
     } catch (error) {
       console.error("Failed to execute toggle publish on backend:", error);
-      alert("Failed to update publication status. Please try again.");
+      toast.error("Failed to update publication status. Please try again.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     } finally {
       setIsUpdating(false);
     }
@@ -53,15 +99,49 @@ export default function LibrarianControls({ book, onUpdate }) {
 
     try {
       // Execute actual server action
-      await deleteBookByLibrarian(deletedBook._id);
+      const res = await deleteBookByLibrarian(deletedBook._id);
       
-      alert("Book successfully deleted from database.");
-      
-      // Redirect to the add book dashboard following successful deletion
-      router.push('/dashboard/librarian/add-book'); 
+      if (res?.deletedCount > 0) {
+        toast.success("Book successfully deleted from database.", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+        
+        // Redirect to the add book dashboard following successful deletion
+        router.push('/dashboard/librarian/add-book'); 
+      } else {
+        toast.error("Failed to delete the book. Please try again.", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
     } catch (error) {
       console.error("Failed to execute delete on backend:", error);
-      alert("Failed to delete the book. Please try again.");
+      toast.error("Failed to delete the book. Please try again.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     } finally {
       setIsUpdating(false);
     }
@@ -73,16 +153,50 @@ export default function LibrarianControls({ book, onUpdate }) {
 
     try {
       // Execute actual server action with new form data
-      await updateBookbyLibrarian(bookId, updatedFields);
+      const res = await updateBookbyLibrarian(bookId, updatedFields);
 
-      // Notify parent component to update UI state
-      if (onUpdate) {
-        onUpdate({ ...book, ...updatedFields });
+      if (res?.modifiedCount > 0) {
+        // Notify parent component to update UI state
+        if (onUpdate) {
+          onUpdate({ ...book, ...updatedFields });
+        }
+        toast.success("Book successfully updated.", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      } else {
+        toast.info("No changes were detected.", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
       }
-      alert("Book successfully updated.");
     } catch (error) {
       console.error("Failed to execute update on backend:", error);
-      alert("Failed to update the book. Please try again.");
+      toast.error("Failed to update the book. Please try again.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     } finally {
       setIsUpdating(false);
     }

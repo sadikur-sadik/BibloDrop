@@ -9,10 +9,10 @@ import { approveBookByAdmin, deleteBookByAdmin, togglePublishByAdmin } from '@/l
 import PublishByAdmin from '../PublishByAdmin';
 import ApproveBooks from '../AdminApprovals/ApproveBooks';
 import DeletePendingBook from '../DeleteByAdmin';
+import { Bounce, toast } from 'react-toastify';
 
 const ManageBooks = ({ books = [] }) => {
   const [localBooks, setLocalBooks] = useState(books);
-  const [notification, setNotification] = useState(null);
 
   // Sync state if books prop updates from parent
   useEffect(() => {
@@ -41,27 +41,47 @@ const ManageBooks = ({ books = [] }) => {
     );
 
     try {
-      await approveBookByAdmin(book._id, nextStatus); 
+      const res = await approveBookByAdmin(book._id, nextStatus); 
       
-      setNotification({
-        type: 'success',
-        title: 'Status Updated',
-        message: `"${book.title}" status has been set to ${nextStatus}.`,
-        targetBook: book.title
-      });
-
-      setTimeout(() => {
-        setNotification((prev) => (prev && prev.targetBook === book.title ? null : prev));
-      }, 4000);
+      if (res?.modifiedCount > 0) {
+        toast.success(`"${book.title}" status has been set to ${nextStatus}.`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      } else {
+        toast.info(`No changes were made to "${book.title}".`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
     } catch (error) {
       console.error("Failed to update status:", error);
       setLocalBooks(previousBooks); // Revert on failure
 
-      setNotification({
-        type: 'error',
-        title: 'Action Failed',
-        message: `Could not update approval status for "${book.title}".`,
-        targetBook: book.title
+      toast.error(`Could not update approval status for "${book.title}".`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
       });
     }
   };
@@ -73,28 +93,49 @@ const ManageBooks = ({ books = [] }) => {
     setLocalBooks((prevBooks) => prevBooks.filter((b) => b._id !== book._id));
 
     try {
-      await deleteBookByAdmin(book._id);
+      const res = await deleteBookByAdmin(book._id);
 
-      setNotification({
-        type: 'success',
-        title: 'Book Removed',
-        message: `"${book.title}" has been permanently deleted from the platform.`,
-        targetBook: book.title
-      });
-
-      setTimeout(() => {
-        setNotification((prev) => (prev && prev.targetBook === book.title ? null : prev));
-      }, 4000);
+      if (res?.deletedCount > 0) {
+        toast.success(`"${book.title}" has been permanently deleted from the platform.`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      } else {
+        toast.error(`Failed to delete "${book.title}".`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+        setLocalBooks(previousBooks); // Revert on failure
+      }
 
     } catch (error) {
       console.error("Failed to delete book:", error);
       setLocalBooks(previousBooks); // Revert on failure
 
-      setNotification({
-        type: 'error',
-        title: 'Action Failed',
-        message: `Could not delete "${book.title}" from the platform database.`,
-        targetBook: book.title
+      toast.error(`Could not delete "${book.title}" from the platform database.`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
       });
     }
   };
@@ -112,28 +153,48 @@ const ManageBooks = ({ books = [] }) => {
 
     try {
       const publishState = nextPublishState === true ? "publish" : "unpublish";
-      await togglePublishByAdmin(book._id, publishState);
+      const res = await togglePublishByAdmin(book._id, publishState);
 
-      setNotification({
-        type: 'success',
-        title: 'Visibility Updated',
-        message: `"${book.title}" has been successfully ${nextPublishState ? 'published' : 'unpublished'}.`,
-        targetBook: book.title
-      });
-
-      setTimeout(() => {
-        setNotification((prev) => (prev && prev.targetBook === book.title ? null : prev));
-      }, 4000);
+      if (res?.modifiedCount > 0) {
+        toast.success(`"${book.title}" has been successfully ${nextPublishState ? 'published' : 'unpublished'}.`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      } else {
+        toast.info(`No changes were made to "${book.title}".`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
 
     } catch (error) {
       console.error("Failed to toggle publish status:", error);
       setLocalBooks(previousBooks);
 
-      setNotification({
-        type: 'error',
-        title: 'Action Failed',
-        message: `Could not update publication status for "${book.title}".`,
-        targetBook: book.title
+      toast.error(`Could not update publication status for "${book.title}".`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
       });
     }
   };
@@ -182,58 +243,8 @@ const ManageBooks = ({ books = [] }) => {
     exit: { opacity: 0, scale: 0.95, transition: { duration: 0.15 } }
   };
 
-  const isSuccess = notification?.type === 'success';
-
   return (
     <div className="relative w-full bg-transparent text-[#192230] dark:text-white transition-colors duration-300 space-y-6">
-
-      {/* ========================================================
-          FLOATING NOTIFICATION BANNER
-          ======================================================== */}
-      <div className="absolute top-4 left-4 right-4 z-50 pointer-events-none">
-        <AnimatePresence>
-          {notification && (
-            <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className={`pointer-events-auto w-full p-4 rounded-2xl bg-white/95 dark:bg-[#192230]/95 backdrop-blur-md border shadow-xl flex items-start justify-between gap-3 ${
-                isSuccess
-                  ? 'border-emerald-500/25 dark:border-emerald-500/20 text-emerald-800 dark:text-emerald-300'
-                  : 'border-rose-500/25 dark:border-rose-500/20 text-rose-800 dark:text-rose-300'
-              }`}
-            >
-              <div className="flex items-start gap-3 min-w-0">
-                <div className={`flex items-center justify-center w-6 h-6 rounded-full shrink-0 text-sm font-bold ${
-                  isSuccess
-                    ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                    : 'bg-rose-500/20 text-rose-600 dark:text-rose-400'
-                }`}>
-                  {isSuccess ? '✓' : '!'}
-                </div>
-                <div className="min-w-0">
-                  <h4 className={`text-sm font-black tracking-tight ${
-                    isSuccess ? 'text-emerald-800 dark:text-emerald-400' : 'text-rose-800 dark:text-rose-400'
-                  }`}>
-                    {notification.title}
-                  </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-400/90 mt-0.5 leading-relaxed">
-                    {notification.message}
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setNotification(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 shrink-0 p-1 rounded-lg transition-colors cursor-pointer"
-              >
-                <Xmark width={16} height={16} />
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
 
       {/* ========================================================
           HEADER SECTION 

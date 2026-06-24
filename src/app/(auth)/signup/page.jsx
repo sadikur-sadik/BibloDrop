@@ -10,6 +10,7 @@ import { Check, Eye, EyeSlash } from "@gravity-ui/icons";
 // Asset Import
 import SideImage from "@/asset/books.jpg";
 import { authClient } from '@/lib/auth-client';
+import { Bounce, toast } from 'react-toastify';
 
 const SignUp = () => {
   const router = useRouter();
@@ -61,7 +62,19 @@ const SignUp = () => {
         callbackURL: '/'
       });
     } catch (err) {
-      setErrorMsg("Failed to initialize Google sign-in. Please try again.");
+      const errMsg = "Failed to initialize Google sign-in. Please try again.";
+      setErrorMsg(errMsg);
+      toast.error(errMsg, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     }
   };
 
@@ -85,21 +98,57 @@ const SignUp = () => {
       });
 
       if (error) {
-        setErrorMsg(error.message || "An error occurred during registration. Please try again.");
+        const errMsg = error.message || "An error occurred during registration. Please try again.";
+        setErrorMsg(errMsg);
         setIsSubmitting(false);
+        toast.error(errMsg, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
         return;
       }
 
       setIsSubmitting(false);
       setStep(3);
 
+      toast.success("Account created successfully!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+
       setTimeout(() => {
         router.push('/');
       }, 2500);
 
     } catch (err) {
-      setErrorMsg("A server or network error occurred. Please try again.");
+      const errMsg = "A server or network error occurred. Please try again.";
+      setErrorMsg(errMsg);
       setIsSubmitting(false);
+      toast.error(errMsg, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     }
   };
 

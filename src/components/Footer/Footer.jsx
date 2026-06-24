@@ -37,8 +37,8 @@ const Footer = () => {
 
   // Route plans mapping to standard page navigation & dashboard configurations
   const exploreLinks = [
-    { name: 'Browse Books', href: '/books' },
-    { name: 'New Arrivals', href: '/books?filter=new' },
+    { name: 'Browse Books', href: '/books?page=1' },
+    { name: 'New Arrivals', href: '/books?sort=newest&page=1' },
     { name: 'Partner Libraries', href: '/libraries' },
     { name: 'How It Works', href: '/how-it-works' },
   ];
