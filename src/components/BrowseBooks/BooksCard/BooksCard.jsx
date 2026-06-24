@@ -34,8 +34,20 @@ const BooksCard = ({ book }) => {
     >
       <Card className="relative overflow-hidden w-full rounded-[2.5rem] border border-slate-100 dark:border-white/10 p-5 bg-white dark:bg-[#192230] transition-colors duration-300 shadow-md hover:shadow-xl dark:shadow-black/20 flex flex-col group">
         
-        {/* Highly-rounded Book Cover Image Container */}
-        <div className="relative w-full aspect-4/3 rounded-[1.85rem] overflow-hidden mb-5">
+        {/* Adjusted to portrait ratio (3:4) with subtle inner styling */}
+        <div className="relative w-full aspect-3/4 rounded-[1.85rem] overflow-hidden mb-5 bg-slate-50 dark:bg-slate-900/30 flex items-center justify-center">
+          
+          {/* Blurred Background to soften any leftover edge space */}
+          <div className="absolute inset-0 select-none pointer-events-none scale-110 blur-xl opacity-20 dark:opacity-30 transition-transform duration-500 group-hover:scale-115">
+            <Image
+              src={coverImage}
+              alt=""
+              fill
+              sizes="100px"
+              className="object-cover"
+            />
+          </div>
+
           {/* "Unavailable" Badge */}
           {isUnavailable && (
             <div className="absolute top-4 right-4 bg-red-600 text-white font-bold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-full z-20 shadow-md">
@@ -43,14 +55,17 @@ const BooksCard = ({ book }) => {
             </div>
           )}
 
-          <Image
-            src={coverImage}
-            alt={title}
-            fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            priority
-            className="object-cover transition-transform duration-500 group-hover:scale-103"
-          />
+          {/* Main Book Cover with drop-shadow adapted to the book outline */}
+          <div className="relative w-[85%] h-[85%] z-10 transition-transform duration-500 group-hover:scale-103">
+            <Image
+              src={coverImage}
+              alt={title}
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              priority
+              className="object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.25)] dark:drop-shadow-[0_12px_24px_rgba(0,0,0,0.55)]"
+            />
+          </div>
         </div>
 
         {/* Hero UI Header - Book Title & Subtitle */}

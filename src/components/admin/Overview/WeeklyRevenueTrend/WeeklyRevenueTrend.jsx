@@ -35,10 +35,10 @@ const formatCurrency = (value) => {
 
 const WeeklyRevenueTrend = ({ deliveries = [] }) => {
   const isDark = useDarkMode();
-  
-  // past 7 days starting from June 23, 2026
+
+ // past 7 days ending on today's date
   const last7Days = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date("2026-06-23T00:00:00.000Z");
+    const d = new Date();
     d.setDate(d.getDate() - i);
     return {
       dateStr: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
@@ -48,7 +48,7 @@ const WeeklyRevenueTrend = ({ deliveries = [] }) => {
   }).reverse();
 
   deliveries.forEach(delivery => {
-    if (delivery.deliveryStatus === 'delivered' && delivery.createdAt) {
+    if (delivery.createdAt) {
       const dateKey = new Date(delivery.createdAt).toISOString().split('T')[0];
       const match = last7Days.find(day => day.dateKey === dateKey);
       if (match) {

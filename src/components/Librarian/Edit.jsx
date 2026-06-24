@@ -121,7 +121,7 @@ const EditBooks = ({ book, onEdit }) => {
     };
 
     try {
-      await onEdit(book._id, updatedData);
+      res = await onEdit(book._id, updatedData);
       setIsOpen(false);
     } catch (error) {
       console.error("Error occurred while updating form:", error);

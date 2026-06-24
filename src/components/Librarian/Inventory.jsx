@@ -17,6 +17,7 @@ import {
   togglePublishByLibrarian,
   updateBookbyLibrarian
 } from '@/lib/action/action';
+import { Bounce, toast } from 'react-toastify';
 
 const Inventory = ({ books = [] }) => {
   const [localBooks, setLocalBooks] = useState(books);
@@ -24,8 +25,6 @@ const Inventory = ({ books = [] }) => {
   // Track active toggling operations to show loader feedback
   const [togglingId, setTogglingId] = useState(null);
 
-  // State to manage success or error notifications
-  const [notification, setNotification] = useState(null);
 
   // Synchronize local state if the parent component updates the books prop
   useEffect(() => {
@@ -33,16 +32,27 @@ const Inventory = ({ books = [] }) => {
   }, [books]);
 
   // --- API CALL HANDLERS ---
-  const handleTogglePublish = async (book) => {
+ const handleTogglePublish = async (book) => {
     if (book.currentStatus === 'pending') {
       console.warn("Unauthorized Action: Librarian cannot toggle publish status of a Pending book.");
+      toast.error("Cannot publish/unpublish a pending book.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
       return;
     }
 
     const nextPublishState = !book.isPublished;
     const publishStatus = nextPublishState ? "publish" : "unpublish";
 
-    // Optimistic Update: Update state instantly before the network call resolves
+    // Optimistic Update
     setLocalBooks((prevBooks) =>
       prevBooks.map((b) =>
         b._id === book._id ? { ...b, isPublished: nextPublishState } : b
@@ -52,131 +62,173 @@ const Inventory = ({ books = [] }) => {
     try {
       setTogglingId(book._id);
 
-      await togglePublishByLibrarian(book._id, publishStatus);
-
-      setNotification({
-        type: 'success',
-        title: nextPublishState ? 'Book Published' : 'Book Unpublished',
-        message: `"${book.title}" has been successfully ${nextPublishState ? 'published' : 'unpublished'}.`,
-        targetBook: book.title
-      });
-
-      // Automatically hide the message after 4 seconds
-      setTimeout(() => {
-        setNotification((prev) => {
-          if (prev && prev.targetBook === book.title) {
-            return null;
-          }
-          return prev;
+      const res = await togglePublishByLibrarian(book._id, publishStatus);
+      
+      if (res?.modifiedCount > 0) {
+        toast.success(`"${book.title}" has been successfully ${publishStatus}ed!`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
         });
-      }, 4000);
+      } else {
+        toast.info(`No changes were made to "${book.title}".`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
 
     } catch (error) {
       console.error("Failed to toggle publish status:", error);
 
-      // Revert state change if the network request fails
+      // Revert state change
       setLocalBooks((prevBooks) =>
         prevBooks.map((b) =>
           b._id === book._id ? { ...b, isPublished: !nextPublishState } : b
         )
       );
 
-      setNotification({
-        type: 'error',
-        title: 'Action Failed',
-        message: `Failed to update publication status for "${book.title}". Please try again.`,
-        targetBook: book.title
+      toast.error(`An error occurred while updating status for "${book.title}".`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
       });
+
     } finally {
       setTogglingId(null);
     }
   };
 
-  const handleUpdateBook = async (bookId, updatedData) => {
+ const handleUpdateBook = async (bookId, updatedData) => {
     const previousBooks = [...localBooks];
 
-    // Optimistic Update: Update list with edited fields instantly
+    // Optimistic Update
     setLocalBooks((prevBooks) =>
       prevBooks.map((b) => (b._id === bookId ? { ...b, ...updatedData } : b))
     );
 
     try {
-      await updateBookbyLibrarian(bookId, updatedData);
-
-      setNotification({
-        type: 'success',
-        title: 'Book Updated',
-        message: `"${updatedData.title}" has been successfully updated.`,
-        targetBook: updatedData.title
-      });
-
-      // Automatically hide the message after 4 seconds
-      setTimeout(() => {
-        setNotification((prev) => {
-          if (prev && prev.targetBook === updatedData.title) {
-            return null;
-          }
-          return prev;
+      const res = await updateBookbyLibrarian(bookId, updatedData);
+      
+      if (res?.modifiedCount > 0) {
+        toast.success(`"${updatedData.title || 'Book'}" updated successfully!`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
         });
-      }, 4000);
+      } else {
+        toast.info("No modifications detected.", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
 
     } catch (error) {
       console.error("Failed to update book:", error);
 
-      // Revert state on failure
+      // Revert state
       setLocalBooks(previousBooks);
 
-      setNotification({
-        type: 'error',
-        title: 'Update Failed',
-        message: `Could not update "${updatedData.title}". Please try again.`,
-        targetBook: updatedData.title
+      toast.error(`An error occurred while saving "${updatedData.title || 'Book'}".`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
       });
     }
   };
 
-  const handleDeleteBook = async (book) => {
-    // Preserve current state in case deletion fails on the server
+const handleDeleteBook = async (book) => {
     const previousBooks = [...localBooks];
 
-    // Optimistic Update: Remove book instantly from UI
+    // Optimistic Update
     setLocalBooks((prevBooks) => prevBooks.filter((b) => b._id !== book._id));
 
     try {
-      await deleteBookByLibrarian(book._id);
+      const res = await deleteBookByLibrarian(book._id);
 
-      setNotification({
-        type: 'success',
-        title: 'Book Deleted',
-        message: `"${book.title}" has been successfully removed from the inventory.`,
-        targetBook: book.title
-      });
-
-      // Automatically hide the message after 4 seconds
-      setTimeout(() => {
-        setNotification((prev) => {
-          if (prev && prev.targetBook === book.title) {
-            return null;
-          }
-          return prev;
+      if (res?.deletedCount > 0) {
+        toast.info(`"${book.title}" was deleted from inventory.`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
         });
-      }, 4000);
+      } else {
+        toast.error(`Failed to delete "${book.title}".`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+        setLocalBooks(previousBooks);
+      }
 
     } catch (error) {
       console.error("Failed to delete book:", error);
 
-      // Revert state to restore the book to UI
+      // Revert state
       setLocalBooks(previousBooks);
 
-      setNotification({
-        type: 'error',
-        title: 'Deletion Failed',
-        message: `Could not delete "${book.title}". Please try again.`,
-        targetBook: book.title
+      toast.error(`An error occurred while trying to delete "${book.title}".`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
       });
     }
   };
-
   // Approval Status Badge helper
   const getStatusBadge = (book) => {
     if (book.currentStatus === 'pending') {
@@ -232,69 +284,26 @@ const Inventory = ({ books = [] }) => {
     }
   };
 
-  const isSuccess = notification?.type === 'success';
 
   return (
     <div className="relative w-full bg-transparent text-[#192230] dark:text-white transition-colors duration-300 space-y-6">
 
-      {/* ========================================================
-          FLOATING NOTIFICATION BANNER
-          ======================================================== */}
-      <div className="absolute top-4 left-4 right-4 z-50 pointer-events-none">
-        <AnimatePresence>
-          {notification && (
-            <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className={`pointer-events-auto w-full p-4 rounded-2xl bg-white/95 dark:bg-[#192230]/95 backdrop-blur-md border shadow-xl flex items-start justify-between gap-3 ${
-                isSuccess
-                  ? 'border-emerald-500/25 dark:border-emerald-500/20 text-emerald-800 dark:text-emerald-300'
-                  : 'border-rose-500/25 dark:border-rose-500/20 text-rose-800 dark:text-rose-300'
-              }`}
-            >
-              <div className="flex items-start gap-3 min-w-0">
-                <div className={`flex items-center justify-center w-6 h-6 rounded-full shrink-0 text-sm font-bold ${
-                  isSuccess
-                    ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                    : 'bg-rose-500/20 text-rose-600 dark:text-rose-400'
-                }`}>
-                  {isSuccess ? '✓' : '!'}
-                </div>
-                <div className="min-w-0">
-                  <h4 className={`text-sm font-black tracking-tight ${
-                    isSuccess ? 'text-emerald-800 dark:text-emerald-400' : 'text-rose-800 dark:text-rose-400'
-                  }`}>
-                    {notification.title}
-                  </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-400/90 mt-0.5 leading-relaxed">
-                    {notification.message}
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setNotification(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 shrink-0 p-1 rounded-lg transition-colors cursor-pointer"
-              >
-                <Xmark width={16} height={16} />
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
+  
       {/* ========================================================
           HEADER SECTION (Adapted to your component context)
           ======================================================== */}
       <div className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8">
-        <h1 className="text-2xl font-black tracking-tight text-slate-800 dark:text-white">
-          Librarian <span className="text-[#856a26] dark:text-[#ffcd00]">Control</span> Center
-        </h1>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        <motion.h1
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }} className="text-2xl font-black tracking-tight text-slate-800 dark:text-white">
+          Librarian Control<span className="text-[#856a26] dark:text-[#ffcd00]"> Center</span>
+        </motion.h1>
+        <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }} className="text-xs text-slate-500 dark:text-slate-400 mt-1">
           Manage your collection with precision. Publish, unpublish, and curate digital inventory.
-        </p>
+        </motion.p>
       </div>
 
       {/* ========================================================
@@ -303,12 +312,18 @@ const Inventory = ({ books = [] }) => {
       <div className="relative w-full">
         {localBooks.length === 0 ? (
           <div className="text-center py-16 bg-slate-100/40 dark:bg-[#2c2f38]/10 border border-slate-200/80 dark:border-gray-800/60 rounded-3xl max-w-md mx-auto space-y-2">
-            <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
+            <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }} className="text-sm font-bold text-slate-500 dark:text-slate-400">
               No books registered in the system.
-            </p>
-            <p className="text-xs text-slate-400 dark:text-slate-500">
+            </motion.p>
+            <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }} className="text-xs text-slate-400 dark:text-slate-500">
               There are currently no items matching your catalog registry.
-            </p>
+            </motion.p>
           </div>
         ) : (
           <>

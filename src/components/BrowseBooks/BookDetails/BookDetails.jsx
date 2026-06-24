@@ -208,6 +208,7 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
             
             <PassingReview 
               bookId={currentBook._id}
+              bookName={currentBook.title}
               currentUser={user}
               isAuthenticated={isAuthenticated}
               deliveryInfo={deliveryInfo}

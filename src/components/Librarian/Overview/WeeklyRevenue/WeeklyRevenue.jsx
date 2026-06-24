@@ -50,7 +50,7 @@ const RevenueTrendLineChart = ({ deliveries = [] }) => {
 
   // 2. Map and aggregate completed delivery revenue per day
   deliveries.forEach(delivery => {
-    if (delivery.deliveryStatus === 'delivered' && delivery.createdAt) {
+    if (delivery.createdAt) {
       const dateKey = new Date(delivery.createdAt).toISOString().split('T')[0];
       const match = last7Days.find(day => day.dateKey === dateKey);
       if (match) {
@@ -71,7 +71,7 @@ const RevenueTrendLineChart = ({ deliveries = [] }) => {
       <div className="flex justify-between items-start mb-6">
         <div className="space-y-1">
           <h3 className="text-lg font-extrabold text-[#192230] dark:text-white">Weekly Revenue Trend</h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">Total delivery earnings generated over the last 7 days (delivered)</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Total delivery earnings generated over the last 7 days</p>
         </div>
         <div className="flex flex-col items-end">
           <span className="text-2xl font-black text-[#856a26] dark:text-[#ffcd00]">

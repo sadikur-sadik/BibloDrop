@@ -239,12 +239,17 @@ const ManageBooks = ({ books = [] }) => {
           HEADER SECTION 
           ======================================================== */}
       <div className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8">
-        <h1 className="text-2xl font-black tracking-tight text-slate-800 dark:text-white">
+        <motion.h1
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }} className="text-2xl font-black tracking-tight text-slate-800 dark:text-white">
           Manage All <span className="text-[#856a26] dark:text-[#ffcd00]">Books</span>
-        </h1>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+        </motion.h1>
+        <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }} className="text-xs text-slate-500 dark:text-slate-400 mt-1">
           Platform-wide catalog registry. Review global listings, modify visibility, or permanently delete books with administrative authority.
-        </p>
+        </motion.p>
       </div>
 
       {/* ========================================================
@@ -253,12 +258,18 @@ const ManageBooks = ({ books = [] }) => {
       <div className="relative w-full">
         {localBooks.length === 0 ? (
           <div className="text-center py-16 bg-slate-100/40 dark:bg-[#2c2f38]/10 border border-slate-200/80 dark:border-gray-800/60 rounded-3xl max-w-md mx-auto space-y-2">
-            <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
+            <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }} className="text-sm font-bold text-slate-500 dark:text-slate-400">
               No books registered in the global catalog.
-            </p>
-            <p className="text-xs text-slate-400 dark:text-slate-500">
+            </motion.p>
+            <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }} className="text-xs text-slate-400 dark:text-slate-500">
               There are currently no items matching the platform directory.
-            </p>
+            </motion.p>
           </div>
         ) : (
           <>

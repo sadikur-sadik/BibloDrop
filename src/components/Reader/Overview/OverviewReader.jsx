@@ -5,6 +5,7 @@ import ReaderStatsCards from './ReaderStats/ReaderStatsCard';
 import ReaderReviewChart from './ReviewChart/ReviewChart';
 import FulfillmentBarChart from './FulfillmentBar/FulfillmentBar';
 import WeeklySpendingTrend from './SpendingTrend/SpendingTrend';
+import { motion } from "motion/react";
 
 const OverviewReader = ({ reader = {}, deliveries = [], reviews = [] }) => {
   const readerEmail = reader?.email;
@@ -24,7 +25,6 @@ const OverviewReader = ({ reader = {}, deliveries = [], reviews = [] }) => {
   const totalBooksOwned = myDeliveries.filter(d => d.deliveryStatus === 'delivered').length;
   
   const totalSpent = myDeliveries
-    .filter(d => d.deliveryStatus === 'delivered')
     .reduce((sum, d) => sum + parseFloat(d.paid || 0), 0);
 
   const pendingDeliveriesCount = myDeliveries.filter(d => 
@@ -34,21 +34,35 @@ const OverviewReader = ({ reader = {}, deliveries = [], reviews = [] }) => {
   const totalReviewsCount = myReviews.length;
 
   return (
-    <div className="w-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-12 px-4 md:px-12 transition-colors duration-300 min-h-screen">
-      <div className="max-w-7xl mx-auto space-y-8">
-        
-        {/* Header/Banner */}
-        <div className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-black tracking-tight text-slate-800 dark:text-white">
-              Reader<span className="text-[#856a26] dark:text-[#ffcd00]">Dashboard</span>
-            </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Welcome back, <span className="font-bold text-[#856a26] dark:text-[#ffcd00]">{reader?.name || 'Reader'}</span>. Track your library logs and collection stats.
-            </p>
-          </div>
+    /* 
+      Updated parent wrapper: switched to bg-transparent and removed restrictive width constraints 
+      to align naturally with the main dashboard container.
+    */
+    <div className="relative w-full min-h-screen bg-transparent text-[#192230] dark:text-white transition-colors duration-300 space-y-6">
+      
+      {/* Header/Banner */}
+      <div className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <motion.h1
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }} 
+            className="text-2xl font-black tracking-tight text-slate-800 dark:text-white"
+          >
+            Reader<span className="text-[#856a26] dark:text-[#ffcd00]"> Dashboard</span>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }} 
+            className="text-xs text-slate-500 dark:text-slate-400 mt-1"
+          >
+            Welcome back, <span className="font-bold text-[#856a26] dark:text-[#ffcd00]">{reader?.name || 'Reader'}</span>. Track your library logs and collection stats.
+          </motion.p>
         </div>
+      </div>
 
+      <div className="w-full space-y-8">
+        
         {/* 1. Statistics Cards Block */}
         <ReaderStatsCards 
           totalBooksOwned={totalBooksOwned}
@@ -58,20 +72,20 @@ const OverviewReader = ({ reader = {}, deliveries = [], reviews = [] }) => {
         />
 
         {/* 2. Graphical Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
           
           {/* Middle Row Left: Star Reviews Distribution (4 cols) */}
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 w-full">
             <ReaderReviewChart reviews={myReviews} />
           </div>
 
           {/* Middle Row Right: Book Status Allocation (8 cols) */}
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-8 w-full">
             <FulfillmentBarChart deliveries={myDeliveries} />
           </div>
 
           {/* Bottom Row: 7-Day Spending Trend (12 cols) */}
-          <div className="lg:col-span-12">
+          <div className="lg:col-span-12 w-full">
             <WeeklySpendingTrend deliveries={myDeliveries} />
           </div>
 
