@@ -31,24 +31,24 @@ const Banner_3 = () => {
 
       {/* Text Content (Responsive centering layout applied here) */}
       <div className="md:col-span-7 z-10 flex flex-col items-center md:items-start text-center md:text-left space-y-5 order-2 md:order-1">
-        <motion.div 
-          variants={itemVariants} 
+        <motion.div
+          variants={itemVariants}
           className="inline-flex items-center gap-2 bg-[#856a26]/10 border border-[#856a26]/30 dark:bg-[#ffcd00]/10 dark:border-[#ffcd00]/30 px-3.5 py-1.5 rounded-full text-xs font-semibold text-[#856a26] dark:text-[#ffcd00] tracking-wider uppercase"
         >
           <span className="w-2 h-2 rounded-full bg-[#856a26] dark:bg-[#ffcd00] animate-pulse"></span>
           Safe & Trustworthy
         </motion.div>
 
-        <motion.h1 
-          variants={itemVariants} 
+        <motion.h1
+          variants={itemVariants}
           className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight"
         >
           Verified Reviews. <br />
           <span className="text-[#856a26] dark:text-[#ffcd00]">Secure Payments.</span>
         </motion.h1>
 
-        <motion.p 
-          variants={itemVariants} 
+        <motion.p
+          variants={itemVariants}
           className="text-[#3d474e] dark:text-[#9ea7b3] text-sm md:text-base max-w-lg mx-auto md:mx-0 leading-relaxed"
         >
           Pay delivery fees safely through integrated Stripe checkout channels. Our system ensures honest feedback by only allowing reviews from verified, completed book deliveries.
@@ -56,13 +56,13 @@ const Banner_3 = () => {
 
         {/* Buttons Centered on Mobile */}
         <motion.div variants={itemVariants} className="flex flex-wrap justify-center md:justify-start gap-4 pt-2 w-full">
-           <Link href="/books?page=1">
-            <button className="bg-[#192230] text-white hover:bg-[#2c2f38] dark:bg-[#ffcd00] dark:text-[#192230] dark:hover:bg-[#ffe066] px-8 py-3.5 rounded-full font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-gray-200 dark:shadow-[#ffcd00]/20 text-sm cursor-pointer">
+          <Link href="/books?page=1">
+            <button className="w-48 text-center bg-[#192230] text-white hover:bg-[#2c2f38] dark:bg-[#ffcd00] dark:text-[#192230] dark:hover:bg-[#ffe066] px-8 py-3.5 rounded-full font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-gray-200 dark:shadow-[#ffcd00]/20 text-sm cursor-pointer">
               Browse Books
             </button>
           </Link>
           <Link href="/signup">
-            <button className="bg-slate-200/60 border border-slate-300/80 dark:bg-[#3d474e]/40 dark:border-gray-700 dark:hover:bg-[#3d474e]/60 px-8 py-3.5 rounded-full font-semibold transition-all transform hover:-translate-y-0.5 text-sm cursor-pointer">
+            <button className="w-48 text-center bg-slate-200/60 border border-slate-300/80 dark:bg-[#3d474e]/40 dark:border-gray-700 dark:hover:bg-[#3d474e]/60 px-8 py-3.5 rounded-full font-semibold transition-all transform hover:-translate-y-0.5 text-sm cursor-pointer">
               Get Started
             </button>
           </Link>
@@ -70,32 +70,32 @@ const Banner_3 = () => {
       </div>
 
       {/* Premium SVG Illustration (Right 5 Columns) */}
-      <motion.div 
-        variants={itemVariants} 
+      <motion.div
+        variants={itemVariants}
         className="md:col-span-5 flex justify-center items-center h-full min-h-62.5 relative order-1 md:order-2"
       >
         <svg viewBox="0 0 400 400" className="w-full max-w-70 md:max-w-[320px] h-auto drop-shadow-2xl">
           <circle cx="200" cy="200" r="160" className="fill-slate-200/60 dark:fill-[#2c2f38] stroke-slate-300/80 dark:stroke-[#3d474e]" opacity="0.6" strokeWidth="2" />
-          
+
           <g transform="translate(110, 100)">
-            <motion.path 
+            <motion.path
               animate={{ scale: [1, 1.03, 1] }}
               transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-              d="M90,30 L160,50 L160,110 C160,160 120,200 90,210 C60,200 20,160 20,110 L20,50 Z" 
-              className="fill-slate-100 dark:fill-[#192230] stroke-slate-300 dark:stroke-[#3d474e]" 
-              strokeWidth="3" 
+              d="M90,30 L160,50 L160,110 C160,160 120,200 90,210 C60,200 20,160 20,110 L20,50 Z"
+              className="fill-slate-100 dark:fill-[#192230] stroke-slate-300 dark:stroke-[#3d474e]"
+              strokeWidth="3"
             />
             <path d="M90,42 L145,58 L145,110 C145,148 115,180 90,192 C65,180 35,148 35,110 L35,58 Z" className="fill-slate-200 dark:fill-[#2c2f38]" opacity="0.5" />
           </g>
 
           <g transform="translate(230, 210)">
-            <motion.circle 
+            <motion.circle
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 15, ease: 'linear' }}
-              cx="40" cy="40" r="35" fill="none" className="stroke-[#856a26] dark:stroke-[#ffcd00]" strokeWidth="2" strokeDasharray="6 4" 
+              cx="40" cy="40" r="35" fill="none" className="stroke-[#856a26] dark:stroke-[#ffcd00]" strokeWidth="2" strokeDasharray="6 4"
             />
             <circle cx="40" cy="40" r="30" className="fill-[#856a26] dark:fill-[#ffcd00]" />
-            
+
             <rect x="25" y="28" width="30" height="20" rx="3" className="fill-slate-100 dark:fill-[#192230]" />
             <rect x="30" y="33" width="7" height="10" rx="1" className="fill-[#856a26] dark:fill-[#ffcd00]" />
             <circle cx="47" cy="38" r="4" className="fill-[#3d474e] dark:fill-[#3d474e]" />

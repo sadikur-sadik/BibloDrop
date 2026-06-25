@@ -16,7 +16,7 @@ export async function POST(req) {
     const userId = user?._id || user?.id || '';
     const userName = user?.name || '';
     
-    const bookId = data.bookId;
+    const bookId = data?.bookId;
     const book = await getSingleBook(bookId);
 
     if (!book) {
@@ -30,9 +30,10 @@ export async function POST(req) {
     // Note: Stripe metadata keys must be strings, with values up to 500 characters
     const checkoutMetadata = {
       bookId: bookId || '',
-      bookTitle: book.title || '',
-      bookAuthor: book.author || '',
-      librarianId: book.librarianId || '',
+      bookTitle: book?.title || '',
+      bookAuthor: book?.author || '',
+      librarianId: book?.librarianId || '',
+      librarianEmail:book?.librarianEmail || "",
       userId: userId || '',
       userEmail: userEmail || '',
       userName: userName || '',
@@ -49,9 +50,9 @@ export async function POST(req) {
             currency: 'usd', 
             unit_amount: Math.round(book.deliveryFee * 100), 
             product_data: {
-              name: book.title || 'Book Delivery Request',
-              description: book.description || undefined,
-              images: book.coverImage ? [book.coverImage] : undefined,
+              name: book?.title || 'Book Delivery Request',
+              description: book?.description || undefined,
+              images: book?.coverImage ? [book?.coverImage] : undefined,
             },
           },
           quantity: 1,

@@ -49,3 +49,6 @@ This is my first industry level project, where I handled both backend and fronte
 - CORS
 - DOTENV
 - JWT authorization
+
+## Live Link:
+https://biblo-drop.vercel.app

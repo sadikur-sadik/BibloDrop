@@ -31,24 +31,24 @@ const Banner_2 = () => {
 
       {/* Text Content (Responsive centering layout applied here) */}
       <div className="md:col-span-7 z-10 flex flex-col items-center md:items-start text-center md:text-left space-y-5 order-2 md:order-1">
-        <motion.div 
-          variants={itemVariants} 
+        <motion.div
+          variants={itemVariants}
           className="inline-flex items-center gap-2 bg-[#856a26]/10 border border-[#856a26]/30 dark:bg-[#ffcd00]/10 dark:border-[#ffcd00]/30 px-3.5 py-1.5 rounded-full text-xs font-semibold text-[#856a26] dark:text-[#ffcd00] tracking-wider uppercase"
         >
           <span className="w-2 h-2 rounded-full bg-[#856a26] dark:bg-[#ffcd00] animate-pulse"></span>
           Librarians & Providers
         </motion.div>
 
-        <motion.h1 
-          variants={itemVariants} 
+        <motion.h1
+          variants={itemVariants}
           className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight"
         >
           Share Your Shelf. <br />
           <span className="text-[#856a26] dark:text-[#ffcd00]">Manage Deliveries.</span>
         </motion.h1>
 
-        <motion.p 
-          variants={itemVariants} 
+        <motion.p
+          variants={itemVariants}
           className="text-[#3d474e] dark:text-[#9ea7b3] text-sm md:text-base max-w-lg mx-auto md:mx-0 leading-relaxed"
         >
           List your catalog, manage pending requests, and dispatch books with ease. Expand your local community presence through a secure, cloud-hosted delivery dashboard.
@@ -56,13 +56,14 @@ const Banner_2 = () => {
 
         {/* Buttons Centered on Mobile */}
         <motion.div variants={itemVariants} className="flex flex-wrap justify-center md:justify-start gap-4 pt-2 w-full">
-           <Link href="/books?page=1">
-            <button className="bg-[#192230] text-white hover:bg-[#2c2f38] dark:bg-[#ffcd00] dark:text-[#192230] dark:hover:bg-[#ffe066] px-8 py-3.5 rounded-full font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-gray-200 dark:shadow-[#ffcd00]/20 text-sm cursor-pointer">
+          <Link href="/books?page=1" className="w-48">
+            <button className="w-full bg-[#192230] text-white hover:bg-[#2c2f38] dark:bg-[#ffcd00] dark:text-[#192230] dark:hover:bg-[#ffe066] px-8 py-3.5 rounded-full font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-gray-200 dark:shadow-[#ffcd00]/20 text-sm cursor-pointer text-center">
               Browse Books
             </button>
           </Link>
-          <Link href="/signup">
-            <button className="bg-slate-200/60 border border-slate-300/80 dark:bg-[#3d474e]/40 dark:border-gray-700 dark:hover:bg-[#3d474e]/60 px-8 py-3.5 rounded-full font-semibold transition-all transform hover:-translate-y-0.5 text-sm cursor-pointer">
+
+          <Link href="/signup" className="w-48">
+            <button className="w-full bg-slate-200/60 border border-slate-300/80 dark:bg-[#3d474e]/40 dark:border-gray-700 dark:hover:bg-[#3d474e]/60 px-8 py-3.5 rounded-full font-semibold transition-all transform hover:-translate-y-0.5 text-sm cursor-pointer text-center">
               Get Started
             </button>
           </Link>
@@ -70,19 +71,19 @@ const Banner_2 = () => {
       </div>
 
       {/* Premium SVG Illustration (Right 5 Columns) */}
-      <motion.div 
-        variants={itemVariants} 
+      <motion.div
+        variants={itemVariants}
         className="md:col-span-5 flex justify-center items-center h-full min-h-62.5 relative order-1 md:order-2"
       >
         <svg viewBox="0 0 400 400" className="w-full max-w-70 md:max-w-[320px] h-auto drop-shadow-2xl">
           <circle cx="200" cy="200" r="160" className="fill-slate-200/60 dark:fill-[#192230] stroke-slate-300/80 dark:stroke-[#3d474e]" opacity="0.6" strokeWidth="2" />
-          
+
           <rect x="80" y="280" width="240" height="12" rx="4" className="fill-slate-300 dark:fill-[#3d474e]" />
-          
+
           <g transform="translate(100, 150)">
             <rect x="10" y="40" width="30" height="90" rx="3" className="fill-slate-200 dark:fill-[#3d474e] stroke-[#192230] dark:stroke-[#192230]" strokeWidth="2" />
             <rect x="15" y="50" width="20" height="10" rx="1" className="fill-[#856a26] dark:fill-[#ffcd00]" opacity="0.8" />
-            
+
             <g transform="rotate(12, 50, 130)">
               <rect x="50" y="40" width="32" height="90" rx="3" className="fill-slate-100 dark:fill-[#192230] stroke-slate-300 dark:stroke-[#3d474e]" strokeWidth="2" />
               <line x1="55" y1="60" x2="77" y2="60" className="stroke-[#856a26] dark:stroke-[#ffcd00]" strokeWidth="2" />

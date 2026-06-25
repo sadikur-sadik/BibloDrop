@@ -72,7 +72,7 @@ const AdminApprovals = ({ books = [] }) => {
       console.error("Failed to update status:", error);
       setLocalBooks(previousBooks); // Revert on failure
 
-      toast.error(`Could not update approval status for "${book.title}".`, {
+      toast.error(`Could not update approval status for "${book?.title}".`, {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -90,13 +90,13 @@ const AdminApprovals = ({ books = [] }) => {
     const previousBooks = [...localBooks];
 
     // Optimistically remove book from state
-    setLocalBooks((prevBooks) => prevBooks.filter((b) => b._id !== book._id));
+    setLocalBooks((prevBooks) => prevBooks.filter((b) => b?._id !== book?._id));
 
     try {
       const res = await deleteBookByAdmin(book._id);
 
       if (res?.deletedCount > 0) {
-        toast.success(`"${book.title}" has been rejected and deleted from the queue.`, {
+        toast.success(`"${book?.title}" has been rejected and deleted from the queue.`, {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -108,7 +108,7 @@ const AdminApprovals = ({ books = [] }) => {
           transition: Bounce,
         });
       } else {
-        toast.error(`Failed to delete "${book.title}".`, {
+        toast.error(`Failed to delete "${book?.title}".`, {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -240,11 +240,11 @@ const AdminApprovals = ({ books = [] }) => {
                       <motion.div
                         layout
                         variants={itemVariants}
-                        key={book._id}
+                        key={book?._id}
                         className="p-5 rounded-2xl border border-slate-200/80 dark:border-gray-800/80 bg-white/40 dark:bg-[#2c2f38]/20 backdrop-blur-md space-y-4"
                       >
                         <div className="flex items-center gap-4">
-                          {book.coverImage && (
+                          {book?.coverImage && (
                             <Image
                               src={book?.coverImage}
                               alt={book?.title}
@@ -255,8 +255,8 @@ const AdminApprovals = ({ books = [] }) => {
                             />
                           )}
                           <div>
-                            <h4 className="font-extrabold text-sm leading-tight">{book.title}</h4>
-                            <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] mt-0.5">{book.author}</p>
+                            <h4 className="font-extrabold text-sm leading-tight">{book?.title}</h4>
+                            <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] mt-0.5">{book?.author}</p>
                             <span className="inline-block px-2 py-0.5 mt-2 rounded text-[10px] uppercase font-bold tracking-wider bg-slate-200/60 dark:bg-[#3d474e]/50 text-slate-600 dark:text-slate-300">
                               {book.genre}
                             </span>

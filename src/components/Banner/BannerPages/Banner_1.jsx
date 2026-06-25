@@ -55,18 +55,22 @@ const Banner_1 = () => {
         </motion.p>
 
         {/* Buttons Centered on Mobile */}
-        <motion.div variants={itemVariants} className="flex flex-wrap justify-center md:justify-start gap-4 pt-2 w-full">
-       <Link href="/books?page=1">
-            <button className="bg-[#192230] text-white hover:bg-[#2c2f38] dark:bg-[#ffcd00] dark:text-[#192230] dark:hover:bg-[#ffe066] px-8 py-3.5 rounded-full font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-gray-200 dark:shadow-[#ffcd00]/20 text-sm cursor-pointer">
-              Browse Books
-            </button>
-          </Link>
-          <Link href="/signup">
-            <button className="bg-slate-200/60 border border-slate-300/80 dark:bg-[#3d474e]/40 dark:border-gray-700 dark:hover:bg-[#3d474e]/60 px-8 py-3.5 rounded-full font-semibold transition-all transform hover:-translate-y-0.5 text-sm cursor-pointer">
-              Get Started
-            </button>
-          </Link>
-        </motion.div>
+    <motion.div 
+  variants={itemVariants} 
+  className="flex flex-col sm:flex-row justify-center md:justify-start items-center md:items-start gap-4 pt-2 w-full"
+>
+  <Link href="/books?page=1" className="w-full sm:w-48">
+    <button className="w-full bg-[#192230] text-white hover:bg-[#2c2f38] dark:bg-[#ffcd00] dark:text-[#192230] dark:hover:bg-[#ffe066] px-8 py-3.5 rounded-full font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-gray-200 dark:shadow-[#ffcd00]/20 text-sm cursor-pointer text-center">
+      Browse Books
+    </button>
+  </Link>
+  
+  <Link href="/signup" className="w-full sm:w-48">
+    <button className="w-full bg-slate-200/60 border border-slate-300/80 dark:bg-[#3d474e]/40 dark:border-gray-700 dark:hover:bg-[#3d474e]/60 px-8 py-3.5 rounded-full font-semibold transition-all transform hover:-translate-y-0.5 text-sm cursor-pointer text-center">
+      Get Started
+    </button>
+  </Link>
+</motion.div>
       </div>
 
       {/* Premium SVG Illustration (Right 5 Columns) */}
