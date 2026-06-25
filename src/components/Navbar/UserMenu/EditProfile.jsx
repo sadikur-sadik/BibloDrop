@@ -140,7 +140,6 @@ const EditProfileModal = ({ isOpen, onClose, user }) => {
                 </button>
               </div>
             </form>
-        
           </motion.div>
         </div>
       )}
