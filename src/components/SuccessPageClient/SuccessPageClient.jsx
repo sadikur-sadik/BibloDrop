@@ -3,8 +3,16 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
+import { authClient } from '@/lib/auth-client';
 
 export default function SuccessPageClient({ customerEmail }) {
+  const { 
+        data: session, 
+        isPending, 
+        error, 
+        refetch 
+    } = authClient.useSession()
+    const role = session?.user?.role
   const containerVariants = {
     hidden: { opacity: 0, y: 15 },
     visible: {
@@ -74,7 +82,7 @@ export default function SuccessPageClient({ customerEmail }) {
                 Browse More Books
               </button>
             </Link>
-            <Link href="/Dashboard">
+            <Link href={`dashboard/${role == "reader" ? "reader/overview": role == "admin" ? "admin/overview" : "librarian/overview"}`}>
               <button className="bg-slate-200/60 border border-slate-300/80 dark:bg-[#3d474e]/40 dark:border-gray-700 dark:hover:bg-[#3d474e]/60 text-[#192230] dark:text-white px-8 py-3.5 rounded-full font-semibold transition-all transform hover:-translate-y-0.5 text-sm cursor-pointer">
                 View Dashboard
               </button>

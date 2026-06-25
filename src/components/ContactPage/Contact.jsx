@@ -2,21 +2,21 @@
 
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { 
-  Button, 
-  FieldError, 
-  Form, 
-  Input, 
-  Label, 
-  TextField, 
+import {
+  Button,
+  FieldError,
+  Form,
+  Input,
+  Label,
+  TextField,
   Card,
 } from '@heroui/react';
-import { 
-  Envelope, 
-  MapPin, 
-  Comment, 
-  PaperPlane, 
-  CircleCheck 
+import {
+  Envelope,
+  MapPin,
+  Comment,
+  PaperPlane,
+  CircleCheck
 } from '@gravity-ui/icons';
 
 const Contact = () => {
@@ -26,7 +26,7 @@ const Contact = () => {
     subject: '',
     message: '',
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -36,20 +36,20 @@ const Contact = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { 
-        duration: 0.6, 
+      transition: {
+        duration: 0.6,
         ease: [0.16, 1, 0.3, 1],
-        staggerChildren: 0.12 
+        staggerChildren: 0.12
       },
     },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { duration: 0.5, ease: 'easeOut' } 
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' }
     },
   };
 
@@ -67,7 +67,7 @@ const Contact = () => {
     const emailBody = encodeURIComponent(
       `Hello,\n\n${formData.message}\n\nSincerely,\n${formData.name}\nDirect Email: ${formData.email}`
     );
-    
+
     const mailtoUrl = `mailto:${recipient}?subject=${emailSubject}&body=${emailBody}`;
 
     setTimeout(() => {
@@ -93,13 +93,13 @@ const Contact = () => {
       >
         {/* Header Section - Matched to BrowseBooks formatting and animated via itemVariants */}
         <div className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8">
-          <motion.h1 
+          <motion.h1
             variants={itemVariants}
             className="text-2xl font-black tracking-tight text-slate-800 dark:text-white"
           >
-            Connect <span className="text-[#856a26] dark:text-[#ffcd00]">With</span> Us
+            Connect <span className="text-[#856a26] dark:text-[#ffcd00]">With Us</span>
           </motion.h1>
-          <motion.p 
+          <motion.p
             variants={itemVariants}
             className="text-xs text-slate-500 dark:text-slate-400 mt-1"
           >
@@ -109,7 +109,7 @@ const Contact = () => {
 
         {/* Two-Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Column 1: Contact Form Container */}
           <motion.div variants={itemVariants} className="lg:col-span-7">
             <Card className="bg-white dark:bg-[#2c2f38] border border-slate-200/80 dark:border-gray-800 shadow-md rounded-[2rem] overflow-hidden">
@@ -135,14 +135,14 @@ const Contact = () => {
                 ) : (
                   <Form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      
+
                       {/* Full Name */}
                       <TextField isRequired name="name" type="text" className="flex flex-col gap-1.5">
                         <Label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                           Full Name
                         </Label>
-                        <Input 
-                          placeholder="John Doe" 
+                        <Input
+                          placeholder="John Doe"
                           value={formData.name}
                           onChange={handleInputChange}
                           className="w-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white rounded-2xl border border-slate-200/80 dark:border-gray-800/80 p-4 text-sm focus:outline-none focus:border-[#856a26] dark:focus:border-[#ffcd00] transition-colors"
@@ -155,15 +155,15 @@ const Contact = () => {
                         <Label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                           Email Address
                         </Label>
-                        <Input 
-                          placeholder="john@example.com" 
+                        <Input
+                          placeholder="john@example.com"
                           value={formData.email}
                           onChange={handleInputChange}
                           className="w-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white rounded-2xl border border-slate-200/80 dark:border-gray-800/80 p-4 text-sm focus:outline-none focus:border-[#856a26] dark:focus:border-[#ffcd00] transition-colors"
                         />
                         <FieldError className="text-xs text-rose-500 mt-1" />
                       </TextField>
-                      
+
                     </div>
 
                     {/* Subject */}
@@ -171,8 +171,8 @@ const Contact = () => {
                       <Label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                         Subject
                       </Label>
-                      <Input 
-                        placeholder="Inquiry about library hosting..." 
+                      <Input
+                        placeholder="Inquiry about library hosting..."
                         value={formData.subject}
                         onChange={handleInputChange}
                         className="w-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white rounded-2xl border border-slate-200/80 dark:border-gray-800/80 p-4 text-sm focus:outline-none focus:border-[#856a26] dark:focus:border-[#ffcd00] transition-colors"
@@ -219,9 +219,9 @@ const Contact = () => {
 
           {/* Column 2: Direct Contact Cards */}
           <div className="lg:col-span-5 space-y-6">
-            
+
             {/* Direct Email Card */}
-            <motion.div 
+            <motion.div
               variants={itemVariants}
               className="bg-white dark:bg-[#2c2f38] border border-slate-200/80 dark:border-gray-800 rounded-3xl p-6 shadow-sm flex items-start gap-4 hover:border-[#856a26]/30 dark:hover:border-[#ffcd00]/30 transition-all duration-300"
             >
@@ -232,8 +232,8 @@ const Contact = () => {
                 <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
                   Direct Mailbox
                 </span>
-                <a 
-                  href="mailto:sadikursadik541@gmail.com" 
+                <a
+                  href="mailto:sadikursadik541@gmail.com"
                   className="text-sm font-bold text-[#192230] dark:text-white hover:text-[#856a26] dark:hover:text-[#ffcd00] transition-colors"
                 >
                   sadikursadik541@gmail.com
@@ -245,7 +245,7 @@ const Contact = () => {
             </motion.div>
 
             {/* Support Channels Card */}
-            <motion.div 
+            <motion.div
               variants={itemVariants}
               className="bg-white dark:bg-[#2c2f38] border border-slate-200/80 dark:border-gray-800 rounded-3xl p-6 shadow-sm flex items-start gap-4 hover:border-[#856a26]/30 dark:hover:border-[#ffcd00]/30 transition-all duration-300"
             >
@@ -266,7 +266,7 @@ const Contact = () => {
             </motion.div>
 
             {/* Logistics Card */}
-            <motion.div 
+            <motion.div
               variants={itemVariants}
               className="bg-white dark:bg-[#2c2f38] border border-slate-200/80 dark:border-gray-800 rounded-3xl p-6 shadow-sm flex items-start gap-4 hover:border-[#856a26]/30 dark:hover:border-[#ffcd00]/30 transition-all duration-300"
             >

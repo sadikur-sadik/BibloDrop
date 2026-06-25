@@ -116,6 +116,8 @@ const EditBooks = ({ book, onEdit }) => {
     // Assemble completed update data payload
     const updatedData = {
       ...formDataObj,
+      quantity: formDataObj?.quantity ? Number(formDataObj.quantity) : 0,
+      deliveryFee: formDataObj?.deliveryFee ? Number(formDataObj.deliveryFee) : 0,
       genre, // Selected genre key
       coverImage: coverUrl, // Processed ImgBB url
     };
@@ -146,7 +148,7 @@ const EditBooks = ({ book, onEdit }) => {
       {/* HeroUI Controlled Overlay Modal */}
       <Modal.Backdrop isOpen={isOpen} onOpenChange={setIsOpen} className="bg-black/60 backdrop-blur-xs transition-all">
         <Modal.Container placement="center" className="p-4 flex items-center justify-center">
-          <Modal.Dialog className="relative w-full max-w-2xl bg-white dark:bg-[#192230] text-[#192230] dark:text-white rounded-3xl border border-slate-200/80 dark:border-gray-800/80 shadow-2xl overflow-hidden p-6 md:p-8 outline-hidden transition-colors duration-300">
+          <Modal.Dialog className="relative w-full max-w-3xl bg-white dark:bg-[#192230] text-[#192230] dark:text-white rounded-3xl border border-slate-200/80 dark:border-gray-800/80 shadow-2xl overflow-hidden p-6 md:p-8 outline-hidden transition-colors duration-300">
             {({ close }) => (
               <>
                 <Modal.CloseTrigger
@@ -167,7 +169,7 @@ const EditBooks = ({ book, onEdit }) => {
                   onSubmit={handleFormSubmit}
                   className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6"
                 >
-                  {/* Left Column: Input Forms */}
+                  {/* Left Column: Title, Author, Description */}
                   <div className="space-y-4">
                     <TextField isRequired name="title" type="text" defaultValue={book?.title} className="flex flex-col gap-1">
                       <Label className="text-xs font-bold text-slate-700 dark:text-slate-300">Book Title</Label>
@@ -181,8 +183,107 @@ const EditBooks = ({ book, onEdit }) => {
                       <FieldError className="text-xs text-rose-500 mt-1" />
                     </TextField>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      {/* Selected value linked dynamically through state */}
+                    <TextField isRequired name="description" defaultValue={book?.description} className="flex flex-col gap-1">
+                      <Label className="text-xs font-bold text-slate-700 dark:text-slate-300">Description</Label>
+                      <TextArea placeholder="Provide a summary of the book plot..." rows={6} className="rounded-xl" />
+                      <FieldError className="text-xs text-rose-500 mt-1" />
+                    </TextField>
+                  </div>
+
+                  {/* Right Column: Book Cover & Form Config Fields & Actions */}
+                  <div className="flex flex-col gap-4 justify-between">
+                    <div className="space-y-4">
+                      <div>
+                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">
+                          Book Cover Image
+                        </span>
+
+                        {!coverUrl ? (
+                          <label className="group flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-[#12141c]/40 border-2 border-dashed border-slate-300 dark:border-slate-800 rounded-2xl cursor-pointer hover:border-amber-600 dark:hover:border-[#ffcd00] hover:bg-slate-100/50 dark:hover:bg-[#12141c]/80 transition-all duration-200">
+                            <div className="p-2.5 bg-white dark:bg-[#192230] rounded-xl shadow-xs text-slate-400 group-hover:text-amber-600 dark:group-hover:text-[#ffcd00] transition-colors">
+                              <ArrowUp width={20} height={20} />
+                            </div>
+                            <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-2">
+                              Upload New Cover
+                            </span>
+                            <span className="text-[10px] text-slate-400 mt-0.5">
+                              PNG, JPG, or JPEG up to 10MB
+                            </span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={handleImageUpload}
+                              disabled={isUploading}
+                            />
+                          </label>
+                        ) : (
+                          <div className="relative border border-slate-200 dark:border-slate-800 p-3 rounded-2xl flex items-center gap-3 bg-slate-50 dark:bg-[#12141c]/20">
+                            <img
+                              src={coverUrl}
+                              alt="Book Cover Preview"
+                              className="h-20 w-14 object-cover rounded-lg shadow-sm border dark:border-slate-800"
+                            />
+                            <div className="flex flex-col min-w-0 flex-1">
+                              <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">
+                                Cover image loaded
+                              </span>
+                              <a
+                                href={coverUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-[10px] text-amber-700 dark:text-[#ffcd00] hover:underline mt-0.5 truncate"
+                              >
+                                View Full Image
+                              </a>
+                            </div>
+                            <Button
+                              isIconOnly
+                              type="button"
+                              variant="light"
+                              onClick={resetCoverImage}
+                              className="text-slate-400 hover:text-rose-500 rounded-full cursor-pointer"
+                            >
+                              <Xmark width={16} height={16} />
+                            </Button>
+                          </div>
+                        )}
+
+                        {/* File Upload Loading Bar */}
+                        <AnimatePresence>
+                          {isUploading && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              className="overflow-hidden mt-3"
+                            >
+                              <div className="flex justify-between items-center text-[10px] text-slate-500 mb-1 font-semibold">
+                                <span>Converting and uploading via ImgBB...</span>
+                                <span>{uploadProgress}%</span>
+                              </div>
+                              <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border dark:border-slate-800">
+                                <motion.div
+                                  className="h-full bg-[#856a26] dark:bg-[#ffcd00] rounded-full"
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${uploadProgress}%` }}
+                                  transition={{ ease: "easeOut" }}
+                                />
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+
+                        {/* File Upload Errors */}
+                        {uploadError && (
+                          <p className="text-[11px] font-semibold text-rose-500 mt-2 flex items-center gap-1">
+                            <TriangleExclamation width={12} height={12} />
+                            {uploadError}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Genre Selector */}
                       <Select
                         isRequired
                         name="genre"
@@ -192,8 +293,8 @@ const EditBooks = ({ book, onEdit }) => {
                         className="flex flex-col gap-1"
                       >
                         <Label className="text-xs font-bold text-slate-700 dark:text-slate-300">Genre</Label>
-                        <Select.Trigger className="h-10 px-3 w-full rounded-xl border border-slate-200 dark:border-gray-800/80 bg-white dark:bg-[#12141c]/20 text-sm text-slate-800 dark:text-slate-200 flex items-center justify-between focus-within:border-[#856a26] dark:focus-within:border-[#ffcd00] transition-colors cursor-pointer">
-                          <Select.Value className="text-slate-800 dark:text-slate-200" />
+                        <Select.Trigger className="h-10 px-3 w-full rounded-xl border border-slate-200 dark:border-gray-800/80 bg-white dark:bg-[#12141c]/20 text-xs text-slate-800 dark:text-slate-200 flex items-center justify-between focus-within:border-[#856a26] dark:focus-within:border-[#ffcd00] transition-colors cursor-pointer">
+                          <Select.Value className="text-slate-800 dark:text-slate-200 truncate" />
                           <Select.Indicator className="text-slate-400" />
                         </Select.Trigger>
                         <Select.Popover className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#192230] rounded-xl shadow-xl mt-1 max-h-48 overflow-y-auto z-50">
@@ -214,122 +315,45 @@ const EditBooks = ({ book, onEdit }) => {
                         <FieldError className="text-xs text-rose-500 mt-1" />
                       </Select>
 
-                      <TextField
-                        isRequired
-                        name="quantity"
-                        type="number"
-                        defaultValue={book?.quantity?.toString() || "1"}
-                        className="flex flex-col gap-1"
-                        validate={(value) => {
-                          if (parseInt(value, 10) < 1) {
-                            return "Quantity must be at least 1";
-                          }
-                          return null;
-                        }}
-                      >
-                        <Label className="text-xs font-bold text-slate-700 dark:text-slate-300">Quantity</Label>
-                        <Input min="1" className="rounded-xl" />
-                        <FieldError className="text-xs text-rose-500 mt-1" />
-                      </TextField>
-                    </div>
+                      {/* Quantity & Delivery Fee */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <TextField
+                          isRequired
+                          name="quantity"
+                          type="number"
+                          defaultValue={book?.quantity?.toString() || "1"}
+                          className="flex flex-col gap-1"
+                          validate={(value) => {
+                            if (parseInt(value, 10) < 1) {
+                              return "At least 1";
+                            }
+                            return null;
+                          }}
+                        >
+                          <Label className="text-xs font-bold text-slate-700 dark:text-slate-300">Quantity</Label>
+                          <Input min="1" placeholder="1" className="rounded-xl" />
+                          <FieldError className="text-xs text-rose-500 mt-1" />
+                        </TextField>
 
-                    <TextField isRequired name="description" defaultValue={book?.description} className="flex flex-col gap-1">
-                      <Label className="text-xs font-bold text-slate-700 dark:text-slate-300">Description</Label>
-                      <TextArea placeholder="Provide a summary of the book plot..." rows={3} className="rounded-xl" />
-                      <FieldError className="text-xs text-rose-500 mt-1" />
-                    </TextField>
-                  </div>
-
-                  {/* Right Column: Book Cover & Form Actions */}
-                  <div className="flex flex-col gap-4 justify-between">
-                    <div>
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">
-                        Book Cover Image
-                      </span>
-
-                      {!coverUrl ? (
-                        <label className="group flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-[#12141c]/40 border-2 border-dashed border-slate-300 dark:border-slate-800 rounded-2xl cursor-pointer hover:border-amber-600 dark:hover:border-[#ffcd00] hover:bg-slate-100/50 dark:hover:bg-[#12141c]/80 transition-all duration-200">
-                          <div className="p-2.5 bg-white dark:bg-[#192230] rounded-xl shadow-xs text-slate-400 group-hover:text-amber-600 dark:group-hover:text-[#ffcd00] transition-colors">
-                            <ArrowUp width={20} height={20} />
-                          </div>
-                          <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-2">
-                            Upload New Cover
-                          </span>
-                          <span className="text-[10px] text-slate-400 mt-0.5">
-                            PNG, JPG, or JPEG up to 10MB
-                          </span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={handleImageUpload}
-                            disabled={isUploading}
-                          />
-                        </label>
-                      ) : (
-                        <div className="relative border border-slate-200 dark:border-slate-800 p-3 rounded-2xl flex items-center gap-3 bg-slate-50 dark:bg-[#12141c]/20">
-                          <img
-                            src={coverUrl}
-                            alt="Book Cover Preview"
-                            className="h-20 w-14 object-cover rounded-lg shadow-sm border dark:border-slate-800"
-                          />
-                          <div className="flex flex-col min-w-0 flex-1">
-                            <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">
-                              Cover image loaded
-                            </span>
-                            <a
-                              href={coverUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-[10px] text-amber-700 dark:text-[#ffcd00] hover:underline mt-0.5 truncate"
-                            >
-                              View Full Image
-                            </a>
-                          </div>
-                          <Button
-                            isIconOnly
-                            type="button"
-                            variant="light"
-                            onClick={resetCoverImage}
-                            className="text-slate-400 hover:text-rose-500 rounded-full cursor-pointer"
-                          >
-                            <Xmark width={16} height={16} />
-                          </Button>
-                        </div>
-                      )}
-
-                      {/* File Upload Loading Bar */}
-                      <AnimatePresence>
-                        {isUploading && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="overflow-hidden mt-3"
-                          >
-                            <div className="flex justify-between items-center text-[10px] text-slate-500 mb-1 font-semibold">
-                              <span>Converting and uploading via ImgBB...</span>
-                              <span>{uploadProgress}%</span>
-                            </div>
-                            <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border dark:border-slate-800">
-                              <motion.div
-                                className="h-full bg-[#856a26] dark:bg-[#ffcd00] rounded-full"
-                                initial={{ width: 0 }}
-                                animate={{ width: `${uploadProgress}%` }}
-                                transition={{ ease: "easeOut" }}
-                              />
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-
-                      {/* File Upload Errors */}
-                      {uploadError && (
-                        <p className="text-[11px] font-semibold text-rose-500 mt-2 flex items-center gap-1">
-                          <TriangleExclamation width={12} height={12} />
-                          {uploadError}
-                        </p>
-                      )}
+                        <TextField
+                          isRequired
+                          name="deliveryFee"
+                          type="number"
+                          defaultValue={book?.deliveryFee?.toString() || "0"}
+                          className="flex flex-col gap-1"
+                          validate={(value) => {
+                            const fee = parseFloat(value);
+                            if (isNaN(fee) || fee < 0) {
+                              return "Cannot be negative";
+                            }
+                            return null;
+                          }}
+                        >
+                          <Label className="text-xs font-bold text-slate-700 dark:text-slate-300">Delivery Fee ($)</Label>
+                          <Input min="0" step="0.01" placeholder="0.00" className="rounded-xl" />
+                          <FieldError className="text-xs text-rose-500 mt-1" />
+                        </TextField>
+                      </div>
                     </div>
 
                     {/* Modal Footer Controls */}

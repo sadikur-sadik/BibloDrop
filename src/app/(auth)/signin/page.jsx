@@ -56,12 +56,12 @@ const SignIn = () => {
             theme: "colored",
             transition: Bounce,
           });
-          
+
           // Role-based routing
           const userRole = ctx.data?.user?.role || 'reader';
-          
+
           if (userRole === 'librarian') {
-            router.push('/dashboard/librarian/overview'); 
+            router.push('/dashboard/librarian/overview');
           } else if (userRole === 'admin') {
             router.push('/dashboard/admin/overview');
           } else {
@@ -106,12 +106,52 @@ const SignIn = () => {
   // Google Sign-in Trigger
   const handleGoogleSignIn = async () => {
     setErrorMsg("");
+    setIsSubmitting(true);
+
     try {
       await authClient.signIn.social({
         provider: 'google',
-        callbackURL: "/", 
+        callbackURL: "/dashboard/reader/overview",
+      }, {
+        onRequest: () => {
+          setIsSubmitting(true);
+        },
+        onSuccess: () => {
+          setIsSubmitting(false);
+
+          toast.success("Welcome back! Signed in successfully.", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+
+          router.push('/dashboard/reader/overview');
+        },
+        onError: (ctx) => {
+          setIsSubmitting(false);
+          const msg = ctx.error.message || "Failed to initiate Google authentication.";
+          setErrorMsg(msg);
+          toast.error(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+        }
       });
     } catch (err) {
+      setIsSubmitting(false);
       const errMsg = "Failed to initiate Google authentication.";
       setErrorMsg(errMsg);
       toast.error(errMsg, {
@@ -245,8 +285,8 @@ const SignIn = () => {
                 <span className="text-[11px] text-[#3d474e] dark:text-gray-400 font-light">Remember me</span>
               </label>
 
-              <Link 
-                href="/forgot-password" 
+              <Link
+                href="/forgot-password"
                 className="text-[11px] font-semibold text-[#856a26] dark:text-[#ffcd00] hover:underline"
               >
                 Forgot password?

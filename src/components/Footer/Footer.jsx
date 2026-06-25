@@ -1,9 +1,22 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) return;
+    setSubscribed(true);
+    setEmail('');
+    setTimeout(() => {
+      setSubscribed(false);
+    }, 5000);
+  };
+
   // SVG Social Icons featuring up-to-date (June 2026) minimalist vector paths
   const socialLinks = [
     {
@@ -35,31 +48,24 @@ const Footer = () => {
     },
   ];
 
-  // Route plans mapping to standard page navigation & dashboard configurations
+  // Public route links only (no private/protected routes)
   const exploreLinks = [
     { name: 'Browse Books', href: '/books?page=1' },
     { name: 'New Arrivals', href: '/books?sort=newest&page=1' },
-    { name: 'Partner Libraries', href: '/libraries' },
-    { name: 'How It Works', href: '/how-it-works' },
+    { name: 'Partner Libraries', href: '/#libraries' },
+    { name: 'How It Works', href: '/#how-it-works' },
   ];
 
-  const consoleLinks = [
-    { name: 'User Profile', href: '/dashboard/profile' },
-    { name: 'Borrow Tracker', href: '/dashboard/borrowed' },
-    { name: 'Librarian Console', href: '/dashboard/inventory' },
-    { name: 'Admin Control', href: '/dashboard/admin' },
-  ];
-
-  const supportLinks = [
-    { name: 'Help Center', href: '/support' },
-    { name: 'Privacy Policy', href: '/privacy' },
-    { name: 'Terms of Service', href: '/terms' },
-    { name: 'Contact Delivery', href: '/contact' },
+  const quickLinks = [
+    { name: 'About Us', href: '/#about' },
+    { name: 'Contact Us', href: '/contact' },
+    { name: 'Privacy Policy', href: '/#privacy' },
+    { name: 'Terms of Service', href: '/#terms' },
   ];
 
   return (
-    <footer className="w-full  max-w-360 border-t border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
-      <div className="mx-auto  w-[90%] md:w-[92%] xl:w-[95%] px-6 py-12 lg:px-8 lg:py-16">
+    <footer className="w-full max-w-360 border-t border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
+      <div className="mx-auto w-[90%] md:w-[92%] xl:w-[95%] px-6 py-12 lg:px-8 lg:py-16">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
 
           {/* Brand Presentation Column */}
@@ -92,10 +98,10 @@ const Footer = () => {
 
             {/* Custom concept text centered around BiblioDrop's delivery ecosystem */}
             <p className="max-w-md text-sm leading-relaxed text-[#3d474e] dark:text-[#94a3b8]">
-              Democratizing access to books by connecting readers with local libraries and book owners. Request doorstep delivery, manage reading lists, and streamline your borrowing experience seamlessly [1].
+              Democratizing access to books by connecting readers with local libraries and book owners. Request doorstep delivery, manage reading lists, and streamline your borrowing experience seamlessly.
             </p>
 
-            {/* Dynamic Social Icons with styled background circles matching your color rules */}
+            {/* Dynamic Social Icons with styled background circles */}
             <div className="flex space-x-4">
               {socialLinks.map((social) => (
                 <a
@@ -113,7 +119,7 @@ const Footer = () => {
           </div>
 
           {/* Interactive Navigation Grid */}
-          <div className="mt-12 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0 sm:grid-cols-3">
+          <div className="mt-12 grid grid-cols-1 gap-8 xl:col-span-2 xl:mt-0 sm:grid-cols-3">
 
             {/* Explore Column */}
             <div>
@@ -134,13 +140,13 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Dashboard Workspace Column */}
+            {/* Quick Links Column */}
             <div>
               <h3 className="text-xs font-bold tracking-widest text-[#856a26] uppercase dark:text-[#ffcd00]">
-                Workspace
+                Quick Links
               </h3>
               <ul role="list" className="mt-4 space-y-3">
-                {consoleLinks.map((item) => (
+                {quickLinks.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.href}
@@ -153,23 +159,30 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Support / Legal Column */}
-            <div className="col-span-2 sm:col-span-1">
+            {/* Newsletter Column */}
+            <div>
               <h3 className="text-xs font-bold tracking-widest text-[#856a26] uppercase dark:text-[#ffcd00]">
-                Support
+                Newsletter
               </h3>
-              <ul role="list" className="mt-4 space-y-3">
-                {supportLinks.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-sm font-medium text-[#3d474e] hover:text-[#192230] dark:text-[#94a3b8] dark:hover:text-white transition-colors duration-150"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              <p className="mt-4 text-xs leading-relaxed text-[#3d474e] dark:text-[#94a3b8]">
+                Subscribe for the latest book arrivals and community updates.
+              </p>
+              <form onSubmit={handleSubscribe} className="mt-4 space-y-2">
+                <input
+                  type="email"
+                  required
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-2.5 text-sm bg-slate-50 dark:bg-[#2c2f38] text-[#192230] dark:text-white border border-slate-200/80 dark:border-gray-800 rounded-xl focus:outline-none focus:border-[#856a26] dark:focus:border-[#ffcd00] transition-colors"
+                />
+                <button
+                  type="submit"
+                  className="w-full py-2.5 bg-[#192230] text-white hover:bg-[#2c2f38] dark:bg-[#ffcd00] dark:text-[#192230] dark:hover:bg-[#ffe066] text-xs font-bold rounded-xl transition-all cursor-pointer"
+                >
+                  {subscribed ? 'Subscribed ✓' : 'Subscribe'}
+                </button>
+              </form>
             </div>
 
           </div>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { motion } from 'motion/react'; 
+import { motion } from 'motion/react';
 import FilterBar from '../FilterBooks/FilterBooks';
 import SearchBar from '../SearchBooks/SearchBooks';
 import BooksCard from '../BooksCard/BooksCard';
@@ -11,7 +11,7 @@ import { Pagination } from '@heroui/react';
 const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
   const router = useRouter();
   const pathname = usePathname();
-  
+
   const [selectedCategory, setSelectedCategory] = useState(params?.category || 'All');
   const [deliveryFeeRange, setDeliveryFeeRange] = useState(params?.deliveryFee || 'All');
   const [availabilityStatus, setAvailabilityStatus] = useState(params?.availability || 'All');
@@ -29,20 +29,20 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { 
-        duration: 0.6, 
+      transition: {
+        duration: 0.6,
         ease: [0.16, 1, 0.3, 1],
-        staggerChildren: 0.12 
+        staggerChildren: 0.12
       },
     },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { duration: 0.5, ease: 'easeOut' } 
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' }
     },
   };
 
@@ -134,7 +134,7 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
 
   return (
     <div className="w-full min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-slate-50/50 dark:bg-[#2c2f38]/20 transition-colors duration-300 relative overflow-hidden">
-      
+
       <div className="absolute right-0 top-0 w-96 h-96 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute left-0 bottom-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -146,19 +146,19 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
         className="max-w-7xl mx-auto space-y-8 relative z-10"
       >
 
-        <motion.div 
+        <motion.div
           variants={itemVariants}
           className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8"
         >
           <h1 className="text-2xl font-black tracking-tight text-slate-800 dark:text-white">
-            Browse <span className="text-[#856a26] dark:text-[#ffcd00]">Digital</span> Collection
+            Browse Digital<span className="text-[#856a26] dark:text-[#ffcd00]"> Collection</span>
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Explore and search dynamic library catalogs. Access book profiles, delivery ranges, and availability statuses.
           </p>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           variants={itemVariants}
           className="bg-white dark:bg-[#192230]/40 p-5 rounded-[2rem] border border-slate-200/60 dark:border-white/5 space-y-4 shadow-sm"
         >
@@ -177,7 +177,7 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
         </motion.div>
 
         {isLoading ? (
-          <motion.div 
+          <motion.div
             variants={itemVariants}
             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
           >
@@ -188,7 +188,7 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
         ) : (
           <>
             {books.length === 0 ? (
-              <motion.div 
+              <motion.div
                 variants={itemVariants}
                 className="text-center py-16 px-4 bg-white dark:bg-[#192230]/30 border border-slate-200/60 dark:border-white/5 rounded-[2.5rem] shadow-sm mb-6"
               >
@@ -206,7 +206,7 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
                 </button>
               </motion.div>
             ) : (
-              <motion.div 
+              <motion.div
                 variants={itemVariants}
                 className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mb-6"
               >

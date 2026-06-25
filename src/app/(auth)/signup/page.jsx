@@ -13,7 +13,7 @@ import { authClient } from '@/lib/auth-client';
 import { Bounce, toast } from 'react-toastify';
 
 const SignUp = () => {
-  const router = useRouter();
+ const router = useRouter();
 
   // State variables for dynamic multi-step flow
   const [step, setStep] = useState(1); // Step 1: Account details, Step 2: Role selection, Step 3: Success Completed
@@ -56,12 +56,52 @@ const SignUp = () => {
   // Handling Google Social Sign-In
   const handleGoogleSignIn = async () => {
     setErrorMsg("");
+    setIsSubmitting(true);
+
     try {
       await authClient.signIn.social({
         provider: 'google',
-        callbackURL: '/'
+        callbackURL: '/dashboard/reader/overview'
+      }, {
+        onRequest: () => {
+          setIsSubmitting(true);
+        },
+        onSuccess: () => {
+          setIsSubmitting(false);
+
+          toast.success("Welcome back! Signed in successfully.", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+
+          router.push('/dashboard/reader/overview');
+        },
+        onError: (ctx) => {
+          setIsSubmitting(false);
+          const msg = ctx.error.message || "Failed to initialize Google sign-in. Please try again.";
+          setErrorMsg(msg);
+          toast.error(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            transition: Bounce,
+          });
+        }
       });
     } catch (err) {
+      setIsSubmitting(false);
       const errMsg = "Failed to initialize Google sign-in. Please try again.";
       setErrorMsg(errMsg);
       toast.error(errMsg, {
