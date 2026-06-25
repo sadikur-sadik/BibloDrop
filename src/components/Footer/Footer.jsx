@@ -64,7 +64,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="w-full max-w-360 border-t border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
+    <footer className="w-full max-w-360 mx-auto border-t border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
       <div className="mx-auto w-[90%] md:w-[92%] xl:w-[95%] px-6 py-12 lg:px-8 lg:py-16">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
 

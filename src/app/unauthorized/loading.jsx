@@ -14,7 +14,7 @@ const UnauthorizedLoading = () => {
   };
 
   return (
-    <div className="relative w-full py-4 px-4 flex items-center justify-center min-h-screen bg-slate-50 dark:bg-[#192230] transition-colors duration-300">
+    <div className="relative w-full max-w-360 mx-auto py-4 px-4 flex items-center justify-center min-h-screen bg-slate-50 dark:bg-[#192230] transition-colors duration-300">
       <motion.div
         initial="hidden"
         animate="visible"

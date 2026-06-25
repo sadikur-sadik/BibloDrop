@@ -1,10 +1,10 @@
 import { requiredRole } from '@/lib/core/session';
 import React from 'react';
 
-const AdminLayout = async({children}) => {
+const AdminLayout = async ({ children }) => {
   await requiredRole("admin")
   return (
-    <div>
+    <div className=''>
       {children}
     </div>
   );

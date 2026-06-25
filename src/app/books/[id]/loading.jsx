@@ -44,7 +44,7 @@ const ReviewStatsSkeleton = () => {
 // Replicates the write review form inside PassingReview
 const PassingReviewSkeleton = () => {
   return (
-    <div className="bg-white dark:bg-[#2c2f38] p-6 rounded-3xl border border-slate-200/80 dark:border-gray-800 shadow-xs space-y-4 animate-pulse">
+    <div className="bg-white max-w-360 mx-auto dark:bg-[#2c2f38] p-6 rounded-3xl border border-slate-200/80 dark:border-gray-800 shadow-xs space-y-4 animate-pulse">
       <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded-md w-28" />
 
       <div className="space-y-4">

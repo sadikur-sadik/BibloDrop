@@ -24,8 +24,8 @@ export default async function Success({ searchParams }) {
   }
 
   // Extract the transaction ID (Payment Intent ID)
-  const transactionId = typeof payment_intent === 'string' 
-    ? payment_intent 
+  const transactionId = typeof payment_intent === 'string'
+    ? payment_intent
     : payment_intent?.id;
 
   // Execute database writes only on a confirmed complete checkout status

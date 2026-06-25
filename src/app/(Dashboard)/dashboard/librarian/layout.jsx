@@ -1,7 +1,7 @@
 import { requiredRole } from '@/lib/core/session';
 import React from 'react';
 
-const LibrarianLayout = async ({children}) => {
+const LibrarianLayout = async ({ children }) => {
   await requiredRole("librarian")
   return (
     <div>

@@ -47,7 +47,7 @@ const CardSkeleton = () => {
 // Filter Bar Row Skeleton matching your 4-column filter drop downs
 const FilterBarSkeleton = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+    <div className="grid grid-cols-1 max-w-360 mx-auto sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
       {[...Array(4)].map((_, i) => (
         <div 
           key={i} 

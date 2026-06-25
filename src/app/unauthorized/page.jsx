@@ -36,7 +36,7 @@ const Unauthorized = () => {
 
   return (
     <div className="relative w-full py-4 px-4 flex items-center justify-center">
-      
+
       <motion.div
         initial="hidden"
         animate="visible"
@@ -44,7 +44,7 @@ const Unauthorized = () => {
         className="relative max-w-md md:max-w-xl w-full p-6 sm:p-8  bg-transparent text-[#192230] dark:text-white overflow-hidden text-center transition-colors duration-300 shadow-xl shadow-slate-100 dark:shadow-none"
       >
         {/* Ambient Glow synced from Banner_1 */}
-        <motion.div 
+        <motion.div
           animate={{
             scale: [1, 1.15, 1],
             opacity: [0.3, 0.6, 0.3],
@@ -54,7 +54,7 @@ const Unauthorized = () => {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute right-0 top-0 w-60 h-60 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none" 
+          className="absolute right-0 top-0 w-60 h-60 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none"
         />
 
         {/* Pulsing Alert Icon Badge */}
@@ -73,8 +73,8 @@ const Unauthorized = () => {
         </div>
 
         {/* Synced Info Badge with Pulsing Status Indicator */}
-        <motion.div 
-          variants={itemVariants} 
+        <motion.div
+          variants={itemVariants}
           className="inline-flex items-center gap-2 bg-[#856a26]/10 border border-[#856a26]/30 dark:bg-[#ffcd00]/10 dark:border-[#ffcd00]/30 px-3.5 py-1.5 rounded-full text-xs font-semibold text-[#856a26] dark:text-[#ffcd00] tracking-wider uppercase mb-1"
         >
           <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
@@ -82,23 +82,23 @@ const Unauthorized = () => {
         </motion.div>
 
         {/* Header matching Banner_1 Title Weight */}
-        <motion.h1 
-          variants={itemVariants} 
+        <motion.h1
+          variants={itemVariants}
           className="text-2xl sm:text-3xl font-black tracking-tight leading-tight mt-1"
         >
           Access <span className="text-[#856a26] dark:text-[#ffcd00]">Restricted.</span>
         </motion.h1>
-        
+
         {/* Description */}
-        <motion.p 
-          variants={itemVariants} 
+        <motion.p
+          variants={itemVariants}
           className="text-[#3d474e] dark:text-[#9ea7b3] text-xs sm:text-sm mt-2 max-w-md mx-auto leading-relaxed transition-colors"
         >
           This section requires different access privileges than those assigned to your current session. You may be signed in with a profile that does not have authorization for this resource.
         </motion.p>
 
         {/* Informational Context Box synced with Banner_1 Slate Accent Blocks */}
-        <motion.div 
+        <motion.div
           variants={itemVariants}
           className="w-full max-w-md mt-4 p-4 bg-slate-200/30 border border-slate-300/50 dark:bg-[#3d474e]/20 dark:border-gray-700/80 rounded-2xl text-left transition-colors"
         >
@@ -113,8 +113,8 @@ const Unauthorized = () => {
         </motion.div>
 
         {/* Symmetrical Navigation Buttons with Banner_1 Physics & Styling */}
-        <motion.div 
-          variants={itemVariants} 
+        <motion.div
+          variants={itemVariants}
           className="mt-5 flex flex-col sm:flex-row gap-3 justify-center w-full max-w-sm mx-auto"
         >
           <Button

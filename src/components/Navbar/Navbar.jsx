@@ -52,7 +52,7 @@ const Navbar = () => {
   const closeMobileMenu = () => setIsOpen(false);
 
   return (
-    <nav className="sticky top-0 z-50 w-full max-w-360 border-b border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
+    <nav className="sticky top-0 max-w-360 mx-auto z-50 w-full border-b border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
       <div className="mx-auto w-[90%] md:w-[92%] xl:w-[95%] px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
 

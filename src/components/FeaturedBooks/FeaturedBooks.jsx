@@ -132,7 +132,7 @@ const FeaturedBooks = () => {
                 variants={itemVariants}
                 className="w-full flex"
               >
-                <Card className="relative overflow-hidden w-full rounded-[2rem] border border-slate-100 dark:border-white/10 p-4 bg-white dark:bg-[#2c2f38] transition-colors duration-300 shadow-sm hover:shadow-xl dark:shadow-black/20 flex flex-col group justify-between">
+                <Card className="relative max-w-360 mx-auto overflow-hidden w-full rounded-[2rem] border border-slate-100 dark:border-white/10 p-4 bg-white dark:bg-[#2c2f38] transition-colors duration-300 shadow-sm hover:shadow-xl dark:shadow-black/20 flex flex-col group justify-between">
                   
                   {/* Portrait Cover Wrapper */}
                   <div>

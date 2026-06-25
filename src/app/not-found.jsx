@@ -15,7 +15,7 @@ const NotFound = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-linear-to-br from-slate-50 to-slate-100 dark:from-[#192230] dark:to-[#2c2f38] text-[#192230] dark:text-white transition-colors duration-300 flex items-center justify-center p-6 md:p-12">
+    <div className="min-h-screen max-w-360 mx-auto w-full bg-linear-to-br from-slate-50 to-slate-100 dark:from-[#192230] dark:to-[#2c2f38] text-[#192230] dark:text-white transition-colors duration-300 flex items-center justify-center p-6 md:p-12">
       
       <motion.div
         initial="hidden"

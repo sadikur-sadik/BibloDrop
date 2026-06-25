@@ -60,7 +60,7 @@ const TopLibrarians = () => {
   };
 
   return (
-    <section className="w-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-16 px-4 sm:px-8 md:px-16 lg:px-20 transition-colors duration-300 relative overflow-hidden select-none">
+    <section className="w-full max-w-360 mx-auto bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-16 px-4 sm:px-8 md:px-16 lg:px-20 transition-colors duration-300 relative overflow-hidden select-none">
       {/* Background visual accents */}
       <div className="absolute right-0 top-0 w-80 h-80 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute left-0 bottom-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />

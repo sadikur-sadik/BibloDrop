@@ -13,7 +13,7 @@ import { authClient } from '@/lib/auth-client';
 import { Bounce, toast } from 'react-toastify';
 
 const SignUp = () => {
- const router = useRouter();
+  const router = useRouter();
 
   // State variables for dynamic multi-step flow
   const [step, setStep] = useState(1); // Step 1: Account details, Step 2: Role selection, Step 3: Success Completed
@@ -193,7 +193,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex h-screen w-full overflow-y-auto lg:overflow-hidden bg-[#FFFFFF] text-[#192230] dark:bg-[#192230] dark:text-[#FFFFFF] transition-colors duration-300">
+    <div className="flex h-screen w-full max-w-360 mx-auto overflow-y-auto lg:overflow-hidden bg-[#FFFFFF] text-[#192230] dark:bg-[#192230] dark:text-[#FFFFFF] transition-colors duration-300">
 
       {/* LEFT SIDEBAR: Static height, high contrast brand elements */}
       <div className="hidden lg:flex relative w-1/2 h-full overflow-hidden bg-[#192230]">
@@ -341,9 +341,9 @@ const SignUp = () => {
                   <FieldError className="text-[10px] text-red-500 mt-0.5" />
                 </TextField>
 
-                <TextField 
-                  isRequired 
-                  name="confirmPassword" 
+                <TextField
+                  isRequired
+                  name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                 >
                   <Label className="text-xs font-semibold text-[#192230] dark:text-gray-200">Confirm Password</Label>
@@ -404,7 +404,7 @@ const SignUp = () => {
                   </svg>
                   Google
                 </Button>
-                
+
                 {/* Note indicating default role registration */}
                 <p className="text-[10px] text-center text-gray-400 dark:text-gray-500 leading-normal">
                   Note: If you sign up with Google, you will be registered as a reader only.
@@ -428,8 +428,8 @@ const SignUp = () => {
                   disabled={isSubmitting}
                   onClick={() => setSelectedRole('reader')}
                   className={`p-4 border rounded-xl flex flex-col items-start text-left gap-2.5 transition-all duration-200 ${selectedRole === 'reader'
-                      ? 'border-[#856a26] bg-[#856a26]/5 dark:border-[#ffcd00] dark:bg-[#ffcd00]/5 ring-2 ring-[#856a26] dark:ring-[#ffcd00]'
-                      : 'border-gray-200 hover:border-gray-300 dark:border-[#2c2f38] dark:hover:border-[#3d474e]'
+                    ? 'border-[#856a26] bg-[#856a26]/5 dark:border-[#ffcd00] dark:bg-[#ffcd00]/5 ring-2 ring-[#856a26] dark:ring-[#ffcd00]'
+                    : 'border-gray-200 hover:border-gray-300 dark:border-[#2c2f38] dark:hover:border-[#3d474e]'
                     }`}
                 >
                   <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs ${selectedRole === 'reader' ? 'bg-[#856a26] text-white dark:bg-[#ffcd00] dark:text-[#192230]' : 'bg-gray-100 dark:bg-[#2c2f38] text-gray-400 dark:text-white'}`}>
@@ -447,8 +447,8 @@ const SignUp = () => {
                   disabled={isSubmitting}
                   onClick={() => setSelectedRole('librarian')}
                   className={`p-4 border rounded-xl flex flex-col items-start text-left gap-2.5 transition-all duration-200 ${selectedRole === 'librarian'
-                      ? 'border-[#856a26] bg-[#856a26]/5 dark:border-[#ffcd00] dark:bg-[#ffcd00]/5 ring-2 ring-[#856a26] dark:ring-[#ffcd00]'
-                      : 'border-gray-200 hover:border-gray-300 dark:border-[#2c2f38] dark:hover:border-[#3d474e]'
+                    ? 'border-[#856a26] bg-[#856a26]/5 dark:border-[#ffcd00] dark:bg-[#ffcd00]/5 ring-2 ring-[#856a26] dark:ring-[#ffcd00]'
+                    : 'border-gray-200 hover:border-gray-300 dark:border-[#2c2f38] dark:hover:border-[#3d474e]'
                     }`}
                 >
                   <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs ${selectedRole === 'librarian' ? 'bg-[#856a26] text-white dark:bg-[#ffcd00] dark:text-[#192230]' : 'bg-gray-100 dark:bg-[#2c2f38] text-gray-400 dark:text-white'}`}>

@@ -79,7 +79,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300 relative overflow-hidden select-none flex flex-col justify-center">
+    <div className="w-full max-w-360 mx-auto bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300 relative overflow-hidden select-none flex flex-col justify-center">
       {/* Background accents */}
       <div className="absolute right-0 top-0 w-96 h-96 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute left-0 bottom-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />

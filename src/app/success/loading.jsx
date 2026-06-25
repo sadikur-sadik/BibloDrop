@@ -19,7 +19,7 @@ const SuccessPageLoading = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white transition-colors duration-300 py-16 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+    <div className="min-h-screen max-w-360 mx-auto bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white transition-colors duration-300 py-16 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
       <motion.div
         initial="hidden"
         animate="visible"

@@ -3,7 +3,7 @@ import React from 'react';
 
 const DashboardLayout = ({ children }) => {
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-slate-100 dark:bg-[#12141c] transition-colors duration-300">
+    <div className="flex flex-col max-w-360 mx-auto md:flex-row min-h-screen bg-slate-100 dark:bg-[#12141c] transition-colors duration-300">
       {/* Sidebar & Mobile Drawer Navigation */}
       <DashboardDrawer />
 

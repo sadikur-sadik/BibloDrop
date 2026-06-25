@@ -6,13 +6,13 @@ import Link from 'next/link';
 import { authClient } from '@/lib/auth-client';
 
 export default function SuccessPageClient({ customerEmail }) {
-  const { 
-        data: session, 
-        isPending, 
-        error, 
-        refetch 
-    } = authClient.useSession()
-    const role = session?.user?.role
+  const {
+    data: session,
+    isPending,
+    error,
+    refetch
+  } = authClient.useSession()
+  const role = session?.user?.role
   const containerVariants = {
     hidden: { opacity: 0, y: 15 },
     visible: {
@@ -28,7 +28,7 @@ export default function SuccessPageClient({ customerEmail }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white transition-colors duration-300 py-16 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+    <div className="min-h-screen max-w-360 mx-auto bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white transition-colors duration-300 py-16 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
       <motion.div
         initial="hidden"
         animate="visible"
@@ -41,31 +41,31 @@ export default function SuccessPageClient({ customerEmail }) {
 
         {/* Text Content */}
         <div className="md:col-span-7 z-10 flex flex-col items-center md:items-start text-center md:text-left space-y-5 order-2 md:order-1">
-          <motion.div 
-            variants={itemVariants} 
+          <motion.div
+            variants={itemVariants}
             className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-1.5 rounded-full text-xs font-semibold text-emerald-600 dark:text-emerald-400 tracking-wider uppercase"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse"></span>
             Order Confirmed
           </motion.div>
 
-          <motion.h1 
-            variants={itemVariants} 
+          <motion.h1
+            variants={itemVariants}
             className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight"
           >
             Delivery <br />
             <span className="text-[#856a26] dark:text-[#ffcd00]">Requested!</span>
           </motion.h1>
 
-          <motion.div 
-            variants={itemVariants} 
+          <motion.div
+            variants={itemVariants}
             className="text-[#3d474e] dark:text-[#9ea7b3] text-sm md:text-base max-w-lg mx-auto md:mx-0 leading-relaxed"
           >
             We appreciate your business! A confirmation email and transaction details have been dispatched to{' '}
             <p className="font-bold text-[#192230] dark:text-white break-all">{customerEmail} .</p>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             variants={itemVariants}
             className="text-xs text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-gray-800/80 pt-4 w-full"
           >
@@ -82,7 +82,7 @@ export default function SuccessPageClient({ customerEmail }) {
                 Browse More Books
               </button>
             </Link>
-            <Link href={`dashboard/${role == "reader" ? "reader/overview": role == "admin" ? "admin/overview" : "librarian/overview"}`}>
+            <Link href={`dashboard/${role == "reader" ? "reader/overview" : role == "admin" ? "admin/overview" : "librarian/overview"}`}>
               <button className="bg-slate-200/60 border border-slate-300/80 dark:bg-[#3d474e]/40 dark:border-gray-700 dark:hover:bg-[#3d474e]/60 text-[#192230] dark:text-white px-8 py-3.5 rounded-full font-semibold transition-all transform hover:-translate-y-0.5 text-sm cursor-pointer">
                 View Dashboard
               </button>
@@ -91,19 +91,19 @@ export default function SuccessPageClient({ customerEmail }) {
         </div>
 
         {/* Success Premium Illustration */}
-        <motion.div 
-          variants={itemVariants} 
+        <motion.div
+          variants={itemVariants}
           className="md:col-span-5 flex justify-center items-center h-full min-h-62.5 relative order-1 md:order-2"
         >
           <svg viewBox="0 0 400 400" className="w-full max-w-70 md:max-w-[320px] h-auto drop-shadow-2xl">
             {/* Background Circle */}
             <circle cx="200" cy="200" r="160" className="fill-slate-100 dark:fill-[#192230] stroke-slate-200 dark:stroke-[#3d474e]" strokeWidth="2" />
-            
+
             {/* Animated Glow Circle */}
-            <motion.circle 
+            <motion.circle
               animate={{ scale: [1, 1.15, 1], opacity: [0.15, 0.35, 0.15] }}
               transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-              cx="200" cy="190" r="65" className="fill-emerald-500 dark:fill-emerald-400" opacity="0.2" 
+              cx="200" cy="190" r="65" className="fill-emerald-500 dark:fill-emerald-400" opacity="0.2"
             />
 
             {/* Delivery Box & Book Composite Graphic */}
