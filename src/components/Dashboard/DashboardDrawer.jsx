@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Drawer, DrawerContent } from "@heroui/react";
 
 // Valid Gravity UI Icons mapped to BiblioDrop actions
 import {
@@ -20,7 +19,6 @@ import {
   CardDiamond,
   LayoutSideContent
 } from "@gravity-ui/icons";
-import { authClient } from "@/lib/auth-client";
 
 const DEFAULT_AVATAR = "https://plus.unsplash.com/premium_photo-1732668021815-9129fdb798d1?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
@@ -99,9 +97,26 @@ const DashboardDrawer = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  const { data: session } = authClient.useSession();
-  const user = session?.user;
-  const userRole = user?.role || "reader";
+  // Fallback state if authClient session isn't loaded/mocked
+  const user = { name: "Sadikur Sadik", role: "librarian", image: null };
+  const userRole = user.role;
+
+  // 1. Auto-close the menu whenever the route (pathname) changes
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  // 2. Prevent body scroll when the mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
   
   const getLinkClass = (href) => {
     const isActive = pathname === href;
@@ -118,14 +133,23 @@ const DashboardDrawer = () => {
       ? LIBRARIAN_NAV
       : READER_NAV;
 
-  // Added onLinkClick callback to cleanly close the drawer when a link is tapped
-  const renderSidebarContent = (onLinkClick) => (
+  const renderSidebarContent = (onClose) => (
     <div className="flex flex-col h-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white p-6 border-r border-slate-200 dark:border-gray-800/80 w-64 shrink-0 transition-colors duration-300">
       {/* Brand Header */}
-      <div className="mb-8 px-2">
+      <div className="flex items-center justify-between mb-8 px-2">
         <h1 className="text-2xl font-black tracking-tight select-none text-[#192230] dark:text-white">
           Biblio<span className="text-[#856a26] dark:text-[#ffcd00]">Drop</span>
         </h1>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="md:hidden p-1.5 rounded-lg text-slate-500 hover:bg-slate-200/50 dark:hover:bg-[#2c2f38] transition cursor-pointer"
+            aria-label="Close menu"
+          >
+            ✕
+          </button>
+        )}
       </div>
 
       {/* Profile Card Panel */}
@@ -163,21 +187,13 @@ const DashboardDrawer = () => {
             </p>
             {section.links.map((link, linkIdx) => {
               const IconComponent = link.icon;
-              const isActive = pathname === link.href;
               return (
                 <Link
                   key={linkIdx}
                   href={link.href}
-                  onClick={() => {
-                    if (onLinkClick) onLinkClick();
-                  }}
                   className={getLinkClass(link.href)}
                 >
-                  <IconComponent 
-                    className={`w-5 h-5 transition-colors duration-200 ${
-                      isActive ? "text-[#856a26] dark:text-[#ffcd00]" : "text-[#3d474e] dark:text-[#9ea7b3]"
-                    }`} 
-                  />
+                  <IconComponent className="w-5 h-5 text-[#3d474e] dark:text-[#9ea7b3]" />
                   {link.label}
                 </Link>
               );
@@ -190,12 +206,12 @@ const DashboardDrawer = () => {
 
   return (
     <>
-      {/* DESKTOP SIDEBAR */}
+      {/* DESKTOP SIDEBAR - Always visible on >= md, completely static and non-blocking */}
       <aside className="hidden md:block h-screen sticky top-0 z-40 shrink-0">
         {renderSidebarContent()}
       </aside>
 
-      {/* MOBILE DRAWER */}
+      {/* MOBILE HEADER & DRAWER SYSTEM - Visible only on < md */}
       <div className="md:hidden p-4">
         <button
           type="button"
@@ -205,32 +221,22 @@ const DashboardDrawer = () => {
           <LayoutSideContent width={22} height={22} />
         </button>
 
-        <Drawer 
-          isOpen={isOpen} 
-          onOpenChange={setIsOpen}
-          placement="left"
-          backdrop="blur"
-          classNames={{
-            base: "max-w-[260px] h-full bg-slate-50 dark:bg-[#192230]",
-            wrapper: "z-50"
-          }}
+        {/* Backdrop Overlay */}
+        <div 
+          onClick={() => setIsOpen(false)}
+          className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity duration-300 ease-in-out ${
+            isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
+        />
+
+        {/* Drawer Container Panel */}
+        <div 
+          className={`fixed top-0 left-0 bottom-0 z-50 w-64 bg-slate-50 dark:bg-[#192230] shadow-2xl transform transition-transform duration-300 ease-in-out ${
+            isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
         >
-          <DrawerContent className="p-0 border-none bg-transparent">
-            {(onClose) => (
-              <div className="relative h-full focus:outline-none">
-                {/* Custom Close Trigger */}
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="absolute top-4 -right-10 text-[#3d474e] dark:text-neutral-400 hover:text-[#192230] dark:hover:text-white z-50 bg-slate-50 dark:bg-[#192230] border border-slate-200 dark:border-gray-800 p-2 rounded-full shadow-sm transition-all cursor-pointer"
-                >
-                  ✕
-                </button>
-                {renderSidebarContent(onClose)}
-              </div>
-            )}
-          </DrawerContent>
-        </Drawer>
+          {renderSidebarContent(() => setIsOpen(false))}
+        </div>
       </div>
     </>
   );

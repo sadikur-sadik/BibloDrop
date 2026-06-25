@@ -6,15 +6,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { authClient } from '@/lib/auth-client';
-import EditProfileModal from './EditProfile';
 
-const UserMenu = ({ variant, onCloseMobileMenu }) => {
+const UserMenu = ({ variant, onCloseMobileMenu, onOpenEditModal }) => {
   const router = useRouter();
   const { data: session } = authClient.useSession();
   
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileDashboardOpen, setIsMobileDashboardOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const user = session?.user;
   const userRole = user?.role || 'reader';
@@ -112,10 +110,10 @@ const UserMenu = ({ variant, onCloseMobileMenu }) => {
                     <button
                       onMouseDown={(e) => {
                         e.preventDefault();
-                        setIsEditModalOpen(true);
+                        if (onOpenEditModal) onOpenEditModal();
                         setIsProfileOpen(false);
                       }}
-                      className="w-full text-left block px-4 py-2 text-xs font-semibold text-[#3d474e] transition-colors duration-150 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-[#3d474e]/40"
+                      className="w-full text-left block px-4 py-2 text-xs font-semibold text-[#3d474e] transition-colors duration-150 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-[#3d474e]/40 cursor-pointer"
                     >
                       Edit Profile
                     </button>
@@ -206,10 +204,10 @@ const UserMenu = ({ variant, onCloseMobileMenu }) => {
                   </Link>
                   <button 
                     onClick={() => {
-                      setIsEditModalOpen(true);
+                      if (onOpenEditModal) onOpenEditModal();
                       if (onCloseMobileMenu) onCloseMobileMenu();
                     }}
-                    className="inline-block py-1 text-xs font-bold text-[#3d474e] dark:text-gray-300 hover:underline"
+                    className="inline-block py-1 text-xs font-bold text-[#3d474e] dark:text-gray-300 hover:underline cursor-pointer"
                   >
                     Edit Profile
                   </button>
@@ -239,17 +237,6 @@ const UserMenu = ({ variant, onCloseMobileMenu }) => {
           </Link>
         )
       )}
-
-      {/* Render the unified Edit/Request Modal */}
-      <AnimatePresence>
-        {isEditModalOpen && (
-          <EditProfileModal 
-            isOpen={isEditModalOpen} 
-            onClose={() => setIsEditModalOpen(false)} 
-            user={user} 
-          />
-        )}
-      </AnimatePresence>
     </>
   );
 };

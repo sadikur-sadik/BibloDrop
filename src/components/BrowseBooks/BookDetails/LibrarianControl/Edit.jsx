@@ -142,20 +142,25 @@ const EditBooks = ({ book, onEdit }) => {
         className="w-full h-9 px-3 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-[#3d474e]/40 dark:hover:bg-[#3d474e]/60 text-slate-600 dark:text-slate-300 border border-slate-200/20 dark:border-gray-800/40 text-[11px] font-bold tracking-tight flex items-center justify-center gap-1.5 transition-all cursor-pointer"
         title="Edit Book"
       >
-        <Pencil className="w-3.5 h-3.5" /> Edit Book
+        <Pencil className="w-3.5 h-3.5" /> <span className='hidden sm:inline-block'> Edit Book</span>
       </motion.button>
 
       <Modal.Backdrop isOpen={isOpen} onOpenChange={setIsOpen} className="bg-black/60 backdrop-blur-xs transition-all">
         <Modal.Container placement="center" className="p-4 flex items-center justify-center">
-          <Modal.Dialog className="relative w-full max-w-3xl bg-white dark:bg-[#192230] text-[#192230] dark:text-white rounded-3xl border border-slate-200/80 dark:border-gray-800/80 shadow-2xl overflow-hidden p-6 md:p-8 outline-hidden transition-colors duration-300">
+          {/* 
+            We apply max-h-[90vh] (on small screens) and md:max-h-[85vh] (on larger viewports).
+            Converting this element to a flex-column layout enables scrolling for child containers.
+          */}
+          <Modal.Dialog className="relative w-full max-w-3xl max-h-[90vh] md:max-h-[85vh] bg-white dark:bg-[#192230] text-[#192230] dark:text-white rounded-3xl border border-slate-200/80 dark:border-gray-800/80 shadow-2xl flex flex-col overflow-hidden p-6 md:p-8 outline-hidden transition-colors duration-300">
             {({ close }) => (
               <>
                 <Modal.CloseTrigger 
                   onPress={close}
-                  className="absolute top-4 right-4 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#2c2f38] text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors cursor-pointer" 
+                  className="absolute top-4 right-4 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#2c2f38] text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors cursor-pointer z-10" 
                 />
                 
-                <Modal.Header className="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-gray-800/60">
+                {/* Fixed Header */}
+                <Modal.Header className="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-gray-800/60 shrink-0">
                   <Modal.Icon className="text-[#856a26] dark:text-[#ffcd00]">
                     <Pencil className="w-5 h-5" />
                   </Modal.Icon>
@@ -164,7 +169,14 @@ const EditBooks = ({ book, onEdit }) => {
                   </Modal.Heading>
                 </Modal.Header>
 
-                <Form onSubmit={handleFormSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                {/* 
+                  Form container made scrollable using overflow-y-auto, flex-1, and 
+                  a slight padding-right to keep the content offset from the browser scrollbar.
+                */}
+                <Form 
+                  onSubmit={handleFormSubmit} 
+                  className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 overflow-y-auto flex-1 pr-1.5 outline-hidden scrollbar-thin"
+                >
                   {/* Left Column: Title, Author, Description */}
                   <div className="space-y-4">
                     <TextField isRequired name="title" type="text" defaultValue={book?.title} className="flex flex-col gap-1">
@@ -187,7 +199,7 @@ const EditBooks = ({ book, onEdit }) => {
                   </div>
 
                   {/* Right Column: Book Cover & Form Config Fields & Actions */}
-                  <div className="flex flex-col gap-4 justify-between">
+                  <div className="flex flex-col gap-4 justify-between h-full">
                     <div className="space-y-4">
                       <div>
                         <span className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">
@@ -317,7 +329,8 @@ const EditBooks = ({ book, onEdit }) => {
                       </div>
                     </div>
 
-                    <div className="flex gap-2.5 justify-end pt-4 border-t border-slate-100 dark:border-gray-800/60">
+                    {/* Footer Controls */}
+                    <div className="flex gap-2.5 justify-end pt-4 mt-4 border-t border-slate-100 dark:border-gray-800/60 shrink-0">
                       <Button onPress={close} className="px-4 h-10 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200/80 dark:bg-[#2c2f38]/60 dark:hover:bg-[#2c2f38] text-slate-700 dark:text-[#9ea7b3] transition-colors cursor-pointer">
                         Cancel
                       </Button>

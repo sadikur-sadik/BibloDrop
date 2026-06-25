@@ -22,14 +22,14 @@ const AdminApprovals = ({ books = [] }) => {
 
   const handleToggleApproval = async (book) => {
     const previousBooks = [...localBooks];
-    const isCurrentlyApproved = book.currentStatus === 'approved';
+    const isCurrentlyApproved = book?.currentStatus === 'approved';
     const nextStatus = isCurrentlyApproved ? 'pending' : 'approved';
     
     // Optimistic Update:
     // Instantly reflect approved status and visibility updates locally
     setLocalBooks((prevBooks) =>
       prevBooks.map((b) =>
-        b._id === book._id
+        b?._id === book?._id
           ? { 
               ...b, 
               currentStatus: nextStatus, 
@@ -41,7 +41,7 @@ const AdminApprovals = ({ books = [] }) => {
 
     try {
       // SINGLE API CALL: Handles both transition to 'approved' and back to 'pending'.
-      const res = await approveBookByAdmin(book._id, nextStatus); 
+      const res = await approveBookByAdmin(book?._id, nextStatus); 
       
       if (res?.modifiedCount > 0) {
         toast.success(`"${book.title}" has been successfully updated to ${nextStatus}.`, {
@@ -246,8 +246,8 @@ const AdminApprovals = ({ books = [] }) => {
                         <div className="flex items-center gap-4">
                           {book.coverImage && (
                             <Image
-                              src={book.coverImage}
-                              alt={book.title}
+                              src={book?.coverImage}
+                              alt={book?.title}
                               width={64}
                               height={80}
                               className="w-16 h-20 object-cover rounded-lg shadow-sm"

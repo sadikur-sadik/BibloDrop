@@ -6,16 +6,22 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sun, Moon } from '@gravity-ui/icons';
 import { useTheme } from 'next-themes';
+import { authClient } from '@/lib/auth-client';
 
-// Imported decoupled component
+// Imported components
 import UserMenu from './UserMenu/UserMenu';
+import EditProfileModal from './UserMenu/EditProfile';
 
 const Navbar = () => {
   const { setTheme, resolvedTheme } = useTheme();
   const pathname = usePathname();
+  const { data: session } = authClient.useSession();
 
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const user = session?.user;
 
   // Sync state after mounting to avoid hydration mismatches
   useEffect(() => {
@@ -107,7 +113,7 @@ const Navbar = () => {
             })}
 
             {/* Desktop User Option */}
-            <UserMenu variant="desktop" />
+            <UserMenu variant="desktop" onOpenEditModal={() => setIsEditModalOpen(true)} />
 
             {/* Theme Toggle Button */}
             <button
@@ -159,7 +165,11 @@ const Navbar = () => {
               ))}
 
               {/* Mobile Profile Area */}
-              <UserMenu variant="mobile-profile" onCloseMobileMenu={closeMobileMenu} />
+              <UserMenu 
+                variant="mobile-profile" 
+                onCloseMobileMenu={closeMobileMenu} 
+                onOpenEditModal={() => setIsEditModalOpen(true)}
+              />
 
               {/* Mobile CTA Options Section */}
               <div className="pt-4 flex items-center justify-between border-t border-gray-100 dark:border-[#2c2f38]">
@@ -182,6 +192,17 @@ const Navbar = () => {
               </div>
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Global Edit Profile Modal (Mounted at the root of Navbar) */}
+      <AnimatePresence>
+        {isEditModalOpen && user && (
+          <EditProfileModal 
+            isOpen={isEditModalOpen} 
+            onClose={() => setIsEditModalOpen(false)} 
+            user={user} 
+          />
         )}
       </AnimatePresence>
     </nav>

@@ -18,7 +18,7 @@ const DeleteBooks = ({ book, onDelete }) => {
         className="w-full h-9 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/20 dark:border-rose-500/10 text-[11px] font-bold tracking-tight flex items-center justify-center gap-1.5 transition-all cursor-pointer"
         title="Delete Book"
       >
-        <TrashBin className="w-3.5 h-3.5" /> Delete Book
+        <TrashBin className="w-3.5 h-3.5" /> <span className='hidden sm:inline-block'>Delete Book</span>
       </motion.button>
 
       <Modal.Backdrop isOpen={isOpen} onOpenChange={setIsOpen} className="bg-black/60 backdrop-blur-xs transition-all">
