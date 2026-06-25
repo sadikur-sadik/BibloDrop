@@ -4,10 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Drawer } from "@heroui/react";
-
-// --- COMMENTED OUT SESSION IMPORT ---
-// import { authClient } from "@/lib/auth-client";
+import { Drawer, DrawerContent } from "@heroui/react";
 
 // Valid Gravity UI Icons mapped to BiblioDrop actions
 import {
@@ -102,10 +99,6 @@ const DashboardDrawer = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  // ========================================================
-  // SESSION DATA (Commented out for easy offline/local mock testing)
-  // ========================================================
-  
   const { data: session } = authClient.useSession();
   const user = session?.user;
   const userRole = user?.role || "reader";
@@ -119,14 +112,14 @@ const DashboardDrawer = () => {
     }`;
   };
 
-  // Select navigation set depending on current role
   const navSections = userRole === "admin"
     ? ADMIN_NAV
     : userRole === "librarian"
       ? LIBRARIAN_NAV
       : READER_NAV;
 
-  const renderSidebarContent = () => (
+  // Added onLinkClick callback to cleanly close the drawer when a link is tapped
+  const renderSidebarContent = (onLinkClick) => (
     <div className="flex flex-col h-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white p-6 border-r border-slate-200 dark:border-gray-800/80 w-64 shrink-0 transition-colors duration-300">
       {/* Brand Header */}
       <div className="mb-8 px-2">
@@ -175,7 +168,9 @@ const DashboardDrawer = () => {
                 <Link
                   key={linkIdx}
                   href={link.href}
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    if (onLinkClick) onLinkClick();
+                  }}
                   className={getLinkClass(link.href)}
                 >
                   <IconComponent 
@@ -210,17 +205,31 @@ const DashboardDrawer = () => {
           <LayoutSideContent width={22} height={22} />
         </button>
 
-        <Drawer isOpen={isOpen} onOpenChange={setIsOpen}>
-          <Drawer.Backdrop variant="blur" />
-          <Drawer.Content placement="left" className="p-0 border-0 bg-transparent h-full max-w-65">
-            <Drawer.Dialog className="h-full bg-slate-50 dark:bg-[#192230] focus-visible:outline-none outline-none border-0">
-              <Drawer.CloseTrigger
-                onClick={() => setIsOpen(false)}
-                className="absolute top-4 -right-10 text-[#3d474e] dark:text-neutral-400 hover:text-[#192230] dark:hover:text-white z-50 bg-slate-50 dark:bg-[#192230] border border-slate-200 dark:border-gray-800 p-2 rounded-full shadow-sm transition-all"
-              />
-              {renderSidebarContent()}
-            </Drawer.Dialog>
-          </Drawer.Content>
+        <Drawer 
+          isOpen={isOpen} 
+          onOpenChange={setIsOpen}
+          placement="left"
+          backdrop="blur"
+          classNames={{
+            base: "max-w-[260px] h-full bg-slate-50 dark:bg-[#192230]",
+            wrapper: "z-50"
+          }}
+        >
+          <DrawerContent className="p-0 border-none bg-transparent">
+            {(onClose) => (
+              <div className="relative h-full focus:outline-none">
+                {/* Custom Close Trigger */}
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="absolute top-4 -right-10 text-[#3d474e] dark:text-neutral-400 hover:text-[#192230] dark:hover:text-white z-50 bg-slate-50 dark:bg-[#192230] border border-slate-200 dark:border-gray-800 p-2 rounded-full shadow-sm transition-all cursor-pointer"
+                >
+                  ✕
+                </button>
+                {renderSidebarContent(onClose)}
+              </div>
+            )}
+          </DrawerContent>
         </Drawer>
       </div>
     </>
