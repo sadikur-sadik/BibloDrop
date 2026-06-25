@@ -33,7 +33,7 @@ const Inventory = ({ books = [] }) => {
 
   // --- API CALL HANDLERS ---
  const handleTogglePublish = async (book) => {
-    if (book.currentStatus === 'pending') {
+    if (book?.currentStatus === 'pending') {
       console.warn("Unauthorized Action: Librarian cannot toggle publish status of a Pending book.");
       toast.error("Cannot publish/unpublish a pending book.", {
         position: "top-center",
@@ -49,23 +49,23 @@ const Inventory = ({ books = [] }) => {
       return;
     }
 
-    const nextPublishState = !book.isPublished;
+    const nextPublishState = !book?.isPublished;
     const publishStatus = nextPublishState ? "publish" : "unpublish";
 
     // Optimistic Update
     setLocalBooks((prevBooks) =>
-      prevBooks.map((b) =>
-        b._id === book._id ? { ...b, isPublished: nextPublishState } : b
+      prevBooks?.map((b) =>
+        b?._id === book?._id ? { ...b, isPublished: nextPublishState } : b
       )
     );
 
     try {
-      setTogglingId(book._id);
+      setTogglingId(book?._id);
 
-      const res = await togglePublishByLibrarian(book._id, publishStatus);
+      const res = await togglePublishByLibrarian(book?._id, publishStatus);
       
       if (res?.modifiedCount > 0) {
-        toast.success(`"${book.title}" has been successfully ${publishStatus}ed!`, {
+        toast.success(`"${book?.title}" has been successfully ${publishStatus}ed!`, {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -77,7 +77,7 @@ const Inventory = ({ books = [] }) => {
           transition: Bounce,
         });
       } else {
-        toast.info(`No changes were made to "${book.title}".`, {
+        toast.info(`No changes were made to "${book?.title}".`, {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -95,12 +95,12 @@ const Inventory = ({ books = [] }) => {
 
       // Revert state change
       setLocalBooks((prevBooks) =>
-        prevBooks.map((b) =>
-          b._id === book._id ? { ...b, isPublished: !nextPublishState } : b
+        prevBooks?.map((b) =>
+          b?._id === book?._id ? { ...b, isPublished: !nextPublishState } : b
         )
       );
 
-      toast.error(`An error occurred while updating status for "${book.title}".`, {
+      toast.error(`An error occurred while updating status for "${book?.title}".`, {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -178,13 +178,13 @@ const handleDeleteBook = async (book) => {
     const previousBooks = [...localBooks];
 
     // Optimistic Update
-    setLocalBooks((prevBooks) => prevBooks.filter((b) => b._id !== book._id));
+    setLocalBooks((prevBooks) => prevBooks?.filter((b) => b?._id !== book?._id) || []);
 
     try {
-      const res = await deleteBookByLibrarian(book._id);
+      const res = await deleteBookByLibrarian(book?._id);
 
       if (res?.deletedCount > 0) {
-        toast.info(`"${book.title}" was deleted from inventory.`, {
+        toast.info(`"${book?.title}" was deleted from inventory.`, {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -196,7 +196,7 @@ const handleDeleteBook = async (book) => {
           transition: Bounce,
         });
       } else {
-        toast.error(`Failed to delete "${book.title}".`, {
+        toast.error(`Failed to delete "${book?.title}".`, {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: false,
@@ -216,7 +216,7 @@ const handleDeleteBook = async (book) => {
       // Revert state
       setLocalBooks(previousBooks);
 
-      toast.error(`An error occurred while trying to delete "${book.title}".`, {
+      toast.error(`An error occurred while trying to delete "${book?.title}".`, {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -231,7 +231,7 @@ const handleDeleteBook = async (book) => {
   };
   // Approval Status Badge helper
   const getStatusBadge = (book) => {
-    if (book.currentStatus === 'pending') {
+    if (book?.currentStatus === 'pending') {
       return {
         text: 'Pending',
         className: 'bg-[#856a26]/10 text-[#856a26] dark:bg-[#ffcd00]/10 dark:text-[#ffcd00] border-[#856a26]/20 dark:border-[#ffcd00]/30',
@@ -247,7 +247,7 @@ const handleDeleteBook = async (book) => {
 
   // Visibility Status Badge helper
   const getVisibilityBadge = (book) => {
-    if (book.isPublished) {
+    if (book?.isPublished) {
       return {
         text: 'Published',
         className: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
@@ -337,23 +337,23 @@ const handleDeleteBook = async (book) => {
                   exit="hidden"
                   className="space-y-4"
                 >
-                  {localBooks.map((book) => {
+                  {localBooks?.map((book) => {
                     const statusBadge = getStatusBadge(book);
                     const visBadge = getVisibilityBadge(book);
-                    const isToggling = togglingId === book._id;
+                    const isToggling = togglingId === book?._id;
 
                     return (
                       <motion.div
                         layout
                         variants={itemVariants}
-                        key={book._id}
+                        key={book?._id}
                         className="p-5 rounded-2xl border border-slate-200/80 dark:border-gray-800/80 bg-white/40 dark:bg-[#2c2f38]/20 backdrop-blur-md space-y-4"
                       >
                         <div className="flex items-center gap-4">
-                          {book.coverImage && (
+                          {book?.coverImage && (
                             <Image
-                              src={book.coverImage}
-                              alt={book.title}
+                              src={book?.coverImage}
+                              alt={book?.title}
                               width={64}
                               height={80}
                               className="w-16 h-20 object-cover rounded-lg shadow-sm"
@@ -361,10 +361,10 @@ const handleDeleteBook = async (book) => {
                             />
                           )}
                           <div>
-                            <h4 className="font-extrabold text-sm leading-tight">{book.title}</h4>
-                            <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] mt-0.5">{book.author}</p>
+                            <h4 className="font-extrabold text-sm leading-tight">{book?.title}</h4>
+                            <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] mt-0.5">{book?.author}</p>
                             <span className="inline-block px-2 py-0.5 mt-2 rounded text-[10px] uppercase font-bold tracking-wider bg-slate-200/60 dark:bg-[#3d474e]/50 text-slate-600 dark:text-slate-300">
-                              {book.genre}
+                              {book?.genre}
                             </span>
                           </div>
                         </div>
@@ -389,30 +389,30 @@ const handleDeleteBook = async (book) => {
 
                           <div className="col-span-2 flex justify-between items-center pt-1 border-t border-slate-100 dark:border-gray-800/40">
                             <span className="text-slate-400 uppercase tracking-wider text-[10px] font-extrabold">Quantity</span>
-                            <p className="text-sm font-bold">{book.quantity || '0'}</p>
+                            <p className="text-sm font-bold">{book?.quantity || '0'}</p>
                           </div>
                         </div>
 
                         <div className="flex items-center justify-between gap-3 pt-3 border-t border-slate-200/60 dark:border-gray-800/60">
                           {/* Publish/Unpublish Action */}
                           <motion.button
-                            whileTap={book.currentStatus !== 'pending' && !isToggling ? { scale: 0.95 } : {}}
+                            whileTap={book?.currentStatus !== 'pending' && !isToggling ? { scale: 0.95 } : {}}
                             onClick={() => handleTogglePublish(book)}
-                            disabled={book.currentStatus === 'pending' || isToggling}
-                            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${book.currentStatus === 'pending'
+                            disabled={book?.currentStatus === 'pending' || isToggling}
+                            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${book?.currentStatus === 'pending'
                                 ? 'bg-slate-200/40 text-slate-400 dark:bg-[#3d474e]/20 dark:text-[#9ea7b3]/40 cursor-not-allowed opacity-50'
                                 : isToggling
                                   ? 'bg-slate-300 text-slate-500 dark:bg-[#3d474e] dark:text-[#9ea7b3] animate-pulse cursor-wait'
-                                  : book.isPublished
+                                  : book?.isPublished
                                     ? 'bg-rose-500/10 text-rose-500 hover:bg-rose-500/20'
                                     : 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20'
                               }`}
                           >
-                            {book.currentStatus === 'pending' ? (
+                            {book?.currentStatus === 'pending' ? (
                               <><Lock className="w-3.5 h-3.5" /> Locked</>
                             ) : isToggling ? (
                               <>Updating...</>
-                            ) : book.isPublished ? (
+                            ) : book?.isPublished ? (
                               <><EyeSlash className="w-3.5 h-3.5" /> Unpublish</>
                             ) : (
                               <><Eye className="w-3.5 h-3.5" /> Publish</>
@@ -459,14 +459,14 @@ const handleDeleteBook = async (book) => {
                     </Table.Header>
 
                     <Table.Body>
-                      {localBooks.map((book, idx) => {
+                      {localBooks?.map((book, idx) => {
                         const statusBadge = getStatusBadge(book);
                         const visBadge = getVisibilityBadge(book);
-                        const isToggling = togglingId === book._id;
+                        const isToggling = togglingId === book?._id;
 
                         return (
                           <Table.Row
-                            key={book._id}
+                            key={book?._id}
                             className="hover:bg-slate-100/40 dark:hover:bg-[#2c2f38]/20 transition-colors border-b border-slate-200/60 dark:border-gray-800/60 last:border-0"
                           >
                             <Table.Cell className="py-4">
@@ -476,10 +476,10 @@ const handleDeleteBook = async (book) => {
                                 transition={{ delay: idx * 0.03, type: "spring", stiffness: 120 }}
                                 className="flex items-center gap-4"
                               >
-                                {book.coverImage && (
+                                {book?.coverImage && (
                                   <Image
-                                    src={book.coverImage}
-                                    alt={book.title}
+                                    src={book?.coverImage}
+                                    alt={book?.title}
                                     width={40}
                                     height={56}
                                     className="w-10 h-14 object-cover rounded-md shadow-sm border border-slate-200 dark:border-gray-800"
@@ -487,8 +487,8 @@ const handleDeleteBook = async (book) => {
                                   />
                                 )}
                                 <div>
-                                  <h3 className="font-extrabold text-sm">{book.title}</h3>
-                                  <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] mt-0.5">{book.author}</p>
+                                  <h3 className="font-extrabold text-sm">{book?.title}</h3>
+                                  <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] mt-0.5">{book?.author}</p>
                                 </div>
                               </motion.div>
                             </Table.Cell>
@@ -499,12 +499,12 @@ const handleDeleteBook = async (book) => {
                                 animate={{ opacity: 1, scale: 1 }}
                                 className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-slate-200/50 dark:bg-[#3d474e]/50 text-slate-600 dark:text-slate-300"
                               >
-                                {book.genre}
+                                {book?.genre}
                               </motion.span>
                             </Table.Cell>
 
                             <Table.Cell className="py-4 font-bold text-sm">
-                              {book.quantity || '0'}
+                              {book?.quantity || '0'}
                             </Table.Cell>
 
                             {/* Column 4: Approval Status */}
@@ -538,32 +538,32 @@ const handleDeleteBook = async (book) => {
                                 {/* Toggle Publish State: Disabled on pending & during active mutation */}
                                 <div className="relative group">
                                   <motion.button
-                                    whileHover={book.currentStatus !== 'pending' && !isToggling ? { scale: 1.08 } : {}}
-                                    whileTap={book.currentStatus !== 'pending' && !isToggling ? { scale: 0.95 } : {}}
+                                    whileHover={book?.currentStatus !== 'pending' && !isToggling ? { scale: 1.08 } : {}}
+                                    whileTap={book?.currentStatus !== 'pending' && !isToggling ? { scale: 0.95 } : {}}
                                     onClick={() => handleTogglePublish(book)}
-                                    disabled={book.currentStatus === 'pending' || isToggling}
-                                    className={`p-2 rounded-xl transition-colors cursor-pointer flex items-center justify-center ${book.currentStatus === 'pending'
+                                    disabled={book?.currentStatus === 'pending' || isToggling}
+                                    className={`p-2 rounded-xl transition-colors cursor-pointer flex items-center justify-center ${book?.currentStatus === 'pending'
                                         ? 'bg-slate-200/30 text-slate-300 dark:bg-[#3d474e]/10 dark:text-slate-700 cursor-not-allowed'
                                         : isToggling
                                           ? 'bg-slate-200 text-slate-400 dark:bg-[#3d474e] dark:text-[#9ea7b3] animate-pulse cursor-wait'
-                                          : book.isPublished
+                                          : book?.isPublished
                                             ? 'bg-rose-500/10 text-rose-500 hover:bg-rose-500/20'
                                             : 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20'
                                       }`}
-                                    title={book.currentStatus === 'pending' ? 'Locked: Awaiting Admin Approval' : book.isPublished ? 'Unpublish Book' : 'Publish Book'}
+                                    title={book?.currentStatus === 'pending' ? 'Locked: Awaiting Admin Approval' : book?.isPublished ? 'Unpublish Book' : 'Publish Book'}
                                   >
-                                    {book.currentStatus === 'pending' ? (
+                                    {book?.currentStatus === 'pending' ? (
                                       <Lock className="w-4 h-4" />
                                     ) : isToggling ? (
                                       <div className="w-4 h-4 rounded-full border-2 border-slate-400 border-t-transparent animate-spin" />
-                                    ) : book.isPublished ? (
+                                    ) : book?.isPublished ? (
                                       <EyeSlash className="w-4 h-4" />
                                     ) : (
                                       <Eye className="w-4 h-4" />
                                     )}
                                   </motion.button>
 
-                                  {book.currentStatus === 'pending' && (
+                                  {book?.currentStatus === 'pending' && (
                                     <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block w-48 p-2 rounded-lg bg-[#192230] dark:bg-white text-white dark:text-[#192230] text-[10px] font-bold text-center shadow-lg pointer-events-none z-20">
                                       Publishing power disabled while "Pending Approval"
                                     </div>

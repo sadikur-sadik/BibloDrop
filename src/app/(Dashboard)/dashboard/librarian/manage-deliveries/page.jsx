@@ -5,7 +5,7 @@ import React from 'react';
 
 const ManageDeliveriesByLibrarian = async () => {
   const user = await getUserSession()
-  const deliveryRequests = await getDeliveriesByLibrarian(user.id, "")
+  const deliveryRequests = await getDeliveriesByLibrarian(user?.id, "")
   
   return (
     <div>

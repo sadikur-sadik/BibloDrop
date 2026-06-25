@@ -140,7 +140,7 @@ const ManageUsersByAdmin = ({ users = [] }) => {
 
     try {
       const res = await deleteUser(user._id);
-      
+
       if (res?.deletedCount > 0) {
         toast.success(`Successfully removed user "${user.name}" from the database.`, {
           position: "top-center",
@@ -167,7 +167,7 @@ const ManageUsersByAdmin = ({ users = [] }) => {
         });
         setLocalUsers(previousUsers);
       }
-      
+
     } catch (error) {
       console.error("Failed to delete user:", error);
       setLocalUsers(previousUsers);
@@ -225,14 +225,14 @@ const ManageUsersByAdmin = ({ users = [] }) => {
       {/* Header section */}
       <div className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8">
         <motion.h1
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }} className="text-2xl font-black tracking-tight text-slate-800 dark:text-white">
-          System <span className="text-[#856a26] dark:text-[#ffcd00]">User Governance</span>
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }} className="text-2xl font-black tracking-tight text-slate-800 dark:text-white">
+          System User <span className="text-[#856a26] dark:text-[#ffcd00]"> Governance</span>
         </motion.h1>
         <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }} className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }} className="text-xs text-slate-500 dark:text-slate-400 mt-1">
           Review accounts, update administrative permissions, and manage membership profiles.
         </motion.p>
       </div>
@@ -242,15 +242,15 @@ const ManageUsersByAdmin = ({ users = [] }) => {
         {localUsers.length === 0 ? (
           <div className="text-center py-16 bg-slate-100/40 dark:bg-[#2c2f38]/10 border border-slate-200/80 dark:border-gray-800/60 rounded-3xl max-w-md mx-auto space-y-2">
             <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }} className="text-sm font-bold text-slate-500 dark:text-slate-400">
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }} className="text-sm font-bold text-slate-500 dark:text-slate-400">
               No registered users found.
             </motion.p>
             <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }} className="text-xs text-slate-400 dark:text-slate-500">
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }} className="text-xs text-slate-400 dark:text-slate-500">
               The platform currently has zero users registered under this catalog.
             </motion.p>
           </div>
@@ -306,14 +306,13 @@ const ManageUsersByAdmin = ({ users = [] }) => {
                                 <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${roleBadge.dotColor}`} />
                                 <span>{roleBadge.text}</span>
                               </span>
-                              
+
                               {/* Librarian Approval Status Badge */}
                               {user.role === 'librarian' && (
-                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase border ${
-                                  (user.status || 'pending') === 'approved'
+                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase border ${(user.status || 'pending') === 'approved'
                                     ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
                                     : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
-                                }`}>
+                                  }`}>
                                   {user.status || 'pending'}
                                 </span>
                               )}
@@ -418,11 +417,10 @@ const ManageUsersByAdmin = ({ users = [] }) => {
 
                                 {/* Librarian Approval Status Badge */}
                                 {user.role === 'librarian' && (
-                                  <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase border ${
-                                    (user.status || 'pending') === 'approved'
+                                  <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase border ${(user.status || 'pending') === 'approved'
                                       ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
                                       : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
-                                  }`}>
+                                    }`}>
                                     {user.status || 'pending'}
                                   </span>
                                 )}

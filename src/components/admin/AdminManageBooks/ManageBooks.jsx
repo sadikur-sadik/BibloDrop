@@ -201,7 +201,7 @@ const ManageBooks = ({ books = [] }) => {
 
   // Approval Status Badge helper
   const getStatusBadge = (book) => {
-    if (book.currentStatus === 'pending') {
+    if (book?.currentStatus === 'pending') {
       return {
         text: 'Pending',
         className: 'bg-[#856a26]/10 text-[#856a26] dark:bg-[#ffcd00]/10 dark:text-[#ffcd00] border-[#856a26]/20 dark:border-[#ffcd00]/30',
@@ -217,7 +217,7 @@ const ManageBooks = ({ books = [] }) => {
 
   // Visibility Status Badge helper
   const getVisibilityBadge = (book) => {
-    if (book.isPublished) {
+    if (book?.isPublished) {
       return {
         text: 'Published',
         className: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
@@ -294,7 +294,7 @@ const ManageBooks = ({ books = [] }) => {
                   exit="hidden"
                   className="space-y-4"
                 >
-                  {localBooks.map((book) => {
+                  {localBooks?.map((book) => {
                     const statusBadge = getStatusBadge(book);
                     const visBadge = getVisibilityBadge(book);
 
@@ -302,14 +302,14 @@ const ManageBooks = ({ books = [] }) => {
                       <motion.div
                         layout
                         variants={itemVariants}
-                        key={book._id}
+                        key={book?._id}
                         className="p-5 rounded-2xl border border-slate-200/80 dark:border-gray-800/80 bg-white/40 dark:bg-[#2c2f38]/20 backdrop-blur-md space-y-4"
                       >
                         <div className="flex items-center gap-4">
-                          {book.coverImage && (
+                          {book?.coverImage && (
                             <Image
-                              src={book.coverImage}
-                              alt={book.title}
+                              src={book?.coverImage}
+                              alt={book?.title}
                               width={64}
                               height={80}
                               className="w-16 h-20 object-cover rounded-lg shadow-sm"
@@ -317,10 +317,10 @@ const ManageBooks = ({ books = [] }) => {
                             />
                           )}
                           <div>
-                            <h4 className="font-extrabold text-sm leading-tight">{book.title}</h4>
-                            <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] mt-0.5">{book.author}</p>
+                            <h4 className="font-extrabold text-sm leading-tight">{book?.title}</h4>
+                            <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] mt-0.5">{book?.author}</p>
                             <span className="inline-block px-2 py-0.5 mt-2 rounded text-[10px] uppercase font-bold tracking-wider bg-slate-200/60 dark:bg-[#3d474e]/50 text-slate-600 dark:text-slate-300">
-                              {book.genre}
+                              {book?.genre}
                             </span>
                           </div>
                         </div>
@@ -345,7 +345,7 @@ const ManageBooks = ({ books = [] }) => {
 
                           <div className="col-span-2 flex justify-between items-center pt-1 border-t border-slate-100 dark:border-gray-800/40">
                             <span className="text-slate-400 uppercase tracking-wider text-[10px] font-extrabold">Quantity</span>
-                            <p className="text-sm font-bold">{book.quantity || '0'}</p>
+                            <p className="text-sm font-bold">{book?.quantity || '0'}</p>
                           </div>
                         </div>
 
@@ -387,13 +387,13 @@ const ManageBooks = ({ books = [] }) => {
                     </Table.Header>
 
                     <Table.Body>
-                      {localBooks.map((book, idx) => {
+                      {localBooks?.map((book, idx) => {
                         const statusBadge = getStatusBadge(book);
                         const visBadge = getVisibilityBadge(book);
 
                         return (
                           <Table.Row
-                            key={book._id}
+                            key={book?._id}
                             className="hover:bg-slate-100/40 dark:hover:bg-[#2c2f38]/20 transition-colors border-b border-slate-200/60 dark:border-gray-800/60 last:border-0"
                           >
                             <Table.Cell className="py-4">
@@ -403,10 +403,10 @@ const ManageBooks = ({ books = [] }) => {
                                 transition={{ delay: idx * 0.03, type: "spring", stiffness: 120 }}
                                 className="flex items-center gap-4"
                               >
-                                {book.coverImage && (
+                                {book?.coverImage && (
                                   <Image
-                                    src={book.coverImage}
-                                    alt={book.title}
+                                    src={book?.coverImage}
+                                    alt={book?.title}
                                     width={40}
                                     height={56}
                                     className="w-10 h-14 object-cover rounded-md shadow-sm border border-slate-200 dark:border-gray-800"
@@ -414,8 +414,8 @@ const ManageBooks = ({ books = [] }) => {
                                   />
                                 )}
                                 <div>
-                                  <h3 className="font-extrabold text-sm">{book.title}</h3>
-                                  <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] mt-0.5">{book.author}</p>
+                                  <h3 className="font-extrabold text-sm">{book?.title}</h3>
+                                  <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] mt-0.5">{book?.author}</p>
                                 </div>
                               </motion.div>
                             </Table.Cell>
@@ -426,12 +426,12 @@ const ManageBooks = ({ books = [] }) => {
                                 animate={{ opacity: 1, scale: 1 }}
                                 className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-slate-200/50 dark:bg-[#3d474e]/50 text-slate-600 dark:text-slate-300"
                               >
-                                {book.genre}
+                                {book?.genre}
                               </motion.span>
                             </Table.Cell>
 
                             <Table.Cell className="py-4 font-bold text-sm">
-                              {book.quantity || '0'}
+                              {book?.quantity || '0'}
                             </Table.Cell>
 
                             {/* Column 4: Approval Status */}

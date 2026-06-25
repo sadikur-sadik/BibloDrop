@@ -60,7 +60,7 @@ const UserMenu = ({ variant, onCloseMobileMenu, onOpenEditModal }) => {
                 <div className="relative h-8 w-8 rounded-full overflow-hidden border border-gray-100 dark:border-[#2c2f38]">
                   <Image 
                     src={user.image} 
-                    alt={user.name || "User profile"} 
+                    alt={user?.name || "User profile"} 
                     width={32}
                     height={32}
                     unoptimized
@@ -75,7 +75,7 @@ const UserMenu = ({ variant, onCloseMobileMenu, onOpenEditModal }) => {
               <span className="hidden lg:block text-sm font-semibold tracking-wide text-[#3d474e] dark:text-[#94a3b8] hover:text-[#192230] dark:hover:text-white transition-colors">
                 {user?.name}
               </span>
-              <svg className={`h-4 w-4 text-[#3d474e] dark:text-[#94a3b8] transform transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className={`h-4 w-4 text-[#3d474e] dark:text-[#94a3b8] transform transition-transform duration-250 ${isProfileOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
@@ -90,10 +90,10 @@ const UserMenu = ({ variant, onCloseMobileMenu, onOpenEditModal }) => {
                 >
                   <div className="px-4 py-3 border-b border-gray-100 dark:border-[#3d474e]">
                     <p className="text-xs font-bold text-[#192230] dark:text-white leading-none truncate mb-1">
-                      {user.name}
+                      {user?.name}
                     </p>
                     <p className="text-[10px] text-gray-400 dark:text-gray-400 truncate mb-2">
-                      {user.email}
+                      {user?.email}
                     </p>
                     <span className="inline-block px-1.5 py-0.5 text-[9px] font-bold tracking-wider uppercase rounded-sm bg-[#856a26]/10 text-[#856a26] dark:bg-[#ffcd00]/10 dark:text-[#ffcd00]">
                       {userRole}
@@ -146,7 +146,7 @@ const UserMenu = ({ variant, onCloseMobileMenu, onOpenEditModal }) => {
                 <div className="relative h-8 w-8 rounded-full overflow-hidden border border-gray-200 dark:border-[#2c2f38]">
                   <Image 
                     src={user.image} 
-                    alt={user.name || "User profile"} 
+                    alt={user?.name || "User profile"} 
                     width={32}
                     height={32}
                     unoptimized

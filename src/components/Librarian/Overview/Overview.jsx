@@ -10,17 +10,16 @@ import {motion} from "motion/react"
 const LibrarianOverview = ({ books = [], deliveries = [], reviews = [] }) => {
 
   // Data calculations
-  const totalPublished = books.filter(book => book.isPublished === true).length;
-  const totalUnpublished = books.filter(book => book.isPublished !== true).length;
+  const totalPublished = books?.filter(book => book?.isPublished === true)?.length || 0;
+  const totalUnpublished = books?.filter(book => book?.isPublished !== true)?.length || 0;
 
-  const totalRevenue = deliveries
-    .reduce((sum, d) => sum + parseFloat(d.paid || 0), 0);
+  const totalRevenue = deliveries?.reduce((sum, d) => sum + parseFloat(d?.paid || 0), 0) || 0;
 
-  const totalReviews = reviews.length;
+  const totalReviews = reviews?.length || 0;
 
-  const activePendingRequests = deliveries.filter(d =>
-    d.deliveryStatus === 'pending' || d.deliveryStatus === 'processing'
-  ).length;
+  const activePendingRequests = deliveries?.filter(d =>
+    d?.deliveryStatus === 'pending' || d?.deliveryStatus === 'processing'
+  )?.length || 0;
 
   return (
     /* 

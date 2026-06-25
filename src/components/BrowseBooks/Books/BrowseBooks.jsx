@@ -187,7 +187,7 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
           </motion.div>
         ) : (
           <>
-            {books.length === 0 ? (
+            {(books?.length || 0) === 0 ? (
               <motion.div
                 variants={itemVariants}
                 className="text-center py-16 px-4 bg-white dark:bg-[#192230]/30 border border-slate-200/60 dark:border-white/5 rounded-[2.5rem] shadow-sm mb-6"
@@ -210,8 +210,8 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
                 variants={itemVariants}
                 className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mb-6"
               >
-                {books.map((book) => (
-                  <BooksCard key={book._id} book={book} />
+                {books?.map((book) => (
+                  <BooksCard key={book?._id} book={book} />
                 ))}
               </motion.div>
             )}

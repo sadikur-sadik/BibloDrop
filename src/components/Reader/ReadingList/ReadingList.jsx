@@ -8,8 +8,8 @@ import { Table } from '@heroui/react';
 const ReadingList = ({ readingList = [] }) => {
   
   // Calculate collection summary statistics
-  const totalBooks = readingList.length;
-  const totalPaid = readingList.reduce((sum, book) => sum + (book.deliveryFee || 0), 0);
+  const totalBooks = readingList?.length || 0;
+  const totalPaid = readingList?.reduce((sum, book) => sum + (book?.deliveryFee || 0), 0) || 0;
 
   // Dynamic color tagging based on genre
   const getGenreBadgeStyles = (genre = '') => {
@@ -123,22 +123,22 @@ const ReadingList = ({ readingList = [] }) => {
                   exit="hidden"
                   className="space-y-4"
                 >
-                  {readingList.map((book) => {
-                    const genreClass = getGenreBadgeStyles(book.genre);
+                   {readingList?.map((book) => {
+                    const genreClass = getGenreBadgeStyles(book?.genre);
 
                     return (
                       <motion.div
                         layout
                         variants={itemVariants}
-                        key={book._id}
+                        key={book?._id}
                         className="p-5 rounded-2xl border border-slate-200/80 dark:border-gray-800/80 bg-white/40 dark:bg-[#2c2f38]/20 backdrop-blur-md flex flex-col gap-4 group hover:shadow-lg hover:shadow-slate-100/30 dark:hover:shadow-none transition-all duration-300"
                       >
                         <div className="flex items-start gap-4">
-                          {book.coverImage && (
+                          {book?.coverImage && (
                             <div className="relative overflow-hidden rounded-xl border border-slate-200 dark:border-gray-800 shadow-md shrink-0">
                               <Image
-                                src={book.coverImage}
-                                alt={book.title}
+                                src={book?.coverImage}
+                                alt={book?.title}
                                 width={64}
                                 height={88}
                                 className="w-16 h-22 object-cover transition-transform duration-300 group-hover:scale-105"
@@ -148,20 +148,20 @@ const ReadingList = ({ readingList = [] }) => {
                           )}
                           <div className="min-w-0 flex-1 py-1">
                             <span className={`inline-block px-2.5 py-0.5 mb-2 rounded-lg text-[9px] uppercase font-black tracking-wider border ${genreClass}`}>
-                              {formatGenre(book.genre)}
+                              {formatGenre(book?.genre)}
                             </span>
                             <h4 className="font-extrabold text-sm leading-snug text-slate-800 dark:text-slate-100 line-clamp-2">
-                              {book.title}
+                              {book?.title}
                             </h4>
                             <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] mt-0.5 truncate">
-                              by {book.author}
+                              by {book?.author}
                             </p>
                           </div>
                         </div>
 
                         <div className="pt-3.5 border-t border-slate-200/60 dark:border-gray-800/60 flex items-center justify-between">
                           <span className="text-slate-400 uppercase tracking-wider text-[9px] font-black">Receipt Verification</span>
-                          {renderPaidStatusBadge(book.deliveryFee)}
+                          {renderPaidStatusBadge(book?.deliveryFee)}
                         </div>
                       </motion.div>
                     );
@@ -188,12 +188,12 @@ const ReadingList = ({ readingList = [] }) => {
                     </Table.Header>
 
                     <Table.Body>
-                      {readingList.map((book, idx) => {
-                        const genreClass = getGenreBadgeStyles(book.genre);
+                      {readingList?.map((book, idx) => {
+                        const genreClass = getGenreBadgeStyles(book?.genre);
 
                         return (
                           <Table.Row
-                            key={book._id}
+                            key={book?._id}
                             className="hover:bg-slate-100/40 dark:hover:bg-[#2c2f38]/20 transition-all border-b border-slate-200/60 dark:border-gray-800/60 last:border-0 group"
                           >
                             <Table.Cell className="py-4">
@@ -203,11 +203,11 @@ const ReadingList = ({ readingList = [] }) => {
                                 transition={{ delay: idx * 0.03, type: "spring", stiffness: 120 }}
                                 className="flex items-center gap-4"
                               >
-                                {book.coverImage && (
+                                {book?.coverImage && (
                                   <div className="relative overflow-hidden rounded-lg border border-slate-200 dark:border-gray-800 shadow-sm shrink-0">
                                     <Image
-                                      src={book.coverImage}
-                                      alt={book.title}
+                                      src={book?.coverImage}
+                                      alt={book?.title}
                                       width={40}
                                       height={56}
                                       className="w-10 h-14 object-cover transition-transform duration-300 group-hover:scale-105"
@@ -217,22 +217,22 @@ const ReadingList = ({ readingList = [] }) => {
                                 )}
                                 <div className="min-w-0">
                                   <h3 className="font-extrabold text-sm text-slate-800 dark:text-white truncate max-w-[320px]">
-                                    {book.title}
+                                    {book?.title}
                                   </h3>
-                                  <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] mt-0.5">by {book.author}</p>
+                                  <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] mt-0.5">by {book?.author}</p>
                                 </div>
                               </motion.div>
                             </Table.Cell>
 
                             <Table.Cell className="py-4">
                               <span className={`inline-block px-3 py-1 rounded-xl text-xs font-extrabold uppercase tracking-wide border ${genreClass}`}>
-                                {formatGenre(book.genre)}
+                                {formatGenre(book?.genre)}
                               </span>
                             </Table.Cell>
 
                             <Table.Cell className="py-4 text-right">
                               <div className="flex items-center justify-end">
-                                {renderPaidStatusBadge(book.deliveryFee)}
+                                {renderPaidStatusBadge(book?.deliveryFee)}
                               </div>
                             </Table.Cell>
                           </Table.Row>

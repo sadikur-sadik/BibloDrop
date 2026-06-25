@@ -60,12 +60,12 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
   const isAuthenticated = !!user;
   
   const isOwner = isAuthenticated && 
-    user.role === 'librarian' && (
-      user._id === currentBook.librarianId || 
-      user.email === currentBook.librarianEmail
+    user?.role === 'librarian' && (
+      user?._id === currentBook?.librarianId || 
+      user?.email === currentBook?.librarianEmail
     );
 
-  const isAvailable = currentBook.quantity > 0 && deliveryStatus === 'Available';
+  const isAvailable = (currentBook?.quantity || 0) > 0 && deliveryStatus === 'Available';
 
   const handleDeliveryAction = () => {
     if (!isAuthenticated) {
@@ -101,8 +101,8 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
           <div className="lg:col-span-4 flex items-center justify-center bg-slate-100/50 dark:bg-[#192230]/30 rounded-2xl p-6 min-h-75 sm:min-h-100">
             <div className="relative w-40 h-56 sm:w-48 sm:h-72">
               <Image 
-                src={currentBook.coverImage} 
-                alt={currentBook.title}
+                src={currentBook?.coverImage} 
+                alt={currentBook?.title}
                 fill
                 priority
                 unoptimized
@@ -115,7 +115,7 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
             <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="bg-[#856a26]/10 text-[#856a26] dark:bg-[#ffcd00]/10 dark:text-[#ffcd00] px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">
-                  {currentBook.genre}
+                  {currentBook?.genre}
                 </span>
                 
                 <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
@@ -132,33 +132,33 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
                     : deliveryStatus === 'Delivered'
                       ? 'Delivered'
                       : isAvailable 
-                        ? `Available (${currentBook.quantity})` 
+                        ? `Available (${currentBook?.quantity || 0})` 
                         : 'Checked Out'
                   }
                 </span>
               </div>
 
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight">
-                {currentBook.title}
+                {currentBook?.title}
               </h1>
 
               <p className="text-slate-600 dark:text-slate-300 text-sm">
-                by <span className="font-semibold">{currentBook.author}</span>
+                by <span className="font-semibold">{currentBook?.author}</span>
               </p>
 
               <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed border-t border-slate-100 dark:border-gray-800 pt-4">
-                {currentBook.description}
+                {currentBook?.description}
               </p>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm border-t border-slate-100 dark:border-gray-800 pt-4 items-center">
                 <div>
                   <span className="text-slate-400 block text-xs">Delivery Fee</span>
-                  <span className="font-bold text-base">${currentBook.deliveryFee?.toFixed(2)}</span>
+                  <span className="font-bold text-base">${currentBook?.deliveryFee?.toFixed(2)}</span>
                 </div>
                 <div>
                   <span className="text-slate-400 block text-xs">Date Cataloged</span>
                   <span className="font-semibold text-slate-700 dark:text-slate-300">
-                    {new Date(currentBook.createdAt).toLocaleDateString()}
+                    {currentBook?.createdAt ? new Date(currentBook.createdAt).toLocaleDateString() : ''}
                   </span>
                 </div>
                 
@@ -168,8 +168,8 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
                     <div className="flex items-center gap-2.5">
                       <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0 border border-slate-200 dark:border-gray-800">
                         <Image 
-                          src={librarian.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=80"} 
-                          alt={librarian.name}
+                          src={librarian?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=80"} 
+                          alt={librarian?.name}
                           fill
                           className="object-cover"
                           unoptimized
@@ -177,10 +177,10 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
                       </div>
                       <div className="min-w-0">
                         <span className="font-bold block text-xs truncate text-slate-700 dark:text-slate-300 leading-tight">
-                          {librarian.name}
+                          {librarian?.name}
                         </span>
                         <span className="text-[10px] text-slate-400 block truncate leading-tight mt-0.5">
-                          {librarian.email}
+                          {librarian?.email}
                         </span>
                       </div>
                     </div>
@@ -197,8 +197,8 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
                 />
               ) : (
                 <DeliveryRequestButton 
-                  bookId={currentBook._id}
-                  deliveryFee={currentBook.deliveryFee}
+                  bookId={currentBook?._id}
+                  deliveryFee={currentBook?.deliveryFee}
                   isAuthenticated={isAuthenticated}
                   isAvailable={isAvailable}
                   isOwner={isOwner}
@@ -222,13 +222,13 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
           <div className="lg:col-span-8 space-y-6">
             
             <PassingReview 
-              bookId={currentBook._id}
-              bookName={currentBook.title}
+              bookId={currentBook?._id}
+              bookName={currentBook?.title}
               currentUser={user}
               isAuthenticated={isAuthenticated}
               deliveryInfo={deliveryInfo}
               onAddReview={handleAddNewReview}
-              librarianId={currentBook.librarianId} // Passed librarianId down here
+              librarianId={currentBook?.librarianId} // Passed librarianId down here
             />
 
             {reviewsList.length === 0 ? (

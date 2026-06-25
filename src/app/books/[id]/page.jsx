@@ -9,7 +9,7 @@ import React from 'react';
 const BookDetailsPage = async({params}) => {
   const {id} = await params
   const book = await getSingleBook(id)
-  const librarianInfo = await getUsersAPI(book.librarianId)
+  const librarianInfo = book?.librarianId ? await getUsersAPI(book.librarianId) : null;
   const user = await getUserSession();
   const deliveryInfo = await getDeliveryInfo(user?.id,id)
   const reviews = await getReviews(id)

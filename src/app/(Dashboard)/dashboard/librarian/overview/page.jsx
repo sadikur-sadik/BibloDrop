@@ -9,7 +9,7 @@ const LibrarianHomePage = async() => {
 
   const user =  await getUserSession()
   const booksOftheLibrarian = await getBooksByLibrarian(user?.id)
-  const deliveryRequests = await getDeliveriesByLibrarian(user.id, "")
+  const deliveryRequests = await getDeliveriesByLibrarian(user?.id, "")
   const allReviews = await getAllLibrarianReviews(user?.id,"")
 
   return (

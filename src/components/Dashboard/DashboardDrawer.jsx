@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 // Valid Gravity UI Icons mapped to BiblioDrop actions
 import {
@@ -97,16 +98,20 @@ const DashboardDrawer = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Fallback state if authClient session isn't loaded/mocked
-  const user = { name: "Sadikur Sadik", role: "librarian", image: null };
-  const userRole = user.role;
+  // Fetch session data and status directly from authClient
+  const { data: session, isPending } = authClient.useSession();
+  const isLoading = isPending;
 
-  // 1. Auto-close the menu whenever the route (pathname) changes
+  // Safely extract the role, defaulting to "reader" if unauthenticated or not found
+  const user = session?.user;
+  const userRole = user?.role?.toLowerCase() || "reader";
+
+  // Auto-close the menu whenever the route (pathname) changes
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
 
-  // 2. Prevent body scroll when the mobile menu is open
+  // Prevent body scroll when the mobile menu is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -117,16 +122,16 @@ const DashboardDrawer = () => {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
-  
+
   const getLinkClass = (href) => {
     const isActive = pathname === href;
-    return `flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all w-full border-l-4 ${
-      isActive
+    return `flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all w-full border-l-4 ${isActive
         ? "bg-slate-200/80 dark:bg-[#2c2f38] text-[#192230] dark:text-[#ffcd00] border-[#856a26] dark:border-[#ffcd00] shadow-sm"
         : "text-[#3d474e] dark:text-[#9ea7b3] hover:text-[#192230] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#2c2f38]/40 border-transparent"
-    }`;
+      }`;
   };
 
+  // Determine active navigation segments based on the authenticated user's role
   const navSections = userRole === "admin"
     ? ADMIN_NAV
     : userRole === "librarian"
@@ -155,51 +160,77 @@ const DashboardDrawer = () => {
       {/* Profile Card Panel */}
       <div className="flex items-center gap-3.5 p-3.5 bg-white dark:bg-[#2c2f38]/60 rounded-2xl border border-slate-200 dark:border-gray-800 shadow-sm mb-8 transition-colors duration-300">
         <div className="relative h-10 w-10 rounded-full bg-slate-200 dark:bg-[#192230] border border-slate-300 dark:border-gray-800 overflow-hidden flex items-center justify-center shrink-0">
-          <Image
-            src={user?.image || DEFAULT_AVATAR}
-            alt={user?.name || "User Profile"}
-            fill
-            className="object-cover"
-          />
+          {isLoading ? (
+            <div className="w-full h-full bg-slate-300 dark:bg-slate-700 animate-pulse" />
+          ) : (
+            <Image
+              src={user?.image || DEFAULT_AVATAR}
+              alt={user?.name || "User Profile"}
+              fill
+              className="object-cover"
+            />
+          )}
         </div>
         <div className="flex flex-col min-w-0">
-          <span className="text-sm font-extrabold truncate text-[#192230] dark:text-slate-100">
-            {user?.name || "User Name"}
-          </span>
-          <span className={`text-[10px] uppercase font-black tracking-wider px-2 py-0.5 rounded w-max mt-1 ${
-            userRole === "admin"
-              ? "text-rose-600 bg-rose-500/10 dark:text-rose-400"
-              : userRole === "librarian"
-                ? "text-amber-600 bg-amber-500/10 dark:text-amber-400"
-                : "text-emerald-600 bg-emerald-500/10 dark:text-emerald-400"
-          }`}>
-            {userRole === "admin" ? "Admin" : userRole === "librarian" ? "Librarian" : "Reader"}
-          </span>
+          {isLoading ? (
+            <div className="space-y-2">
+              <div className="h-3.5 w-24 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />
+              <div className="h-3 w-16 bg-slate-150 dark:bg-slate-800 rounded animate-pulse" />
+            </div>
+          ) : (
+            <>
+              <span className="text-sm font-extrabold truncate text-[#192230] dark:text-slate-100">
+                {user?.name || "User Name"}
+              </span>
+              <span className={`text-[10px] uppercase font-black tracking-wider px-2 py-0.5 rounded w-max mt-1 ${userRole === "admin"
+                  ? "text-rose-600 bg-rose-500/10 dark:text-rose-400"
+                  : userRole === "librarian"
+                    ? "text-amber-600 bg-amber-500/10 dark:text-amber-400"
+                    : "text-emerald-600 bg-emerald-500/10 dark:text-emerald-400"
+                }`}>
+                {userRole === "admin" ? "Admin" : userRole === "librarian" ? "Librarian" : "Reader"}
+              </span>
+            </>
+          )}
         </div>
       </div>
 
       {/* Sidebar Navigation */}
       <nav className="flex-1 space-y-6 overflow-y-auto pr-1 hidden-scrollbar">
-        {navSections.map((section, sectionIdx) => (
-          <div key={sectionIdx} className="space-y-1.5">
-            <p className="text-[10px] font-black text-[#3d474e]/60 dark:text-[#9ea7b3]/40 uppercase tracking-widest px-4 mb-2 select-none">
-              {section.title}
-            </p>
-            {section.links.map((link, linkIdx) => {
-              const IconComponent = link.icon;
-              return (
-                <Link
-                  key={linkIdx}
-                  href={link.href}
-                  className={getLinkClass(link.href)}
-                >
-                  <IconComponent className="w-5 h-5 text-[#3d474e] dark:text-[#9ea7b3]" />
-                  {link.label}
-                </Link>
-              );
-            })}
+        {isLoading ? (
+          // Skeleton loading placeholders for links
+          <div className="space-y-6">
+            {[1, 2].map((group) => (
+              <div key={group} className="space-y-2">
+                <div className="h-2 w-16 bg-slate-200 dark:bg-slate-700/50 rounded animate-pulse px-4 mb-3" />
+                {[1, 2, 3].map((link) => (
+                  <div key={link} className="h-10 w-full bg-slate-100 dark:bg-slate-800/40 rounded-xl animate-pulse" />
+                ))}
+              </div>
+            ))}
           </div>
-        ))}
+        ) : (
+          navSections.map((section, sectionIdx) => (
+            <div key={sectionIdx} className="space-y-1.5">
+              <p className="text-[10px] font-black text-[#3d474e]/60 dark:text-[#9ea7b3]/40 uppercase tracking-widest px-4 mb-2 select-none">
+                {section.title}
+              </p>
+              {section.links.map((link, linkIdx) => {
+                const IconComponent = link.icon;
+                return (
+                  <Link
+                    key={linkIdx}
+                    href={link.href}
+                    className={getLinkClass(link.href)}
+                  >
+                    <IconComponent className="w-5 h-5 text-[#3d474e] dark:text-[#9ea7b3]" />
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </div>
+          ))
+        )}
       </nav>
     </div>
   );
@@ -222,18 +253,16 @@ const DashboardDrawer = () => {
         </button>
 
         {/* Backdrop Overlay */}
-        <div 
+        <div
           onClick={() => setIsOpen(false)}
-          className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity duration-300 ease-in-out ${
-            isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-          }`}
+          className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity duration-300 ease-in-out ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+            }`}
         />
 
         {/* Drawer Container Panel */}
-        <div 
-          className={`fixed top-0 left-0 bottom-0 z-50 w-64 bg-slate-50 dark:bg-[#192230] shadow-2xl transform transition-transform duration-300 ease-in-out ${
-            isOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+        <div
+          className={`fixed top-0 left-0 bottom-0 z-50 w-64 bg-slate-50 dark:bg-[#192230] shadow-2xl transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
         >
           {renderSidebarContent(() => setIsOpen(false))}
         </div>

@@ -14,8 +14,8 @@ const EditProfileModal = ({ isOpen, onClose, user }) => {
 
   useEffect(() => {
     if (user) {
-      setEditName(user.name || '');
-      setEditImage(user.image || '');
+      setEditName(user?.name || '');
+      setEditImage(user?.image || '');
     }
   }, [user]);
 
