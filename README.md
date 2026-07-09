@@ -1,54 +1,62 @@
-# BiblioDrop
+# 📚 BiblioDrop
 
-## Description: 
-This is my first industry level project, where I handled both backend and frontend. This project is about reading books. So, it is a perfect book for avit readers. It this app, there are several roles- Admin, Librarian, Reader. They each have distinct features and interfaces. Readers can borrow books, submit review on it, while the Librarians most books and delivers it to the readers. On the other hand, the admin watchover all the operations.
+> Your Local Library, Delivered. A full-stack, industry-level platform bridging the gap between literature and local communities.
 
-## Role Based Functionality:
-### Admin:
-- Dashboard: The dashboard will show the total revenue, reviews, and user related information such as number of users, how many books are delivered etc.Visual Representation of data by rechart.
-- Approvals: They can approve the librarians to post books, promote or demote an user's role. They can even publish or unpublish books
-- Transaction History: They can see the transaction history
-### Librarian:
-- Dashboard: The dashboard will show only the revenue, reviews, and user related information of how many books are delivered etc of their books.Visual Representation of data by rechart.
-- Add books: Librarians, who are given approval, can add books with necessary information
-- Inventory Management: Librarian can update, publish/unpublish, or delete their books.
-- Manage Deliveries: Librarian can give live information to the readers about the book they bought. Librarian can - give info of dispatching and successfully delivered.
-### Reader:
-- Dashboard: Readers can see information about their spending, how many books they have read (delivered) etc.Visual Representation of data by rechart.
-- Delivery History: Readers can see live update of their requested books
-- My Reading List: Readers can see the books they have completed so far (delivered books only).
-- My Reviews : Readers can see every interactions they made. They can also edit or delete the interactions.
+<p align="center">
+  <img src="https://i.ibb.co.com/bMgqj6bX/image.png" alt="BiblioDrop Homepage Preview" width="100%" />
+</p>
 
-## Features:
-- Browse books section to display all published books.
-- Pagination, Filter, Sort, Search from backend. And these operations can be copied too.
-- In the details section of a book, people who only never borrowed the book or someone who is not owner of the book.
-- Only the people who borrowed the book can pass a review.
-- Banner with carousel.
-- Stats, Top librarian static sections.
-- Categories section. Clicking these will take users to browse page with specific filter applied.
-- Footer, Navbar , Theme toggle, editing profile, contact authority etc. also available.
+## 🔗 Live Links
+- **Live Application:** [https://biblo-drop.vercel.app](https://biblo-drop.vercel.app)
 
-## Technologies:
+---
 
-### FrontEnd:
-- HTML5
-- CSS3
-- JS (ES6)
-- Next js
-- MongoDB
-- Better Auth
-- Stripe (Payment integration)
-- ReChart
-- Hero UI
-- React Toastify
-### BackEnd:
-- Node.js
-- Express.js
-- MONGODB
-- CORS
-- DOTENV
-- JWT authorization
+## 📝 Description
+**BiblioDrop** is an industry-ready, full-stack platform designed to make reading deeply accessible by allowing local residents to borrow books entirely from home. Built to serve avid readers, the system introduces a comprehensive multi-tenant architecture with three distinct user roles: **Admin, Librarian, and Reader**. Each role navigates a unique interface equipped with specific data access and specialized features to create a seamless, community-driven reading cycle.
 
-## Live Link:
-https://biblo-drop.vercel.app
+---
+
+## 👥 Role-Based Functionality
+
+### 👑 Admin Interface
+- **Comprehensive Dashboard:** Visual data representations using Recharts to track overall platform metrics, including total revenue, active reviews, total user registration counts, and total book deliveries.
+- **Access Control & Approvals:** Manage librarian validation status, authorize book posting permissions, and directly update user permissions (promote/demote user roles).
+- **Content Moderation:** Ability to instantly publish or unpublish books across the platform globally.
+- **Financial Auditing:** Access a complete cross-platform transaction history.
+
+### 💼 Librarian Interface
+- **Tailored Dashboard:** Tracks dynamic business analytics exclusive to their uploaded catalogs, highlighting personal revenue performance, review histories, and fulfillment stats via Recharts.
+- **Inventory Control:** Authorized librarians can dynamically add new literary works, update inventory data, configure visibility (publish/unpublish), or remove listings entirely.
+- **Live Delivery Management:** Update order pipelines natively, allowing readers to see real-time logistical transitions from *dispatched* to *successfully delivered*.
+
+### 📖 Reader Interface
+- **Personalized Dashboard:** A stylized overview documenting individual financial spending habits, total library engagement, and visual feedback on reading history graphs via Recharts.
+- **Order Tracking:** Real-time logistics logs updating readers on the movement of their requested material.
+- **Reading Logs:** A curated "My Reading List" section archiving every successfully completed, delivered book.
+- **Interactive Reviews:** Personal feedback archive tracking user impressions, with absolute CRUD control to add, edit, or delete personal reviews.
+
+---
+
+## 🚀 Key Features
+- **Advanced Book Directory:** High-performance catalog searching, multi-key filtering, and sorting managed entirely on the backend for quick processing.
+- **Persistent States:** Advanced backend-driven pagination mechanics allow users to copy/share their exact search/filter result strings via unique URLs.
+- **Conditional Actions:** Smart business logic restrictions ensure that book details, borrowing privileges, and product review features are securely isolated to non-owners and qualified borrowers.
+- **Engaging UI Elements:** Dynamic banner carousel systems, stylized statistics displays, top librarian spotlight modules, full theme toggles, clean user profile editing, and built-in contact forms.
+
+---
+
+## 🛠️ Technologies Used
+
+### 🎨 Frontend Stack
+* **Framework:** Next.js (React)
+* **Design & UI Frameworks:** Hero UI, Tailwind CSS, HTML5, CSS3
+* **State & Utilities:** JavaScript (ES6+), React Toastify
+* **Authentication:** Better Auth
+* **Payment Gateway:** Stripe API Integration
+* **Data Visualization:** Recharts
+
+### ⚙️ Backend Stack
+* **Runtime Environment:** Node.js
+* **Server Architecture:** Express.js
+* **Database Management:** MongoDB
+* **Security & Gateways:** JWT (JSON Web Tokens), CORS, Dotenv
