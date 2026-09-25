@@ -15,8 +15,18 @@ const authHeader = async () => {
   }
 };
 
+const getBackendUrl = () => {
+  if (process.env.BACKEND_URL && process.env.BACKEND_URL.trim()) {
+    return process.env.BACKEND_URL.trim();
+  }
+  if (process.env.NODE_ENV === "production") {
+    return "https://biblo-drop-backend.vercel.app";
+  }
+  return "http://localhost:5000";
+};
+
 export const serverMutation = async (key, operation, data) => {
-  const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
+  const backendUrl = getBackendUrl();
   const res = await fetch(`${backendUrl}/${key}`, {
     method: operation,
     headers: {
@@ -24,7 +34,7 @@ export const serverMutation = async (key, operation, data) => {
       ...await authHeader()
     },
     body: JSON.stringify(data),
-    signal: AbortSignal.timeout(8000)
+    cache: 'no-store'
   });
   if (!res.ok) {
     throw new Error(`Mutation failed: ${res.statusText}`);
@@ -33,7 +43,7 @@ export const serverMutation = async (key, operation, data) => {
 };
 
 export const serverFetch = async (key, query = "") => {
-  const backendUrl = process.env.BACKEND_URL || "http://localhost:5000";
+  const backendUrl = getBackendUrl();
   try {
     const res = await fetch(`${backendUrl}/${key}${query}`, {
       method: 'GET',
@@ -41,8 +51,7 @@ export const serverFetch = async (key, query = "") => {
         'Content-Type': 'application/json',
         ...await authHeader()
       },
-      cache: 'no-store',
-      signal: AbortSignal.timeout(5000)
+      cache: 'no-store'
     });
 
     if (!res.ok) {
