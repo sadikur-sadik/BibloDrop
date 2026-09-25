@@ -16,13 +16,20 @@ const authHeader = async () => {
 };
 
 const getBackendUrl = () => {
-  if (process.env.BACKEND_URL && process.env.BACKEND_URL.trim()) {
-    return process.env.BACKEND_URL.trim();
+  let url = process.env.BACKEND_URL ? process.env.BACKEND_URL.trim() : "";
+  
+  // In production (e.g. Vercel deployment), if BACKEND_URL is empty or points to localhost, force deployed backend URL
+  if (process.env.NODE_ENV === "production" || process.env.VERCEL === "1") {
+    if (!url || url.includes("localhost") || url.includes("127.0.0.1")) {
+      url = "https://biblo-drop-backend.vercel.app";
+    }
   }
-  if (process.env.NODE_ENV === "production") {
-    return "https://biblo-drop-backend.vercel.app";
+
+  if (!url) {
+    url = "http://localhost:5000";
   }
-  return "http://localhost:5000";
+
+  return url.replace(/\/+$/, "");
 };
 
 export const serverMutation = async (key, operation, data) => {
