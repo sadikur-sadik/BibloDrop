@@ -4,13 +4,15 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sun, Moon } from '@gravity-ui/icons';
+import { Sun, Moon, Bell } from '@gravity-ui/icons';
 import { useTheme } from 'next-themes';
 import { authClient } from '@/lib/auth-client';
+import { getNotificationsAPI, markNotificationsAsReadAPI } from '@/lib/fetch/notifications';
 
 // Imported components
 import UserMenu from './UserMenu/UserMenu';
 import EditProfileModal from './UserMenu/EditProfile';
+import NotificationModal from './NotificationModal';
 
 const Navbar = () => {
   const { setTheme, resolvedTheme } = useTheme();
@@ -21,12 +23,54 @@ const Navbar = () => {
   const [mounted, setMounted] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
+  // Notification states
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [isLoadingNotifications, setIsLoadingNotifications] = useState(false);
+
   const user = session?.user;
+
+  const fetchNotifications = async () => {
+    if (!user) return;
+    setIsLoadingNotifications(true);
+    try {
+      const data = await getNotificationsAPI();
+      if (data) {
+        setNotifications(data.notifications || []);
+        setUnreadCount(data.unreadCount || 0);
+      }
+    } catch (error) {
+      console.error("Failed to fetch notifications:", error);
+    } finally {
+      setIsLoadingNotifications(false);
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markNotificationsAsReadAPI();
+      setUnreadCount(0);
+      setNotifications((prev) =>
+        prev.map((item) => ({ ...item, isRead: true }))
+      );
+    } catch (error) {
+      console.error("Failed to mark notifications as read:", error);
+    }
+  };
 
   // Sync state after mounting to avoid hydration mismatches
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      fetchNotifications();
+      const interval = setInterval(fetchNotifications, 20000);
+      return () => clearInterval(interval);
+    }
+  }, [user?.id, user?.email]);
 
   const isDarkMode = resolvedTheme === 'dark';
 
@@ -52,19 +96,20 @@ const Navbar = () => {
   const closeMobileMenu = () => setIsOpen(false);
 
   return (
-    <nav className="sticky top-0 max-w-360 mx-auto z-50 w-full border-b border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
-      <div className="mx-auto w-[90%] md:w-[92%] xl:w-[95%] px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between">
+    <nav className="sticky top-0 mx-auto z-50 w-full max-w-[2560px] 3xl:max-w-[3400px] border-b border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
+      {/* Outer bounds & padding scaled up for 1440px, 1920px, 2K, and 4K viewports */}
+      <div className="mx-auto w-[92%] xl:w-[95%] px-6 lg:px-8 xl:px-12 2xl:px-16 3xl:px-24">
+        <div className="flex h-20 xl:h-24 2xl:h-28 items-center justify-between">
 
-          {/* Logo Section */}
-          <Link href="/" className="group flex items-center gap-2">
+          {/* Logo Section - Scaled font and SVG sizing for large displays */}
+          <Link href="/" className="group flex items-center gap-2 xl:gap-3">
             <motion.div
               whileHover={{ y: -2 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
               className="text-[#856a26] dark:text-[#ffcd00]"
             >
               <svg
-                className="h-7 w-7"
+                className="h-7 w-7 xl:h-8 xl:w-8 2xl:h-9 2xl:w-9"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -82,20 +127,20 @@ const Navbar = () => {
               </svg>
             </motion.div>
 
-            <span className="font-serif text-2xl font-light tracking-wide text-[#192230] transition-colors duration-300 dark:text-[#FFFFFF]">
+            <span className="font-serif text-2xl xl:text-3xl 2xl:text-4xl font-light tracking-wide text-[#192230] transition-colors duration-300 dark:text-[#FFFFFF]">
               Biblio<span className="font-extrabold tracking-normal text-[#856a26] dark:text-[#ffcd00]">Drop</span>
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden items-center space-x-8 md:flex">
+          {/* Desktop Navigation - Enhanced spacing and text scale on xl & 2xl viewports */}
+          <div className="hidden items-center space-x-8 xl:space-x-10 2xl:space-x-14 md:flex">
             {navLinks.map((link) => {
               const isActive = isRouteActive(link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative py-1 text-sm font-semibold tracking-wide transition-colors duration-200 ${isActive
+                  className={`relative py-1 text-sm xl:text-base 2xl:text-lg font-semibold tracking-wide transition-colors duration-200 ${isActive
                     ? 'text-[#856a26] dark:text-[#ffcd00]'
                     : 'text-[#3d474e] hover:text-[#192230] dark:text-[#94a3b8] dark:hover:text-white'
                     }`}
@@ -114,6 +159,25 @@ const Navbar = () => {
 
             {/* Desktop User Option */}
             <UserMenu variant="desktop" onOpenEditModal={() => setIsEditModalOpen(true)} />
+
+            {/* Notification Bell Button (Desktop) */}
+            {user && (
+              <button
+                onClick={() => {
+                  fetchNotifications();
+                  setIsNotificationModalOpen(true);
+                }}
+                className="relative rounded-full p-2.5 transition-colors duration-200 hover:bg-gray-100 text-[#192230] dark:hover:bg-[#2c2f38] dark:text-[#FFFFFF] flex items-center justify-center min-w-10 min-h-10 cursor-pointer"
+                aria-label="Notifications"
+              >
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow-xs">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </button>
+            )}
 
             {/* Theme Toggle Button */}
             <button
@@ -175,20 +239,41 @@ const Navbar = () => {
               <div className="pt-4 flex items-center justify-between border-t border-gray-100 dark:border-[#2c2f38]">
                 <UserMenu variant="mobile-cta" onCloseMobileMenu={closeMobileMenu} />
 
-                <button
-                  onClick={toggleTheme}
-                  className="rounded-full p-2.5 bg-gray-55 dark:bg-[#2c2f38] text-[#192230] dark:text-white flex items-center justify-center min-w-10 min-h-10"
-                >
-                  {mounted ? (
-                    isDarkMode ? (
-                      <Sun className="h-5 w-5 text-[#ffcd00]" />
-                    ) : (
-                      <Moon className="h-5 w-5 text-[#192230]" />
-                    )
-                  ) : (
-                    <div className="h-5 w-5" />
+                <div className="flex items-center gap-2">
+                  {user && (
+                    <button
+                      onClick={() => {
+                        closeMobileMenu();
+                        fetchNotifications();
+                        setIsNotificationModalOpen(true);
+                      }}
+                      className="relative rounded-full p-2.5 bg-gray-55 dark:bg-[#2c2f38] text-[#192230] dark:text-white flex items-center justify-center min-w-10 min-h-10 cursor-pointer"
+                      aria-label="Notifications"
+                    >
+                      <Bell className="h-5 w-5" />
+                      {unreadCount > 0 && (
+                        <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow-xs">
+                          {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                      )}
+                    </button>
                   )}
-                </button>
+
+                  <button
+                    onClick={toggleTheme}
+                    className="rounded-full p-2.5 bg-gray-55 dark:bg-[#2c2f38] text-[#192230] dark:text-white flex items-center justify-center min-w-10 min-h-10"
+                  >
+                    {mounted ? (
+                      isDarkMode ? (
+                        <Sun className="h-5 w-5 text-[#ffcd00]" />
+                      ) : (
+                        <Moon className="h-5 w-5 text-[#192230]" />
+                      )
+                    ) : (
+                      <div className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -205,6 +290,15 @@ const Navbar = () => {
           />
         )}
       </AnimatePresence>
+
+      {/* Notification Modal */}
+      <NotificationModal
+        isOpen={isNotificationModalOpen}
+        onClose={() => setIsNotificationModalOpen(false)}
+        notifications={notifications}
+        isLoading={isLoadingNotifications}
+        onMarkAllAsRead={handleMarkAllAsRead}
+      />
     </nav>
   );
 };

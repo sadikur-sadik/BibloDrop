@@ -60,7 +60,7 @@ const TopLibrarians = () => {
   };
 
   return (
-    <section className="w-full max-w-360 mx-auto bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-16 px-4 sm:px-8 md:px-16 lg:px-20 transition-colors duration-300 relative overflow-hidden select-none">
+    <section className="w-full max-w-[2560px] 3xl:max-w-[3400px] mx-auto bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-16 xl:py-24 2xl:py-32 px-4 sm:px-8 md:px-16 lg:px-20 transition-colors duration-300 relative overflow-hidden select-none">
       {/* Background visual accents */}
       <div className="absolute right-0 top-0 w-80 h-80 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute left-0 bottom-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -71,7 +71,7 @@ const TopLibrarians = () => {
         whileInView="visible"
         viewport={{ once: false, amount: 0.15 }}
         variants={containerVariants}
-        className="max-w-7xl mx-auto space-y-12 relative z-10"
+        className="w-full max-w-[2560px] 3xl:max-w-[3400px] mx-auto space-y-12 xl:space-y-16 2xl:space-y-20 relative z-10"
       >
         
         {/* Header Block with dynamic view-triggered entry */}

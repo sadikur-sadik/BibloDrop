@@ -73,7 +73,7 @@ const EditProfileModal = ({ isOpen, onClose, user }) => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className="relative w-full max-w-md rounded-xl border border-gray-100 bg-white p-6 shadow-xl dark:border-[#3d474e] dark:bg-[#2c2f38] max-h-[85vh] overflow-y-auto"
+        className="relative w-full max-w-md xl:max-w-lg 2xl:max-w-xl rounded-xl border border-gray-100 bg-white p-6 xl:p-8 2xl:p-10 shadow-xl dark:border-[#3d474e] dark:bg-[#2c2f38] max-h-[85vh] overflow-y-auto"
       >
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-lg font-bold text-[#192230] dark:text-white">Profile Settings</h3>

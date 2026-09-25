@@ -64,17 +64,17 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="w-full max-w-360 mx-auto border-t border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
-      <div className="mx-auto w-[90%] md:w-[92%] xl:w-[95%] px-6 py-12 lg:px-8 lg:py-16">
-        <div className="xl:grid xl:grid-cols-3 xl:gap-8">
+    <footer className="w-full mx-auto max-w-[2560px] 3xl:max-w-[3400px] border-t border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
+      <div className="mx-auto w-[92%] xl:w-[95%] px-6 py-12 lg:px-8 lg:py-16 xl:px-12 2xl:px-16 3xl:px-24 2xl:py-20">
+        <div className="xl:grid xl:grid-cols-3 2xl:grid-cols-4 xl:gap-8 2xl:gap-12">
 
-          {/* Brand Presentation Column */}
-          <div className="space-y-6">
-            <Link href="/" className="flex items-center gap-2">
+          {/* Brand Presentation Column - Scaled line-length and brand fonts on ultra-wide */}
+          <div className="space-y-6 2xl:col-span-1">
+            <Link href="/" className="flex items-center gap-2 xl:gap-3">
               {/* Custom SVG bookmark logo matching the Navbar */}
               <div className="text-[#856a26] dark:text-[#ffcd00]">
                 <svg
-                  className="h-7 w-7"
+                  className="h-7 w-7 xl:h-8 xl:w-8 2xl:h-9 2xl:w-9"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -91,25 +91,25 @@ const Footer = () => {
                   />
                 </svg>
               </div>
-              <span className="font-serif text-2xl font-light tracking-wide text-[#192230] dark:text-[#FFFFFF]">
+              <span className="font-serif text-2xl xl:text-3xl 2xl:text-4xl font-light tracking-wide text-[#192230] dark:text-[#FFFFFF]">
                 Biblio<span className="font-extrabold tracking-normal text-[#856a26] dark:text-[#ffcd00]">Drop</span>
               </span>
             </Link>
 
             {/* Custom concept text centered around BiblioDrop's delivery ecosystem */}
-            <p className="max-w-md text-sm leading-relaxed text-[#3d474e] dark:text-[#94a3b8]">
+            <p className="max-w-md xl:max-w-lg 2xl:max-w-xl text-sm xl:text-base leading-relaxed text-[#3d474e] dark:text-[#94a3b8]">
               Democratizing access to books by connecting readers with local libraries and book owners. Request doorstep delivery, manage reading lists, and streamline your borrowing experience seamlessly.
             </p>
 
             {/* Dynamic Social Icons with styled background circles */}
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 xl:space-x-5">
               {socialLinks.map((social) => (
                 <a
                   key={social.name}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 text-[#3d474e] transition-all duration-200 hover:bg-gray-100 dark:bg-[#2c2f38] dark:text-[#94a3b8] dark:hover:bg-[#3d474e] dark:hover:text-white"
+                  className="flex h-10 w-10 xl:h-11 xl:w-11 items-center justify-center rounded-full bg-gray-50 text-[#3d474e] transition-all duration-200 hover:bg-gray-100 dark:bg-[#2c2f38] dark:text-[#94a3b8] dark:hover:bg-[#3d474e] dark:hover:text-white"
                   aria-label={social.name}
                 >
                   {social.icon}
@@ -119,7 +119,7 @@ const Footer = () => {
           </div>
 
           {/* Interactive Navigation Grid */}
-          <div className="mt-12 grid grid-cols-1 gap-8 xl:col-span-2 xl:mt-0 sm:grid-cols-3">
+          <div className="mt-12 grid grid-cols-1 gap-8 xl:col-span-2 2xl:col-span-3 xl:mt-0 sm:grid-cols-3 xl:gap-12">
 
             {/* Explore Column */}
             <div>

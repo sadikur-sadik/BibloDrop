@@ -143,24 +143,24 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-        className="max-w-7xl mx-auto space-y-8 relative z-10"
+        className="w-full max-w-[2560px] 3xl:max-w-[3400px] mx-auto space-y-8 xl:space-y-10 2xl:space-y-12 3xl:space-y-16 relative z-10"
       >
 
         <motion.div
           variants={itemVariants}
           className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8"
         >
-          <h1 className="text-2xl font-black tracking-tight text-slate-800 dark:text-white">
+          <h1 className="text-2xl sm:text-3xl xl:text-4xl 2xl:text-5xl font-black tracking-tight text-slate-800 dark:text-white">
             Browse Digital<span className="text-[#856a26] dark:text-[#ffcd00]"> Collection</span>
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm xl:text-base text-slate-500 dark:text-slate-400 mt-1 max-w-2xl xl:max-w-3xl">
             Explore and search dynamic library catalogs. Access book profiles, delivery ranges, and availability statuses.
           </p>
         </motion.div>
 
         <motion.div
           variants={itemVariants}
-          className="bg-white dark:bg-[#192230]/40 p-5 rounded-[2rem] border border-slate-200/60 dark:border-white/5 space-y-4 shadow-sm"
+          className="bg-white dark:bg-[#192230]/40 p-5 xl:p-7 2xl:p-8 rounded-[2rem] border border-slate-200/60 dark:border-white/5 space-y-4 xl:space-y-6 shadow-sm"
         >
           <SearchBar searchQuery={searchInput} setSearchQuery={setSearchInput} />
 
@@ -179,7 +179,7 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
         {isLoading ? (
           <motion.div
             variants={itemVariants}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 min-[2200px]:grid-cols-8 gap-4 sm:gap-6"
           >
             <p className="text-slate-400 dark:text-slate-500 text-sm col-span-full py-8 text-center animate-pulse">
               Syncing catalog from database...
@@ -190,7 +190,7 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
             {(books?.length || 0) === 0 ? (
               <motion.div
                 variants={itemVariants}
-                className="text-center py-16 px-4 bg-white dark:bg-[#192230]/30 border border-slate-200/60 dark:border-white/5 rounded-[2.5rem] shadow-sm mb-6"
+                className="text-center py-16 px-4 bg-white dark:bg-[#192230]/30 border border-slate-200/60 dark:border-white/5 rounded-[2.5rem] shadow-sm mb-6 max-w-xl mx-auto"
               >
                 <p className="text-lg font-bold text-slate-500 dark:text-slate-400">
                   No matching books found
@@ -208,7 +208,7 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
             ) : (
               <motion.div
                 variants={itemVariants}
-                className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mb-6"
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 min-[2200px]:grid-cols-7 3xl:grid-cols-8 gap-4 sm:gap-6 xl:gap-7 2xl:gap-8 3xl:gap-10 mb-6"
               >
                 {books?.map((book) => (
                   <BooksCard key={book?._id} book={book} />

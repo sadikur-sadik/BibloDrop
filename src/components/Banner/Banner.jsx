@@ -27,7 +27,7 @@ const Banner = () => {
   };
 
   return (
-    <div className="embla relative w-full group max-w-360 mx-auto">
+    <div className="embla relative w-full group max-w-7xl xl:max-w-[1600px] 2xl:max-w-[1800px] min-[2200px]:max-w-[2200px] mx-auto px-4 sm:px-6 xl:px-8">
       {/* Viewport Wrapper - holds the slides cleanly without side gaps */}
       <div className="embla__viewport overflow-hidden rounded-3xl" ref={emblaRef}>
         <div className="embla__container flex">
