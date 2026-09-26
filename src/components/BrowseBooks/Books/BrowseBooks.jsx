@@ -133,7 +133,7 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
   };
 
   return (
-    <div className="w-full min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-slate-50/50 dark:bg-[#2c2f38]/20 transition-colors duration-300 relative overflow-hidden">
+    <div className="w-full min-h-screen py-8 px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 3xl:px-24 4k:px-32 bg-slate-50/50 dark:bg-[#2c2f38]/20 transition-colors duration-300 relative overflow-hidden">
 
       <div className="absolute right-0 top-0 w-96 h-96 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute left-0 bottom-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -143,17 +143,17 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-        className="w-full max-w-[2560px] 3xl:max-w-[3400px] mx-auto space-y-8 xl:space-y-10 2xl:space-y-12 3xl:space-y-16 relative z-10"
+        className="w-full max-w-[2560px] 3xl:max-w-[3400px] 4k:max-w-[3840px] mx-auto space-y-8 xl:space-y-10 2xl:space-y-12 3xl:space-y-16 4k:space-y-20 relative z-10"
       >
 
         <motion.div
           variants={itemVariants}
           className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8"
         >
-          <h1 className="text-2xl sm:text-3xl xl:text-4xl 2xl:text-5xl font-black tracking-tight text-slate-800 dark:text-white">
+          <h1 className="text-2xl sm:text-3xl xl:text-4xl 2xl:text-5xl 4k:text-6xl font-black tracking-tight text-slate-800 dark:text-white">
             Browse Digital<span className="text-[#856a26] dark:text-[#ffcd00]"> Collection</span>
           </h1>
-          <p className="text-xs sm:text-sm xl:text-base text-slate-500 dark:text-slate-400 mt-1 max-w-2xl xl:max-w-3xl">
+          <p className="text-xs sm:text-sm xl:text-base 4k:text-lg text-slate-500 dark:text-slate-400 mt-1 max-w-2xl xl:max-w-3xl 4k:max-w-5xl">
             Explore and search dynamic library catalogs. Access book profiles, delivery ranges, and availability statuses.
           </p>
         </motion.div>
@@ -179,7 +179,7 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
         {isLoading ? (
           <motion.div
             variants={itemVariants}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 min-[2200px]:grid-cols-8 gap-4 sm:gap-6"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 3xl:grid-cols-8 4k:grid-cols-10 gap-4 sm:gap-6"
           >
             <p className="text-slate-400 dark:text-slate-500 text-sm col-span-full py-8 text-center animate-pulse">
               Syncing catalog from database...
@@ -208,7 +208,7 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
             ) : (
               <motion.div
                 variants={itemVariants}
-                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 min-[2200px]:grid-cols-7 3xl:grid-cols-8 gap-4 sm:gap-6 xl:gap-7 2xl:gap-8 3xl:gap-10 mb-6"
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 3xl:grid-cols-8 4k:grid-cols-10 gap-4 sm:gap-6 xl:gap-7 2xl:gap-8 3xl:gap-10 4k:gap-12 mb-6"
               >
                 {books?.map((book) => (
                   <BooksCard key={book?._id} book={book} />

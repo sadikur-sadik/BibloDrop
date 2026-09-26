@@ -79,7 +79,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="w-full max-w-360 mx-auto bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300 relative overflow-hidden select-none flex flex-col justify-center">
+    <div className="w-full min-h-screen max-w-[2560px] 3xl:max-w-[3400px] 4k:max-w-[3840px] mx-auto bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-12 px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 3xl:px-24 4k:px-32 transition-colors duration-300 relative overflow-hidden select-none flex flex-col justify-center">
       {/* Background accents */}
       <div className="absolute right-0 top-0 w-96 h-96 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute left-0 bottom-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -89,7 +89,7 @@ const Contact = () => {
         whileInView="visible"
         viewport={{ once: false, amount: 0.1 }}
         variants={containerVariants}
-        className="max-w-7xl mx-auto w-full space-y-12 relative z-10"
+        className="w-full max-w-[2560px] 3xl:max-w-[3400px] 4k:max-w-[3840px] mx-auto space-y-12 relative z-10"
       >
         {/* Header Section - Matched to BrowseBooks formatting and animated via itemVariants */}
         <div className="border-b border-slate-200/80 dark:border-gray-800/80 pb-6 mb-8">

@@ -2,7 +2,8 @@
 @import "@heroui/styles";
 
 @theme {
-  --breakpoint-4k: 2560px;
+  --breakpoint-3xl: 120rem; /* 1920px */
+  --breakpoint-4k: 160rem;  /* 2560px */
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

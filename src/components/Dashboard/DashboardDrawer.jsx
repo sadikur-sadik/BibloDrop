@@ -139,7 +139,7 @@ const DashboardDrawer = () => {
       : READER_NAV;
 
   const renderSidebarContent = (onClose) => (
-    <div className="flex flex-col h-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white p-6 2xl:p-8 border-r border-slate-200 dark:border-gray-800/80 w-64 xl:w-72 2xl:w-80 3xl:w-96 shrink-0 transition-colors duration-300">
+    <div className="flex flex-col h-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white p-6 2xl:p-8 4k:p-10 border-r border-slate-200 dark:border-gray-800/80 w-64 xl:w-72 2xl:w-80 3xl:w-96 4k:w-[420px] shrink-0 transition-colors duration-300">
       {/* Brand Header */}
       <div className="flex items-center justify-between mb-8 px-2">
         <h1 className="text-2xl font-black tracking-tight select-none text-[#192230] dark:text-white">

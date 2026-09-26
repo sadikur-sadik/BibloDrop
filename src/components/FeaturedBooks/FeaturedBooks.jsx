@@ -37,20 +37,20 @@ const FeaturedBooks = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { 
-        duration: 0.6, 
+      transition: {
+        duration: 0.6,
         ease: [0.16, 1, 0.3, 1], // Custom deceleration curve for premium transition
-        staggerChildren: 0.15 
+        staggerChildren: 0.15
       },
     },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { duration: 0.5, ease: 'easeOut' } 
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' }
     },
   };
 
@@ -73,48 +73,48 @@ const FeaturedBooks = () => {
   }
 
   return (
-    <section className="w-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-16 xl:py-24 2xl:py-32 px-4 sm:px-8 md:px-16 lg:px-20 xl:px-24 2xl:px-32 transition-colors duration-300 relative overflow-hidden select-none">
-      
+    <section className="w-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-16 xl:py-24 2xl:py-32 4k:py-40 px-4 sm:px-8 md:px-16 lg:px-20 xl:px-24 2xl:px-32 4k:px-40 transition-colors duration-300 relative overflow-hidden select-none">
+
       {/* Background visual accents */}
       <div className="absolute right-0 top-0 w-80 h-80 xl:w-[450px] xl:h-[450px] bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute left-0 bottom-0 w-80 h-80 xl:w-[450px] xl:h-[450px] bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Outer wrapper bounded for 1440px, 1920px, 2560px (2K), and 3840px (4K) */}
-      <motion.div 
+      {/* Outer wrapper bounded for standard screens, expanded on 4K */}
+      <motion.div
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.15 }}
         variants={containerVariants}
-        className="w-full max-w-[2560px] 3xl:max-w-[3400px] mx-auto space-y-12 xl:space-y-16 2xl:space-y-20 3xl:space-y-24 relative z-10"
+        className="w-full max-w-7xl 4k:max-w-[3840px] mx-auto space-y-12 xl:space-y-16 2xl:space-y-20 4k:space-y-28 relative z-10"
       >
-        
+
         {/* Header Block with Line-length limits */}
-        <div className="text-center space-y-4 max-w-2xl xl:max-w-3xl 2xl:max-w-4xl mx-auto">
-          <motion.span 
+        <div className="text-center space-y-4 max-w-2xl xl:max-w-3xl 2xl:max-w-4xl 4k:max-w-5xl mx-auto">
+          <motion.span
             variants={itemVariants}
-            className="inline-flex items-center gap-2 bg-[#856a26]/10 border border-[#856a26]/30 dark:bg-[#ffcd00]/10 dark:border-[#ffcd00]/30 px-3.5 py-1.5 xl:px-4 xl:py-2 rounded-full text-xs xl:text-sm font-semibold text-[#856a26] dark:text-[#ffcd00] uppercase tracking-wider"
+            className="inline-flex items-center gap-2 bg-[#856a26]/10 border border-[#856a26]/30 dark:bg-[#ffcd00]/10 dark:border-[#ffcd00]/30 px-3.5 py-1.5 xl:px-4 xl:py-2 4k:px-6 4k:py-3 rounded-full text-xs xl:text-sm 4k:text-xl font-semibold text-[#856a26] dark:text-[#ffcd00] uppercase tracking-wider"
           >
-            <span className="w-2 h-2 rounded-full bg-[#856a26] dark:bg-[#ffcd00] animate-pulse"></span>
+            <span className="w-2 h-2 4k:w-3 4k:h-3 rounded-full bg-[#856a26] dark:bg-[#ffcd00] animate-pulse"></span>
             Curated Selection
           </motion.span>
-          
-          <motion.h2 
+
+          <motion.h2
             variants={itemVariants}
-            className="text-3xl md:text-4xl xl:text-5xl 2xl:text-6xl font-black tracking-tight text-[#192230] dark:text-white"
+            className="text-3xl md:text-4xl xl:text-5xl 2xl:text-6xl 4k:text-7xl font-black tracking-tight text-[#192230] dark:text-white"
           >
             Our Featured <span className="text-[#856a26] dark:text-[#ffcd00]">Literature</span>
           </motion.h2>
-          
-          <motion.p 
+
+          <motion.p
             variants={itemVariants}
-            className="text-[#3d474e] dark:text-[#9ea7b3] text-sm md:text-base xl:text-lg 2xl:text-xl leading-relaxed max-w-xl xl:max-w-2xl 2xl:max-w-3xl mx-auto"
+            className="text-[#3d474e] dark:text-[#9ea7b3] text-sm md:text-base xl:text-lg 2xl:text-xl 4k:text-2xl leading-relaxed max-w-xl xl:max-w-2xl 2xl:max-w-3xl 4k:max-w-4xl mx-auto"
           >
             Vetted literary selections registered directly under verified community catalog libraries.
           </motion.p>
         </div>
 
-        {/* Compact Staggered Cards Grid - Extended to 6, 8, and 10 columns for ultra-wide displays */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-6 2xl:grid-cols-8 min-[2200px]:grid-cols-10 gap-6 md:gap-5 xl:gap-6 2xl:gap-8">
+        {/* Standard Grid for <2560px, Centered Flex for 4k */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-5 xl:gap-6 4k:flex 4k:flex-wrap 4k:justify-center 4k:gap-10">
           {books.map((book) => {
             const {
               _id = "default-id",
@@ -130,14 +130,14 @@ const FeaturedBooks = () => {
               <motion.div
                 key={_id}
                 variants={itemVariants}
-                className="w-full flex"
+                className="w-full flex 4k:w-[320px] 4k:max-w-[340px]"
               >
-                <Card className="relative max-w-360 mx-auto overflow-hidden w-full rounded-[2rem] border border-slate-100 dark:border-white/10 p-4 bg-white dark:bg-[#2c2f38] transition-colors duration-300 shadow-sm hover:shadow-xl dark:shadow-black/20 flex flex-col group justify-between">
-                  
+                <Card className="relative max-w-360 mx-auto overflow-hidden w-full rounded-[2rem] 4k:rounded-[2.5rem] border border-slate-100 dark:border-white/10 p-4 4k:p-6 bg-white dark:bg-[#2c2f38] transition-colors duration-300 shadow-sm hover:shadow-xl dark:shadow-black/20 flex flex-col group justify-between">
+
                   {/* Portrait Cover Wrapper */}
                   <div>
                     <div className="relative w-full aspect-3/4 rounded-[1.4rem] overflow-hidden mb-3.5 bg-slate-50 dark:bg-slate-900/30 flex items-center justify-center">
-                      
+
                       <div className="absolute inset-0 select-none pointer-events-none scale-110 blur-xl opacity-20 dark:opacity-35 transition-transform duration-500 group-hover:scale-115">
                         <Image
                           src={coverImage}
@@ -165,7 +165,7 @@ const FeaturedBooks = () => {
                       <Card.Title className="text-sm font-extrabold tracking-tight text-[#192230] dark:text-white leading-snug line-clamp-1 group-hover:text-[#856a26] dark:group-hover:text-[#ffcd00] transition-colors duration-200">
                         {title}
                       </Card.Title>
-                      
+
                       {/* Integrated Author & Stock Layout */}
                       <Card.Description className="text-[10px] font-semibold text-slate-400 dark:text-[#9ea7b3]/70 mt-1 uppercase tracking-wider line-clamp-1 flex items-center flex-wrap gap-1">
                         <span>by {author}</span>

@@ -28,12 +28,12 @@ export default function SuccessPageClient({ customerEmail }) {
   };
 
   return (
-    <div className="min-h-screen max-w-360 mx-auto bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white transition-colors duration-300 py-16 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+    <div className="min-h-screen w-full max-w-[2560px] 3xl:max-w-[3400px] 4k:max-w-[3840px] mx-auto bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white transition-colors duration-300 py-16 px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 3xl:px-24 4k:px-32 flex items-center justify-center">
       <motion.div
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-        className="relative w-full max-w-4xl bg-white dark:bg-[#2c2f38] p-8 sm:p-12 md:p-16 rounded-3xl border border-slate-200/80 dark:border-gray-800 shadow-xl grid grid-cols-1 md:grid-cols-12 gap-8 items-center overflow-hidden"
+        className="relative w-full max-w-4xl 2xl:max-w-5xl 4k:max-w-6xl bg-white dark:bg-[#2c2f38] p-8 sm:p-12 md:p-16 4k:p-20 rounded-3xl border border-slate-200/80 dark:border-gray-800 shadow-xl grid grid-cols-1 md:grid-cols-12 gap-8 4k:gap-12 items-center overflow-hidden"
       >
         {/* Visual background accents matching Banner_1 */}
         <div className="absolute right-0 top-0 w-80 h-80 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none" />

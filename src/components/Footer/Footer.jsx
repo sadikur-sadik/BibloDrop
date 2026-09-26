@@ -64,9 +64,9 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="w-full mx-auto max-w-[2560px] 3xl:max-w-[3400px] border-t border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
-      <div className="mx-auto w-[92%] xl:w-[95%] px-6 py-12 lg:px-8 lg:py-16 xl:px-12 2xl:px-16 3xl:px-24 2xl:py-20">
-        <div className="xl:grid xl:grid-cols-3 2xl:grid-cols-4 xl:gap-8 2xl:gap-12">
+    <footer className="w-full mx-auto max-w-[2560px] 3xl:max-w-[3400px] 4k:max-w-[3840px] border-t border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
+      <div className="mx-auto w-[92%] xl:w-[95%] px-6 py-12 lg:px-8 lg:py-16 xl:px-12 2xl:px-16 3xl:px-24 4k:px-32 2xl:py-20 4k:py-28">
+        <div className="xl:grid xl:grid-cols-3 2xl:grid-cols-4 xl:gap-8 2xl:gap-12 4k:gap-16">
 
           {/* Brand Presentation Column - Scaled line-length and brand fonts on ultra-wide */}
           <div className="space-y-6 2xl:col-span-1">

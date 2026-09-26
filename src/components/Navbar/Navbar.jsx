@@ -96,20 +96,20 @@ const Navbar = () => {
   const closeMobileMenu = () => setIsOpen(false);
 
   return (
-    <nav className="sticky top-0 mx-auto z-50 w-full max-w-[2560px] 3xl:max-w-[3400px] border-b border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
+    <nav className="sticky top-0 mx-auto z-50 w-full max-w-[2560px] 3xl:max-w-[3400px] 4k:max-w-[3840px] border-b border-gray-100 bg-white text-[#192230] transition-colors duration-300 dark:border-[#2c2f38] dark:bg-[#192230] dark:text-[#FFFFFF]">
       {/* Outer bounds & padding scaled up for 1440px, 1920px, 2K, and 4K viewports */}
-      <div className="mx-auto w-[92%] xl:w-[95%] px-6 lg:px-8 xl:px-12 2xl:px-16 3xl:px-24">
-        <div className="flex h-20 xl:h-24 2xl:h-28 items-center justify-between">
+      <div className="mx-auto w-[92%] xl:w-[95%] px-6 lg:px-8 xl:px-12 2xl:px-16 3xl:px-24 4k:px-32">
+        <div className="flex h-20 xl:h-24 2xl:h-28 4k:h-32 items-center justify-between">
 
           {/* Logo Section - Scaled font and SVG sizing for large displays */}
-          <Link href="/" className="group flex items-center gap-2 xl:gap-3">
+          <Link href="/" className="group flex items-center gap-2 xl:gap-3 4k:gap-4">
             <motion.div
               whileHover={{ y: -2 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
               className="text-[#856a26] dark:text-[#ffcd00]"
             >
               <svg
-                className="h-7 w-7 xl:h-8 xl:w-8 2xl:h-9 2xl:w-9"
+                className="h-7 w-7 xl:h-8 xl:w-8 2xl:h-9 2xl:w-9 4k:h-11 4k:w-11"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -127,20 +127,20 @@ const Navbar = () => {
               </svg>
             </motion.div>
 
-            <span className="font-serif text-2xl xl:text-3xl 2xl:text-4xl font-light tracking-wide text-[#192230] transition-colors duration-300 dark:text-[#FFFFFF]">
+            <span className="font-serif text-2xl xl:text-3xl 2xl:text-4xl 4k:text-5xl font-light tracking-wide text-[#192230] transition-colors duration-300 dark:text-[#FFFFFF]">
               Biblio<span className="font-extrabold tracking-normal text-[#856a26] dark:text-[#ffcd00]">Drop</span>
             </span>
           </Link>
 
           {/* Desktop Navigation - Enhanced spacing and text scale on xl & 2xl viewports */}
-          <div className="hidden items-center space-x-8 xl:space-x-10 2xl:space-x-14 md:flex">
+          <div className="hidden items-center space-x-8 xl:space-x-10 2xl:space-x-14 4k:space-x-18 md:flex">
             {navLinks.map((link) => {
               const isActive = isRouteActive(link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative py-1 text-sm xl:text-base 2xl:text-lg font-semibold tracking-wide transition-colors duration-200 ${isActive
+                  className={`relative py-1 text-sm xl:text-base 2xl:text-lg 4k:text-xl font-semibold tracking-wide transition-colors duration-200 ${isActive
                     ? 'text-[#856a26] dark:text-[#ffcd00]'
                     : 'text-[#3d474e] hover:text-[#192230] dark:text-[#94a3b8] dark:hover:text-white'
                     }`}

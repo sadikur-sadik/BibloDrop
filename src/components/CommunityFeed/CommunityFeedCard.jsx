@@ -139,3 +139,61 @@ export function CommunityFeedCard({ entry, variants }) {
     </motion.div>
   );
 }
+
+export function CommunityFeedSkeletonCard() {
+  return (
+    <div className="w-full h-full flex flex-col">
+      <div className="relative bg-white dark:bg-[#2c2f38] border border-slate-200/80 dark:border-gray-800 rounded-3xl overflow-hidden shadow-md h-full flex flex-col justify-between p-5 sm:p-6 4k:p-10 select-none animate-pulse">
+        <div>
+          {/* Header: User Avatar & Reviewer Details */}
+          <div className="flex gap-3 items-center mb-4">
+            {/* Avatar Circle */}
+            <div className="w-10 h-10 4k:w-16 4k:h-16 rounded-full shrink-0 bg-slate-200 dark:bg-slate-700/60" />
+            
+            <div className="flex flex-col items-start justify-center grow min-w-0 space-y-2">
+              <div className="flex items-center gap-2 flex-wrap w-full">
+                {/* Reviewer Name Line */}
+                <div className="h-4 sm:h-4.5 4k:h-7 w-28 sm:w-36 4k:w-52 bg-slate-200 dark:bg-slate-700/60 rounded-md" />
+                {/* Verified Badge Pill */}
+                <div className="h-4 4k:h-6 w-20 4k:w-28 bg-slate-200/70 dark:bg-slate-700/40 rounded-full" />
+              </div>
+              {/* "Shared a review" subtitle */}
+              <div className="h-3 4k:h-4 w-24 4k:w-36 bg-slate-200/60 dark:bg-slate-700/40 rounded-md" />
+            </div>
+          </div>
+
+          {/* Book Title & Rating Stars Row */}
+          <div className="mb-3 space-y-1">
+            <div className="flex justify-between items-center gap-2">
+              {/* Book Title */}
+              <div className="h-5 sm:h-6 4k:h-9 w-3/5 bg-slate-200 dark:bg-slate-700/60 rounded-md" />
+              {/* 5 Rating Stars */}
+              <div className="flex items-center gap-0.5 shrink-0">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="w-3.5 h-3.5 4k:w-6 4k:h-6 rounded-full bg-slate-200/70 dark:bg-slate-700/50" />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Review Comment Quote lines */}
+          <div className="space-y-2 mb-6">
+            <div className="h-3.5 sm:h-4 4k:h-6 w-full bg-slate-200/80 dark:bg-slate-700/50 rounded-md" />
+            <div className="h-3.5 sm:h-4 4k:h-6 w-11/12 bg-slate-200/80 dark:bg-slate-700/50 rounded-md" />
+            <div className="h-3.5 sm:h-4 4k:h-6 w-3/4 bg-slate-200/80 dark:bg-slate-700/50 rounded-md" />
+          </div>
+        </div>
+
+        {/* Action Buttons Row */}
+        <div className="pt-4 border-t border-slate-100 dark:border-gray-800/80 flex items-center justify-between gap-2">
+          {/* Helpful Button Pill */}
+          <div className="h-7 sm:h-8 4k:h-12 w-24 sm:w-28 4k:w-40 rounded-full bg-slate-200 dark:bg-slate-700/60" />
+
+          {/* Save Button Pill */}
+          <div className="h-7 sm:h-8 4k:h-12 w-16 sm:w-20 4k:w-28 rounded-full bg-slate-200 dark:bg-slate-700/60" />
+        </div>
+      </div>
+    </div>
+  );
+}
+

@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { CommunityFeedCard } from "./CommunityFeedCard";
-import { Spinner } from "@heroui/react";
+import { CommunityFeedCard, CommunityFeedSkeletonCard } from "./CommunityFeedCard";
 
 const DEMO_FEED = [
   {
@@ -75,73 +74,79 @@ export default function CommunityFeedSection() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { 
-        duration: 0.6, 
+      transition: {
+        duration: 0.6,
         ease: [0.16, 1, 0.3, 1],
-        staggerChildren: 0.12 
+        staggerChildren: 0.12
       },
     },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { duration: 0.5, ease: 'easeOut' } 
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' }
     },
   };
 
   return (
-    <section className="w-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-16 xl:py-24 2xl:py-32 4k:py-40 px-4 sm:px-8 md:px-16 lg:px-20 xl:px-24 2xl:px-32 transition-colors duration-300 relative overflow-hidden select-none">
-      
+    <section className="w-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-16 xl:py-24 2xl:py-32 4k:py-40 px-4 sm:px-8 md:px-16 lg:px-20 xl:px-24 2xl:px-32 4k:px-40 transition-colors duration-300 relative overflow-hidden select-none">
+
       {/* Background visual accents matching TopLibrarians & FeaturedBooks */}
       <div className="absolute right-0 top-0 w-80 h-80 xl:w-[450px] xl:h-[450px] bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute left-0 bottom-0 w-80 h-80 xl:w-[450px] xl:h-[450px] bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Outer Motion Wrapper */}
-      <motion.div 
+      <motion.div
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.15 }}
         variants={containerVariants}
-        className="w-full max-w-[2560px] 3xl:max-w-[3400px] mx-auto space-y-12 xl:space-y-16 2xl:space-y-20 relative z-10"
+        className="w-full max-w-7xl 4k:max-w-[3840px] mx-auto space-y-12 xl:space-y-16 2xl:space-y-20 4k:space-y-28 relative z-10"
       >
-        
-        {/* Header Block matching TopLibrarians & FeaturedBooks */}
-        <div className="text-center space-y-4 max-w-2xl xl:max-w-3xl 2xl:max-w-4xl mx-auto">
-          <motion.span 
+
+        {/* Header Block */}
+        <div className="text-center space-y-4 max-w-2xl xl:max-w-3xl 2xl:max-w-4xl 4k:max-w-5xl mx-auto">
+          <motion.span
             variants={itemVariants}
-            className="inline-flex items-center gap-2 bg-[#856a26]/10 border border-[#856a26]/30 dark:bg-[#ffcd00]/10 dark:border-[#ffcd00]/30 px-3.5 py-1.5 xl:px-4 xl:py-2 rounded-full text-xs xl:text-sm 4k:text-2xl font-semibold text-[#856a26] dark:text-[#ffcd00] uppercase tracking-wider"
+            className="inline-flex items-center gap-2 bg-[#856a26]/10 border border-[#856a26]/30 dark:bg-[#ffcd00]/10 dark:border-[#ffcd00]/30 px-3.5 py-1.5 xl:px-4 xl:py-2 4k:px-6 4k:py-3 rounded-full text-xs xl:text-sm 4k:text-xl font-semibold text-[#856a26] dark:text-[#ffcd00] uppercase tracking-wider"
           >
-            <span className="w-2 h-2 rounded-full bg-[#856a26] dark:bg-[#ffcd00] animate-pulse"></span>
+            <span className="w-2 h-2 4k:w-3 4k:h-3 rounded-full bg-[#856a26] dark:bg-[#ffcd00] animate-pulse"></span>
             Community Insights
           </motion.span>
-          
-          <motion.h2 
+
+          <motion.h2
             variants={itemVariants}
             className="text-3xl md:text-4xl xl:text-5xl 2xl:text-6xl 4k:text-7xl font-black tracking-tight text-[#192230] dark:text-white"
           >
             Live Reader <span className="text-[#856a26] dark:text-[#ffcd00]">Activity</span>
           </motion.h2>
-          
-          <motion.p 
+
+          <motion.p
             variants={itemVariants}
-            className="text-[#3d474e] dark:text-[#9ea7b3] text-sm md:text-base xl:text-lg 2xl:text-xl 4k:text-2xl leading-relaxed max-w-xl xl:max-w-2xl 2xl:max-w-3xl mx-auto"
+            className="text-[#3d474e] dark:text-[#9ea7b3] text-sm md:text-base xl:text-lg 2xl:text-xl 4k:text-2xl leading-relaxed max-w-xl xl:max-w-2xl 2xl:max-w-3xl 4k:max-w-4xl mx-auto"
           >
             Real reviews and activity from verified readers across the library network.
           </motion.p>
         </div>
 
-        {/* Dynamic Responsive Grid Layout with Staggered Scroll Animations */}
+        {/* Standard Grid for <2560px, Centered Flex for 4K */}
         {loading ? (
-          <div className="flex justify-center py-12">
-            <Spinner label="Loading live community activity..." size="lg" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 4k:flex 4k:flex-wrap 4k:justify-center 4k:gap-12">
+            {[...Array(4)].map((_, idx) => (
+              <div key={idx} className="w-full 4k:w-[calc(25%-2rem)] 4k:max-w-xl flex">
+                <CommunityFeedSkeletonCard />
+              </div>
+            ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 4k:grid-cols-6 gap-6 md:gap-8 4k:gap-14">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 4k:flex 4k:flex-wrap 4k:justify-center 4k:gap-12">
             {feed.map((entry) => (
-              <CommunityFeedCard entry={entry} key={entry._id} variants={itemVariants} />
+              <div key={entry._id} className="w-full 4k:w-[calc(25%-2rem)] 4k:max-w-xl flex">
+                <CommunityFeedCard entry={entry} variants={itemVariants} />
+              </div>
             ))}
           </div>
         )}

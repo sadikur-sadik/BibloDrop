@@ -193,7 +193,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex h-screen w-full max-w-360 mx-auto overflow-y-auto lg:overflow-hidden bg-[#FFFFFF] text-[#192230] dark:bg-[#192230] dark:text-[#FFFFFF] transition-colors duration-300">
+    <div className="flex min-h-screen w-full max-w-[2560px] 3xl:max-w-[3400px] 4k:max-w-[3840px] mx-auto overflow-y-auto lg:overflow-hidden bg-[#FFFFFF] text-[#192230] dark:bg-[#192230] dark:text-[#FFFFFF] transition-colors duration-300">
 
       {/* LEFT SIDEBAR: Static height, high contrast brand elements */}
       <div className="hidden lg:flex relative w-1/2 h-full overflow-hidden bg-[#192230]">

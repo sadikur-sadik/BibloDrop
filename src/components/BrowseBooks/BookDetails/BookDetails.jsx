@@ -92,14 +92,14 @@ export default function BookDetails({ book, user, deliveryInfo, librarianInfo, r
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#192230] text-slate-800 dark:text-white transition-colors duration-300 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#192230] text-slate-800 dark:text-white transition-colors duration-300 py-10 px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 3xl:px-24 4k:px-32">
+      <div className="w-full max-w-[2560px] 3xl:max-w-[3400px] 4k:max-w-[3840px] mx-auto space-y-8 xl:space-y-12 4k:space-y-16">
         
         {/* Book Information Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white dark:bg-[#2c2f38] p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-gray-800 shadow-xs">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 4k:gap-12 bg-white dark:bg-[#2c2f38] p-6 sm:p-8 2xl:p-12 4k:p-16 rounded-3xl border border-slate-200/80 dark:border-gray-800 shadow-xs">
           
-          <div className="lg:col-span-4 flex items-center justify-center bg-slate-100/50 dark:bg-[#192230]/30 rounded-2xl p-6 min-h-75 sm:min-h-100">
-            <div className="relative w-40 h-56 sm:w-48 sm:h-72">
+          <div className="lg:col-span-4 flex items-center justify-center bg-slate-100/50 dark:bg-[#192230]/30 rounded-2xl p-6 min-h-75 sm:min-h-100 4k:min-h-125">
+            <div className="relative w-40 h-56 sm:w-48 sm:h-72 3xl:w-60 3xl:h-80 4k:w-72 4k:h-96">
               <Image 
                 src={currentBook?.coverImage} 
                 alt={currentBook?.title}
