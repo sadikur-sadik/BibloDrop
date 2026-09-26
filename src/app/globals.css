@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
+@theme {
+  --breakpoint-4k: 2560px;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* Embla Base Structure Rules */

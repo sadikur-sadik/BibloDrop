@@ -1,6 +1,7 @@
 import Banner from "@/components/Banner/Banner";
 import CategoryCarousel from "@/components/CategoriesComponent/Categories";
 import FeaturedBooks from "@/components/FeaturedBooks/FeaturedBooks";
+import CommunityFeedSection from "@/components/CommunityFeed/CommunityFeedSection";
 import Footer from "@/components/Footer/Footer";
 import StatsSection from "@/components/Stats/StatsSection";
 import TopLibrarians from "@/components/Top-Librarian/TopLibrarians";
@@ -12,6 +13,7 @@ export default function Home({ children }) {
       <Banner />
       <StatsSection />
       <FeaturedBooks />
+      <CommunityFeedSection />
       <TopLibrarians />
       <CategoryCarousel />
       <Footer />

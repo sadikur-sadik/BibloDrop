@@ -1,0 +1,141 @@
+'use client';
+
+import { useState } from "react";
+import { motion } from "motion/react";
+import { Tooltip } from "@heroui/react";
+import { StarFill, Bookmark, ThumbsUp, ShieldCheck } from "@gravity-ui/icons";
+import { toast } from "react-toastify";
+
+const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250";
+
+export function CommunityFeedCard({ entry, variants }) {
+  const [helpfulCount, setHelpfulCount] = useState(entry.helpfulCount || 0);
+  const [isHelpful, setIsHelpful] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [imgSrc, setImgSrc] = useState(() => {
+    if (entry.reviewerImage && entry.reviewerImage !== "/default-avatar.png") {
+      return entry.reviewerImage;
+    }
+    return DEFAULT_AVATAR;
+  });
+
+  const handleHelpfulClick = () => {
+    if (isHelpful) {
+      setHelpfulCount(prev => prev - 1);
+      setIsHelpful(false);
+    } else {
+      setHelpfulCount(prev => prev + 1);
+      setIsHelpful(true);
+      toast.success("Marked review as helpful!");
+    }
+  };
+
+  const handleSaveClick = () => {
+    setIsSaved(prev => !prev);
+    if (!isSaved) {
+      toast.info(`Saved "${entry.bookTitle || 'Book'}" to your reading list!`);
+    } else {
+      toast.info(`Removed "${entry.bookTitle || 'Book'}" from saved list.`);
+    }
+  };
+
+  const ratingValue = Number(entry.rating) || 5;
+
+  return (
+    <motion.div
+      variants={variants}
+      whileHover={{ y: -6, transition: { duration: 0.25, ease: "easeOut" } }}
+      className="h-full flex flex-col w-full"
+    >
+      <div className="group relative bg-white dark:bg-[#2c2f38] border border-slate-200/80 dark:border-gray-800 rounded-3xl overflow-hidden shadow-md hover:shadow-xl dark:hover:shadow-[#ffcd00]/10 hover:border-[#856a26]/40 dark:hover:border-[#ffcd00]/40 transition-all duration-300 h-full flex flex-col justify-between p-5 sm:p-6 4k:p-10 select-none">
+        <div>
+          {/* Header: User Avatar & Flex-Wrapped Verified Reader Badge */}
+          <div className="flex gap-3 items-center mb-4">
+            <div className="relative w-10 h-10 4k:w-16 4k:h-16 rounded-full overflow-hidden shrink-0 border-2 border-slate-100 dark:border-[#192230] shadow-xs group-hover:border-[#856a26] dark:group-hover:border-[#ffcd00] transition-colors duration-300 bg-slate-100 dark:bg-slate-800">
+              <img
+                src={imgSrc}
+                alt={entry.reviewerName || "Reader"}
+                className="w-full h-full object-cover"
+                onError={() => setImgSrc(DEFAULT_AVATAR)}
+                loading="lazy"
+              />
+            </div>
+            
+            <div className="flex flex-col items-start justify-center grow min-w-0">
+              <div className="flex items-center gap-2 flex-wrap w-full">
+                <h4 className="text-sm sm:text-base 4k:text-2xl font-bold leading-tight text-[#192230] dark:text-white group-hover:text-[#856a26] dark:group-hover:text-[#ffcd00] transition-colors duration-200 truncate">
+                  {entry.reviewerName || "Anonymous Reader"}
+                </h4>
+                {entry.isVerified && (
+                  <span className="inline-flex items-center gap-1 bg-[#856a26]/10 text-[#856a26] dark:bg-[#ffcd00]/10 dark:text-[#ffcd00] border border-[#856a26]/20 dark:border-[#ffcd00]/30 px-2 py-0.5 rounded-full text-[10px] 4k:text-xs font-extrabold uppercase tracking-wider shrink-0">
+                    <ShieldCheck className="w-3 h-3 4k:w-4 4k:h-4" />
+                    Verified Reader
+                  </span>
+                )}
+              </div>
+              <span className="text-xs 4k:text-base text-[#3d474e] dark:text-[#9ea7b3] font-medium mt-0.5">
+                Shared a review
+              </span>
+            </div>
+          </div>
+
+          {/* Book Title & Rating Row */}
+          <div className="mb-3 space-y-1">
+            <div className="flex justify-between items-center gap-2">
+              <h3 className="font-extrabold text-[#192230] dark:text-white text-base sm:text-lg 4k:text-3xl line-clamp-1 leading-snug">
+                {entry.bookTitle || "Unknown Book"}
+              </h3>
+              <div className="flex items-center gap-0.5 shrink-0">
+                {[...Array(5)].map((_, i) => (
+                  <StarFill
+                    key={i}
+                    className={`w-3.5 h-3.5 4k:w-6 4k:h-6 ${
+                      i < ratingValue ? 'text-[#856a26] dark:text-[#ffcd00]' : 'text-slate-200 dark:text-gray-700'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Review Comment Quote */}
+          <p className="text-[#3d474e] dark:text-[#9ea7b3] text-xs sm:text-sm 4k:text-xl italic leading-relaxed line-clamp-3 mb-6">
+            "{entry.comment || "Great read!"}"
+          </p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="pt-4 border-t border-slate-100 dark:border-gray-800/80 flex items-center justify-between gap-2">
+          <button
+            onClick={handleHelpfulClick}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs 4k:text-lg font-bold transition-all duration-200 cursor-pointer ${
+              isHelpful
+                ? "bg-[#856a26] text-white dark:bg-[#ffcd00] dark:text-[#192230] shadow-xs"
+                : "bg-slate-100 dark:bg-[#192230] text-[#3d474e] dark:text-[#9ea7b3] hover:bg-[#856a26]/10 dark:hover:bg-[#ffcd00]/10 hover:text-[#856a26] dark:hover:text-[#ffcd00]"
+            }`}
+          >
+            <ThumbsUp className="w-3.5 h-3.5 4k:w-5 4k:h-5" />
+            <span>{isHelpful ? `Helpful (${helpfulCount})` : helpfulCount > 0 ? `Helpful (${helpfulCount})` : "Helpful"}</span>
+          </button>
+
+          <Tooltip content={isSaved ? "Remove from reading list" : "Add book to your reading list"}>
+            <button
+              onClick={handleSaveClick}
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs 4k:text-lg font-extrabold transition-all duration-200 cursor-pointer ${
+                isSaved
+                  ? "bg-emerald-600 text-white dark:bg-emerald-500 dark:text-slate-950 shadow-xs"
+                  : "bg-[#192230] text-white hover:bg-[#2c2f38] dark:bg-[#ffcd00] dark:text-[#192230] dark:hover:bg-[#ffe066]"
+              }`}
+            >
+              <Bookmark className="w-3.5 h-3.5 4k:w-5 4k:h-5" />
+              <span>{isSaved ? "Saved" : "Save"}</span>
+            </button>
+          </Tooltip>
+        </div>
+
+        {/* Bottom Accent Gradient Line */}
+        <div className="absolute inset-x-0 bottom-0 h-1 bg-linear-to-r from-transparent via-[#856a26] dark:via-[#ffcd00] to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center" />
+      </div>
+    </motion.div>
+  );
+}
