@@ -44,9 +44,15 @@ export default function AllReviews({ reviews }) {
               </div>
               
               <div className="flex flex-col items-end gap-1">
-                <span className="text-xs text-amber-500 dark:text-[#ffcd00] font-bold tracking-wider">
-                  {'★'.repeat(Math.min(5, Math.max(1, review.rating || 5)))}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                    <span>👍</span>
+                    <span>{review.helpfulCount ?? review.likes ?? 0}</span>
+                  </span>
+                  <span className="text-xs text-amber-500 dark:text-[#ffcd00] font-bold tracking-wider">
+                    {'★'.repeat(Math.min(5, Math.max(1, review.rating || 5)))}
+                  </span>
+                </div>
                 {review.verified && (
                   <span className="text-[9px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-sm font-semibold uppercase">
                     Verified Reader

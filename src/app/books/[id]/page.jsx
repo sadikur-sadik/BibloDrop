@@ -1,4 +1,5 @@
 import BookDetails from '@/components/BrowseBooks/BookDetails/BookDetails';
+import Footer from '@/components/Footer/Footer';
 import { getUserSession } from '@/lib/core/session';
 import { getDeliveryInfo } from '@/lib/fetch/get-delivery';
 import { getReviews } from '@/lib/fetch/reviews';
@@ -16,6 +17,7 @@ const BookDetailsPage = async ({ params }) => {
   return (
     <div>
       <BookDetails book={book} user={user} deliveryInfo={deliveryInfo} librarianInfo={librarianInfo} reviews={reviews} />
+      <Footer />
     </div>
   );
 };

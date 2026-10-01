@@ -26,7 +26,8 @@
 
 .embla__slide {
   flex: 0 0 100%;
-  min-width: 0;
+  min-width: 100%;
+  width: 100%;
   /* Fixes visual flash rendering on iOS and MacOS browsers */
   backface-visibility: hidden; 
 }

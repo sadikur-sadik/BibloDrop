@@ -58,8 +58,8 @@ const FeaturedBooks = () => {
     return (
       <section className="w-full bg-slate-50 dark:bg-[#192230] py-16 px-4 sm:px-8 md:px-16 transition-colors duration-300">
         <div className="max-w-7xl mx-auto space-y-12">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 animate-pulse">
-            {[...Array(6)].map((_, idx) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-5 animate-pulse">
+            {[...Array(8)].map((_, idx) => (
               <div key={idx} className="h-80 bg-slate-200 dark:bg-slate-800 rounded-[2rem]" />
             ))}
           </div>
@@ -113,9 +113,9 @@ const FeaturedBooks = () => {
           </motion.p>
         </div>
 
-        {/* Standard Grid for <2560px, Centered Flex for 4k */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-5 xl:gap-6 4k:flex 4k:flex-wrap 4k:justify-center 4k:gap-10">
-          {books.map((book) => {
+        {/* Standard Grid for <2560px (4 and 4 layout), Centered Flex for 4k */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6 4k:flex 4k:flex-wrap 4k:justify-center 4k:gap-10">
+          {books.slice(0, 8).map((book) => {
             const {
               _id = "default-id",
               title = "Untitled Title",
@@ -132,7 +132,7 @@ const FeaturedBooks = () => {
                 variants={itemVariants}
                 className="w-full flex 4k:w-[320px] 4k:max-w-[340px]"
               >
-                <Card className="relative max-w-360 mx-auto overflow-hidden w-full rounded-[2rem] 4k:rounded-[2.5rem] border border-slate-100 dark:border-white/10 p-4 4k:p-6 bg-white dark:bg-[#2c2f38] transition-colors duration-300 shadow-sm hover:shadow-xl dark:shadow-black/20 flex flex-col group justify-between">
+                <Card className="relative max-w-[360px] mx-auto overflow-hidden w-full rounded-[2rem] 4k:rounded-[2.5rem] border border-slate-100 dark:border-white/10 p-4 4k:p-6 bg-white dark:bg-[#2c2f38] transition-colors duration-300 shadow-sm hover:shadow-xl dark:shadow-black/20 flex flex-col group justify-between">
 
                   {/* Portrait Cover Wrapper */}
                   <div>

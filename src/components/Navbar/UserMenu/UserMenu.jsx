@@ -107,6 +107,12 @@ const UserMenu = ({ variant, onCloseMobileMenu, onOpenEditModal }) => {
                     >
                       Dashboard
                     </Link>
+                    <Link
+                      href="/saved-comments"
+                      className="block px-4 py-2 text-xs font-semibold text-[#3d474e] transition-colors duration-150 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-[#3d474e]/40"
+                    >
+                      Saved Comments
+                    </Link>
                     <button
                       onMouseDown={(e) => {
                         e.preventDefault();

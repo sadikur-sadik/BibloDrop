@@ -179,7 +179,7 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
         {isLoading ? (
           <motion.div
             variants={itemVariants}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 3xl:grid-cols-8 4k:grid-cols-10 gap-4 sm:gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6"
           >
             <p className="text-slate-400 dark:text-slate-500 text-sm col-span-full py-8 text-center animate-pulse">
               Syncing catalog from database...
@@ -208,7 +208,7 @@ const BrowseBooks = ({ books = [], params, total, isLoading = false }) => {
             ) : (
               <motion.div
                 variants={itemVariants}
-                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 3xl:grid-cols-8 4k:grid-cols-10 gap-4 sm:gap-6 xl:gap-7 2xl:gap-8 3xl:gap-10 4k:gap-12 mb-6"
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-6 gap-4 sm:gap-6 xl:gap-7 2xl:gap-8 mb-6"
               >
                 {books?.map((book) => (
                   <BooksCard key={book?._id} book={book} />

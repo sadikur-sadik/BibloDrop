@@ -11,6 +11,7 @@ import {
   House,
   Book,
   BookOpen,
+  Bookmark,
   Clock,
   Comment,
   Plus,
@@ -38,6 +39,7 @@ const READER_NAV = [
     links: [
       { href: "/dashboard/reader/delivery-history", label: "Delivery History", icon: Clock },
       { href: "/dashboard/reader/reading-list", label: "My Reading List", icon: BookOpen },
+      { href: "/dashboard/reader/saved-comments", label: "Saved Comments", icon: Bookmark },
       { href: "/dashboard/reader/reviews", label: "My Reviews", icon: Comment },
     ],
   },
