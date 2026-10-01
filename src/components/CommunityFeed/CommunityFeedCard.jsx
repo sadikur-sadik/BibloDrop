@@ -11,7 +11,10 @@ import {
   isCommentSaved, 
   toggleSaveComment, 
   isCommentLiked, 
-  toggleLikeComment 
+  isCommentDisliked,
+  getCommentCounts,
+  toggleLikeComment, 
+  toggleDislikeComment 
 } from "@/lib/saved-comments";
 
 const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250";
@@ -20,8 +23,13 @@ export function CommunityFeedCard({ entry, variants }) {
   const { data: session } = authClient.useSession();
   const userId = session?.user?.id || session?.user?.email;
 
-  const [helpfulCount, setHelpfulCount] = useState(() => entry.helpfulCount ?? entry.likes ?? 0);
-  const [isHelpful, setIsHelpful] = useState(false);
+  const entryId = entry._id || entry.id;
+  const initialLikes = entry.helpfulCount ?? entry.likes ?? 0;
+  const initialDislikes = entry.dislikes ?? 0;
+
+  const [counts, setCounts] = useState(() => getCommentCounts(entryId, initialLikes, initialDislikes));
+  const [isHelpful, setIsHelpful] = useState(() => Boolean(userId && isCommentLiked(userId, entryId)));
+  const [isDisliked, setIsDisliked] = useState(() => Boolean(userId && isCommentDisliked(userId, entryId)));
   const [isSaved, setIsSaved] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalAction, setAuthModalAction] = useState("");
@@ -32,67 +40,78 @@ export function CommunityFeedCard({ entry, variants }) {
     return DEFAULT_AVATAR;
   });
 
-  // Dynamically update helpful count from comment data when prop changes
+  // Sync initial saved, liked, and count states whenever session or entry changes
   useEffect(() => {
-    setHelpfulCount(entry.helpfulCount ?? entry.likes ?? 0);
-  }, [entry.helpfulCount, entry.likes]);
-
-  // Sync initial saved and liked states whenever session or entry changes
-  useEffect(() => {
-    if (userId && entry?._id) {
-      setIsSaved(isCommentSaved(userId, entry._id));
-      const isUserInHelpfulList = Array.isArray(entry.helpfulUsers) && session?.user?.email && entry.helpfulUsers.includes(session.user.email);
-      setIsHelpful(Boolean(isUserInHelpfulList || isCommentLiked(userId, entry._id)));
+    if (userId && entryId) {
+      setIsSaved(isCommentSaved(userId, entryId));
+      setIsHelpful(isCommentLiked(userId, entryId));
+      setIsDisliked(isCommentDisliked(userId, entryId));
+      setCounts(getCommentCounts(entryId, initialLikes, initialDislikes));
     }
-  }, [userId, entry?._id, entry.helpfulUsers, session?.user?.email]);
+  }, [userId, entryId, initialLikes, initialDislikes]);
 
   // Listen for window events to sync state across components in real-time
   useEffect(() => {
-    if (!userId || !entry?._id) return;
+    if (!entryId) return;
 
     const handleSavedUpdate = (e) => {
-      if (e.detail?.userId === userId && e.detail?.commentId === entry._id) {
+      if (e.detail?.commentId === entryId && (!e.detail.userId || e.detail.userId === userId)) {
         setIsSaved(e.detail.isSaved);
       }
     };
 
     const handleLikedUpdate = (e) => {
-      if (e.detail?.userId === userId && e.detail?.commentId === entry._id) {
-        setIsHelpful(e.detail.isLiked);
+      if (e.detail?.commentId === entryId) {
+        if (!userId || e.detail.userId === userId) {
+          setIsHelpful(Boolean(e.detail.isLiked));
+          setIsDisliked(Boolean(e.detail.isDisliked));
+        }
+        if (typeof e.detail.likes === 'number') {
+          setCounts({ likes: e.detail.likes, dislikes: e.detail.dislikes });
+        }
+      }
+    };
+
+    const handleCountsUpdate = (e) => {
+      if (e.detail?.commentId === entryId) {
+        setCounts({ likes: e.detail.likes, dislikes: e.detail.dislikes });
       }
     };
 
     window.addEventListener('saved_comments_updated', handleSavedUpdate);
     window.addEventListener('liked_comments_updated', handleLikedUpdate);
+    window.addEventListener('comment_counts_updated', handleCountsUpdate);
 
     return () => {
       window.removeEventListener('saved_comments_updated', handleSavedUpdate);
       window.removeEventListener('liked_comments_updated', handleLikedUpdate);
+      window.removeEventListener('comment_counts_updated', handleCountsUpdate);
     };
-  }, [userId, entry?._id]);
+  }, [userId, entryId]);
 
   const handleHelpfulClick = async () => {
     if (!session?.user) {
-      setAuthModalAction("mark community reviews as helpful");
+      setAuthModalAction("like community reviews");
       setIsAuthModalOpen(true);
       return;
     }
 
-    const nowLiked = toggleLikeComment(userId, entry._id);
-    setIsHelpful(nowLiked);
-    if (nowLiked) {
-      setHelpfulCount(prev => prev + 1);
-      toast.success("Marked review as helpful!");
+    const res = toggleLikeComment(userId, entryId, initialLikes, initialDislikes);
+    setIsHelpful(res.isLiked);
+    setIsDisliked(res.isDisliked);
+    setCounts({ likes: res.newLikes, dislikes: res.newDislikes });
+
+    if (res.isLiked) {
+      toast.success("Liked review!");
     } else {
-      setHelpfulCount(prev => Math.max(0, prev - 1));
-      toast.info("Removed helpful mark.");
+      toast.info("Removed like.");
     }
 
     // Persist to backend database for global reader updates
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
       const token = session?.token || session?.session?.token;
-      const res = await fetch(`${apiUrl}/community-feed/${entry._id}/helpful`, {
+      await fetch(`${apiUrl}/community-feed/${entryId}/helpful`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -100,10 +119,6 @@ export function CommunityFeedCard({ entry, variants }) {
         },
         body: JSON.stringify({ userEmail: session.user.email || userId })
       });
-      const data = await res.json();
-      if (data.success && typeof data.helpfulCount === 'number') {
-        setHelpfulCount(data.helpfulCount);
-      }
     } catch (err) {
       console.error("Failed to sync helpful count with server:", err);
     }
@@ -202,7 +217,7 @@ export function CommunityFeedCard({ entry, variants }) {
               }`}
             >
               <ThumbsUp className="w-3.5 h-3.5 4k:w-5 4k:h-5" />
-              <span>{isHelpful ? `Liked (${helpfulCount})` : helpfulCount > 0 ? `Helpful (${helpfulCount})` : "Helpful"}</span>
+              <span>{isHelpful ? `Liked (${counts.likes})` : counts.likes > 0 ? `Like (${counts.likes})` : "Like"}</span>
             </button>
 
             <Tooltip content={isSaved ? "Remove from saved comments" : "Save comment from Live Reader Activity"}>
