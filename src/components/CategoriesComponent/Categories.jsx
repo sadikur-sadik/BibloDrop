@@ -3,8 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'motion/react';
-import useEmblaCarousel from 'embla-carousel-react';
-import Autoplay from 'embla-carousel-autoplay';
 
 // Minimal, modern SVG components for each genre
 const FictionIcon = () => (
@@ -125,15 +123,6 @@ const GENRES = [
 ];
 
 const CategoryCarousel = () => {
-  const [emblaRef] = useEmblaCarousel(
-    { 
-      loop: true, 
-      align: 'start', 
-      dragFree: true 
-    },
-    [Autoplay({ delay: 1500, stopOnInteraction: false })]
-  );
-
   const containerVariants = {
     hidden: { opacity: 0, y: 15 },
     visible: {
@@ -154,7 +143,7 @@ const CategoryCarousel = () => {
       <div className="absolute right-0 top-0 w-80 h-80 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute left-0 bottom-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Changed once to false to allow repeating animations on entry/exit */}
+      {/* Outer Motion Container */}
       <motion.div
         initial="hidden"
         whileInView="visible"
@@ -162,7 +151,7 @@ const CategoryCarousel = () => {
         variants={containerVariants}
         className="w-full max-w-[2560px] 3xl:max-w-[3400px] 4k:max-w-[3840px] mx-auto space-y-12 xl:space-y-16 2xl:space-y-20 4k:space-y-28 relative z-10"
       >
-        {/* Corrected Centered Header Block */}
+        {/* Centered Header Block */}
         <div className="text-center space-y-4 max-w-2xl xl:max-w-3xl 2xl:max-w-4xl 4k:max-w-5xl mx-auto">
           <motion.span 
             variants={itemVariants}
@@ -187,20 +176,31 @@ const CategoryCarousel = () => {
           </motion.p>
         </div>
 
-        {/* Responsive Embla Viewport */}
-        {/* Shows exactly 2 categories (flex-[0_0_50%]) on mobile devices (xs) */}
+        {/* Continuous Moving Infinite Marquee Viewport */}
         <motion.div 
           variants={itemVariants}
-          className="overflow-hidden cursor-grab active:cursor-grabbing px-2" 
-          ref={emblaRef}
+          className="relative w-full overflow-hidden py-4"
         >
-          <div className="flex py-4">
-            {GENRES.map((genre) => {
+          {/* Edge gradient fade masks */}
+          <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 sm:w-20 md:w-28 bg-gradient-to-r from-slate-50 dark:from-[#192230] to-transparent z-10" />
+          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 sm:w-20 md:w-28 bg-gradient-to-l from-slate-50 dark:from-[#192230] to-transparent z-10" />
+
+          {/* Continuously Moving Row */}
+          <motion.div
+            className="flex items-center gap-6 sm:gap-8 md:gap-10 w-max"
+            animate={{ x: ['0%', '-50%'] }}
+            transition={{
+              ease: 'linear',
+              duration: 32,
+              repeat: Infinity,
+            }}
+          >
+            {[...GENRES, ...GENRES].map((genre, idx) => {
               const Icon = genre.icon;
               return (
                 <div 
-                  key={genre.id} 
-                  className="flex-[0_0_50%] min-w-0 sm:flex-[0_0_25%] md:flex-[0_0_20%] lg:flex-[0_0_12.5%] 3xl:flex-[0_0_10%] 4k:flex-[0_0_8.33%] px-2 text-center"
+                  key={`${genre.id}-${idx}`} 
+                  className="shrink-0 w-20 sm:w-24 md:w-28 text-center select-none"
                 >
                   <Link
                     href={`/books?category=${genre.id}&page=1`}
@@ -214,14 +214,14 @@ const CategoryCarousel = () => {
                     </div>
 
                     {/* Label */}
-                    <span className="text-xs md:text-sm 4k:text-base font-bold text-[#192230] dark:text-slate-200 group-hover:text-[#856a26] dark:group-hover:text-[#ffcd00] transition-colors duration-200 line-clamp-2 max-w-27.5 sm:max-w-full px-1">
+                    <span className="text-xs md:text-sm 4k:text-base font-bold text-[#192230] dark:text-slate-200 group-hover:text-[#856a26] dark:group-hover:text-[#ffcd00] transition-colors duration-200 line-clamp-2 max-w-28 sm:max-w-full px-1">
                       {genre.name}
                     </span>
                   </Link>
                 </div>
               );
             })}
-          </div>
+          </motion.div>
         </motion.div>
 
       </motion.div>

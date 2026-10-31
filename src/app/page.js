@@ -11,11 +11,11 @@ export default function Home({ children }) {
 
       {children}
       <Banner />
+      <CategoryCarousel />
       <StatsSection />
       <FeaturedBooks />
       <CommunityFeedSection />
       <TopLibrarians />
-      <CategoryCarousel />
       <Footer />
     </>
   )

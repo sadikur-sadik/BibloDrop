@@ -4,6 +4,8 @@
 @theme {
   --breakpoint-3xl: 120rem; /* 1920px */
   --breakpoint-4k: 160rem;  /* 2560px */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

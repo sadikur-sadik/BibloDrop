@@ -28,6 +28,14 @@ const STATIC_LIBRARIANS = [
     image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&crop=faces&q=90&w=1000&h=1000',
     deliveryCount: 115,
     status: 'approved',
+  },
+  {
+    _id: '4',
+    name: 'Elena Rostova',
+    email: 'elena.rostova@library.delivery',
+    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&crop=faces&q=90&w=1000&h=1000',
+    deliveryCount: 104,
+    status: 'approved',
   }
 ];
 
@@ -36,7 +44,6 @@ const TopLibrarians = () => {
     (a, b) => (b.deliveryCount || 0) - (a.deliveryCount || 0)
   );
 
-  // Animation configuration to trigger only when entered into viewport
   const containerVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
@@ -44,7 +51,7 @@ const TopLibrarians = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: [0.16, 1, 0.3, 1], // Custom deceleration curve for premium transition
+        ease: [0.16, 1, 0.3, 1],
         staggerChildren: 0.15
       },
     },
@@ -60,7 +67,7 @@ const TopLibrarians = () => {
   };
 
   return (
-    <section className="w-full max-w-[2560px] 3xl:max-w-[3400px] 4k:max-w-[3840px] mx-auto bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-16 xl:py-24 2xl:py-32 4k:py-40 px-4 sm:px-8 md:px-16 lg:px-20 xl:px-24 2xl:px-32 4k:px-40 transition-colors duration-300 relative overflow-hidden select-none">
+    <section className="w-full bg-slate-50 dark:bg-[#192230] text-[#192230] dark:text-white py-16 xl:py-24 2xl:py-32 4k:py-40 px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-24 4k:px-40 transition-colors duration-300 relative overflow-hidden select-none">
       {/* Background visual accents */}
       <div className="absolute right-0 top-0 w-80 h-80 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute left-0 bottom-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -69,13 +76,13 @@ const TopLibrarians = () => {
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.15 }}
+        viewport={{ once: true, amount: 0.1 }}
         variants={containerVariants}
-        className="w-full max-w-7xl 4k:max-w-[3840px] mx-auto space-y-12 xl:space-y-16 2xl:space-y-20 4k:space-y-28 relative z-10"
+        className="w-full max-w-7xl 2xl:max-w-[1600px] 4k:max-w-[3840px] mx-auto space-y-10 md:space-y-14 xl:space-y-16 2xl:space-y-20 4k:space-y-28 relative z-10"
       >
 
         {/* Header Block */}
-        <div className="text-center space-y-4 max-w-2xl xl:max-w-3xl 2xl:max-w-4xl 4k:max-w-5xl mx-auto">
+        <div className="text-center space-y-3 md:space-y-4 max-w-2xl xl:max-w-3xl 2xl:max-w-4xl 4k:max-w-5xl mx-auto">
           <motion.span
             variants={itemVariants}
             className="inline-flex items-center gap-2 bg-[#856a26]/10 border border-[#856a26]/30 dark:bg-[#ffcd00]/10 dark:border-[#ffcd00]/30 px-3.5 py-1.5 xl:px-4 xl:py-2 4k:px-6 4k:py-3 rounded-full text-xs xl:text-sm 4k:text-xl font-semibold text-[#856a26] dark:text-[#ffcd00] uppercase tracking-wider"
@@ -86,7 +93,7 @@ const TopLibrarians = () => {
 
           <motion.h2
             variants={itemVariants}
-            className="text-3xl md:text-4xl xl:text-5xl 2xl:text-6xl 4k:text-7xl font-black tracking-tight text-[#192230] dark:text-white"
+            className="text-2xl sm:text-3xl md:text-4xl xl:text-5xl 2xl:text-6xl 4k:text-7xl font-black tracking-tight text-[#192230] dark:text-white"
           >
             Our Top Delivery <span className="text-[#856a26] dark:text-[#ffcd00]">Partners</span>
           </motion.h2>
@@ -99,28 +106,28 @@ const TopLibrarians = () => {
           </motion.p>
         </div>
 
-        {/* Standard Grid for <2560px, Centered Flex for 4K */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 4k:flex 4k:flex-wrap 4k:justify-center 4k:gap-12">
+        {/* Card Grid — 2 cols on sm, 4 cols on xl */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 md:gap-6 xl:gap-7 4k:gap-12">
           {sortedLibrarians.map((librarian, index) => (
             <motion.div
               key={librarian._id}
               variants={itemVariants}
-              className="group relative bg-white dark:bg-[#2c2f38] border border-slate-200/80 dark:border-gray-800 rounded-3xl overflow-hidden shadow-md hover:shadow-xl dark:hover:shadow-[#ffcd00]/10 hover:border-[#856a26]/40 dark:hover:border-[#ffcd00]/40 transition-all duration-300 hover:-translate-y-1.5 flex flex-col 4k:w-[calc(33.333%-2rem)] 4k:max-w-xl"
+              className="group relative bg-white dark:bg-[#2c2f38] border border-slate-200/80 dark:border-gray-800 rounded-3xl overflow-hidden shadow-md hover:shadow-xl dark:hover:shadow-[#ffcd00]/10 hover:border-[#856a26]/40 dark:hover:border-[#ffcd00]/40 transition-all duration-300 hover:-translate-y-1.5 flex flex-col"
             >
               {/* Card Banner */}
-              <div className="h-24 sm:h-28 bg-slate-100 dark:bg-[#192230] relative overflow-hidden border-b border-slate-200 dark:border-[#3d474e]/40">
+              <div className="h-20 sm:h-24 bg-slate-100 dark:bg-[#192230] relative overflow-hidden border-b border-slate-200 dark:border-[#3d474e]/40">
                 <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 rounded-full blur-xl transition-all duration-300 group-hover:scale-125" />
 
                 {/* Ranking Tag */}
-                <div className="absolute top-4 right-4 bg-white/80 dark:bg-[#2c2f38]/80 backdrop-blur-xs border border-slate-200 dark:border-gray-700/50 px-2.5 py-1 rounded-lg text-xs font-black text-[#856a26] dark:text-[#ffcd00] uppercase tracking-wide">
+                <div className="absolute top-3 right-3 bg-white/80 dark:bg-[#2c2f38]/80 backdrop-blur-xs border border-slate-200 dark:border-gray-700/50 px-2.5 py-1 rounded-lg text-[11px] font-black text-[#856a26] dark:text-[#ffcd00] uppercase tracking-wide">
                   Rank #{index + 1}
                 </div>
               </div>
 
               {/* Profile Details Content Area */}
-              <div className="px-4 sm:px-6 pb-6 grow flex flex-col items-center -mt-12 relative z-10 text-center">
+              <div className="px-4 sm:px-5 pb-5 grow flex flex-col items-center -mt-10 relative z-10 text-center">
                 {/* Avatar Frame */}
-                <div className="relative w-24 h-24 rounded-full border-4 border-white dark:border-[#2c2f38] overflow-hidden shadow-lg group-hover:border-[#856a26] dark:group-hover:border-[#ffcd00] group-hover:shadow-[0_0_15px_rgba(255,205,0,0.15)] transition-all duration-300 bg-slate-100 dark:bg-[#192230]">
+                <div className="relative w-20 h-20 rounded-full border-4 border-white dark:border-[#2c2f38] overflow-hidden shadow-lg group-hover:border-[#856a26] dark:group-hover:border-[#ffcd00] group-hover:shadow-[0_0_15px_rgba(255,205,0,0.15)] transition-all duration-300 bg-slate-100 dark:bg-[#192230]">
                   <img
                     src={librarian.image}
                     alt={librarian.name}
@@ -129,43 +136,38 @@ const TopLibrarians = () => {
                   />
                 </div>
 
-                {/* Status Badging */}
+                {/* Status Badge */}
                 {librarian.status === 'approved' && (
-                  <div className="mt-3.5 inline-flex items-center gap-1.5 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 text-[#856a26] dark:text-[#ffcd00] px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase border border-[#856a26]/15 dark:border-[#ffcd00]/15">
-                    <ShieldCheck className="w-3.5 h-3.5" />
+                  <div className="mt-3 inline-flex items-center gap-1.5 bg-[#856a26]/5 dark:bg-[#ffcd00]/5 text-[#856a26] dark:text-[#ffcd00] px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-wider uppercase border border-[#856a26]/15 dark:border-[#ffcd00]/15">
+                    <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                     Verified Host
                   </div>
                 )}
 
-                {/* Identification */}
-                <h3 className="mt-3.5 text-lg sm:text-xl font-bold text-[#192230] dark:text-white transition-colors duration-200 group-hover:text-[#856a26] dark:group-hover:text-[#ffcd00]">
+                {/* Name & Email */}
+                <h3 className="mt-3 text-base sm:text-lg font-bold text-[#192230] dark:text-white transition-colors duration-200 group-hover:text-[#856a26] dark:group-hover:text-[#ffcd00] line-clamp-1">
                   {librarian.name}
                 </h3>
-                <p className="text-xs text-[#3d474e] dark:text-[#9ea7b3] font-medium mt-0.5 max-w-50 sm:max-w-xs truncate">
+                <p className="text-[11px] sm:text-xs text-[#3d474e] dark:text-[#9ea7b3] font-medium mt-0.5 max-w-full truncate px-2">
                   {librarian.email}
                 </p>
 
-                {/* Divider Line */}
-                <div className="w-full h-px bg-slate-100 dark:bg-gray-800/80 my-5" />
+                {/* Divider */}
+                <div className="w-full h-px bg-slate-100 dark:bg-gray-800/80 my-4" />
 
-                {/* Delivery Counter Area */}
-                <div className="w-full flex justify-between items-center bg-slate-50 dark:bg-[#192230] rounded-2xl p-4 border border-slate-100 dark:border-[#3d474e]/30 transition-colors duration-300">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-2 bg-white dark:bg-[#2c2f38] rounded-xl text-[#856a26] dark:text-[#ffcd00] border border-slate-200 dark:border-gray-700/50">
-                      <Car className="w-4 h-4 sm:w-5 sm:h-5" />
+                {/* Delivery Counter — Centered Stack Layout */}
+                <div className="w-full bg-slate-50 dark:bg-[#192230] rounded-xl p-3 sm:p-4 border border-slate-100 dark:border-[#3d474e]/30 transition-colors duration-300 flex flex-col items-center gap-1.5">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 bg-white dark:bg-[#2c2f38] rounded-lg text-[#856a26] dark:text-[#ffcd00] border border-slate-200 dark:border-gray-700/50">
+                      <Car className="w-4 h-4" />
                     </div>
-                    <span className="text-[10px] sm:text-xs font-bold text-[#3d474e] dark:text-[#9ea7b3] uppercase tracking-wide">
-                      Deliveries
-                    </span>
-                  </div>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-xl sm:text-2xl font-black text-[#192230] dark:text-white">
+                    <span className="text-2xl sm:text-3xl font-black text-[#192230] dark:text-white leading-none">
                       {librarian.deliveryCount || 0}
                     </span>
-                    <span className="text-[9px] sm:text-[10px] font-extrabold text-[#856a26] dark:text-[#ffcd00] uppercase tracking-wider">
-                      Completed
-                    </span>
                   </div>
+                  <span className="text-[10px] sm:text-[11px] font-extrabold text-[#856a26] dark:text-[#ffcd00] uppercase tracking-widest">
+                    Deliveries Completed
+                  </span>
                 </div>
               </div>
 
